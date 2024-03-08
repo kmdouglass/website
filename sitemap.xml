@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+ <url>
+  <loc>https://kylemdouglass.com/</loc>
+  <lastmod>2024-03-08T14:13:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/2024/</loc>
+  <lastmod>2024-03-08T14:13:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/archive.html</loc>
+  <lastmod>2024-03-08T15:08:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/</loc>
+  <lastmod>2024-03-08T14:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/cad/</loc>
+  <lastmod>2024-03-08T14:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/cat_optics/</loc>
+  <lastmod>2024-03-08T14:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/galleries/</loc>
+  <lastmod>2024-03-08T14:06:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/listings/</loc>
+  <lastmod>2024-03-08T14:06:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/fusion-360-core-concepts/</loc>
+  <lastmod>2024-03-08T14:26:00Z</lastmod>
+ </url>
+</urlset>

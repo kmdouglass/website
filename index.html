@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="Optics, programming, and biophysics">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyle M. Douglass</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/fusion-360-core-concepts/" type="text/html">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href=".">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="rss.xml" class="nav-link">RSS feed</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+
+    
+
+
+    
+<div class="postindex">
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/fusion-360-core-concepts/" class="u-url">Fusion 360 Core Concepts</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/fusion-360-core-concepts/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-03-08T15:16:22+01:00" itemprop="datePublished" title="2024-03-08 15:16">2024-03-08 15:16</time></a>
+            </p>
+        </div>
+    </header><div class="e-content entry-content">
+    <p>I decided recently to learn Fusion 360 to help with some custom optomechanical designs that I need in the lab. The following are my notes about its core concepts.</p>
+<h2>Assemblies</h2>
+<p>An assembly is a group of parts in one design file.</p>
+<p>In CAD, there are two ways to create assemblies:</p>
+<ol>
+<li>
+<strong>Bottom-up</strong><ol>
+<li>Create parts</li>
+<li>Add parts to the assembly</li>
+</ol>
+</li>
+<li>
+<strong>Top-down</strong> (used by Fusion 360)<ol>
+<li>Start with an assembly</li>
+<li>Add parts to it</li>
+</ol>
+</li>
+</ol>
+<h2>Bodies vs. components</h2>
+<h3>Bodies</h3>
+<p>A body is a 3D shape used to add or remove components.</p>
+<p>There are two core types:</p>
+<ol>
+<li>Solid bodies</li>
+<li>Surface bodies (denoted by a yellow face)</li>
+</ol>
+<p>Other types include T-Splines (created in the Form environment) used to create freeform shapes, and mesh bodies.</p>
+<p><strong>Bodies must be of the same type to interact with one another.</strong></p>
+<h3>Components</h3>
+<p>A component is a part or "container" used within an assembly.</p>
+<p>Components can contain</p>
+<ul>
+<li>bodies</li>
+<li>construction planes</li>
+<li>sketches</li>
+<li>canvases</li>
+<li>origin planes</li>
+<li>other components (a.k.a. <strong>subassemblies</strong>)</li>
+</ul>
+<h2>Joints</h2>
+<p>Joints are how components are forced to stay together.</p>
+<h2>Guidelines</h2>
+<ol>
+<li>Always start an assembly with a new component</li>
+<li>Always rename components and bodies right after creation</li>
+</ol>
+<h2>References</h2>
+<ol>
+<li><a href="https://www.youtube.com/watch?v=TzG2deElWqI&amp;t=0s">Bodies vs Components</a></li>
+</ol>
+</div>
+    </article>
+</div>
+
+
+
+    
+
+
+
+
+
+        <!--End of body content-->
+
+        <footer id="footer">
+            Contents © 2024         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
