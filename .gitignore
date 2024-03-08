@@ -1,3 +1,8 @@
+# Nikola
+.doit*
+cache/
+output/
+
 .vscode/
 
 # Byte-compiled / optimized / DLL files
