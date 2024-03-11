@@ -933,5 +933,5 @@ html[dir="rtl"] body {
     min-height: 25px;
 }
 
-svg { position:fixed; top:0; left:0; height:100%; width:100% }
+svg { height:auto; width:100% }
 
