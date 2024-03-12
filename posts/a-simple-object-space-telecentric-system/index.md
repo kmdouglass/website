@@ -157,4 +157,4 @@ At first the marginal ray trace was a bit confusing because the entrance pupil i
 
 ## Telecentric lens design
 
-So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angles to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.
+So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.

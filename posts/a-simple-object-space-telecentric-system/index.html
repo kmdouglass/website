@@ -232,7 +232,7 @@ bg-dark
 <h3>Marginal ray trace</h3>
 <p>At first the marginal ray trace was a bit confusing because the entrance pupil is at infinity. How can the marginal ray, which intersects the pupil at its edge, be traced when the pupil is at infinity? Then I remembered that I don't aim for the edge of the pupil when tracing the marginal ray. Instead, I launch a ray from the axis in the object plane at a random angle taking the surface with the smallest ray height as the aperture stop. (I chose a paraxial angle of 1 in the table above. Technically, this is called a pseudo-marginal ray. The real marginal ray is calculated from it by rescaling the surface intersection heights by the aperture stop semi-diameter.) Once you have the marginal ray in image space, just find its intersection with the axis to determine the image location.</p>
 <h3>Telecentric lens design</h3>
-<p>So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angles to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.</p>
+<p>So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.</p>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
 <li><a class="tag p-category" href="../../categories/ray-tracing/" rel="tag">ray tracing</a></li>
