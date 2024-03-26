@@ -10,8 +10,20 @@
   <lastmod>2024-03-08T14:42:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/cat_3d-printing.xml</loc>
+  <lastmod>2024-03-26T13:35:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kylemdouglass.com/categories/cat_fabrication.xml</loc>
+  <lastmod>2024-03-26T13:31:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_optics.xml</loc>
   <lastmod>2024-03-12T08:15:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kylemdouglass.com/categories/fits.xml</loc>
+  <lastmod>2024-03-26T13:35:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/ray-tracing.xml</loc>
@@ -23,10 +35,10 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/rss.xml</loc>
-  <lastmod>2024-03-12T08:15:00Z</lastmod>
+  <lastmod>2024-03-26T13:35:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/sitemap.xml</loc>
-  <lastmod>2024-03-12T08:19:00Z</lastmod>
+  <lastmod>2024-03-26T13:35:00Z</lastmod>
  </sitemap>
 </sitemapindex>
