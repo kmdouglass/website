@@ -25,3 +25,5 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 - **screw**, *n* : une vis
 - **tap**, *n* : un taraud
 - **thread**, *n* : un filetage
+    - **exterior threads** : 1. filetage extérieur, 2. filetages mâles 
+    - **interior threads** : 1. filetage intérieur, 2. filetages femelles  
