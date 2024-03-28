@@ -15,23 +15,27 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2024-03-26T13:03:00Z</lastmod>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2024-03-26T13:35:00Z</lastmod>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/cad/</loc>
   <lastmod>2024-03-08T14:42:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/cat_3d-printing-machining/</loc>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/cat_3d-printing/</loc>
   <lastmod>2024-03-26T13:35:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kylemdouglass.com/categories/cat_fabrication/</loc>
-  <lastmod>2024-03-26T13:03:00Z</lastmod>
+  <loc>https://kylemdouglass.com/categories/cat_machining/</loc>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/cat_optics/</loc>
@@ -40,6 +44,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/fits/</loc>
   <lastmod>2024-03-26T13:35:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/french/</loc>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/ray-tracing/</loc>
@@ -56,6 +64,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/engineering-fits/</loc>
   <lastmod>2024-03-26T13:03:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/french-vocabulary-for-machinists/</loc>
+  <lastmod>2024-03-28T08:48:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/fusion-360-core-concepts/</loc>
