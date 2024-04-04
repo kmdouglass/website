@@ -24,6 +24,8 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 # Tools and parts
 
 - **die**, *n* : une filière
+- **latch**, *n* : un loquet (possibly Swiss-French)
+    - **push latch**, *n* : un loquet poussoir
 - **screw**, *n* : une vis
     - **cap (or head) screw**, *n* : une vis à tête
     - **countersunk cap screw**, *n* : vis à tête fraisée
