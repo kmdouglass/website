@@ -23,6 +23,8 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 
 - **die**, *n* : une filière
 - **screw**, *n* : une vis
+    - **cap (or head) screw**, *n* : une vis à tête
+    - **countersunk cap screw**, *n* : vis à tête fraisée
 - **tap**, *n* : un taraud
 - **threading**, *n* : un filetage
     - **exterior threads** : 1. filetage extérieur, 2. filetages mâles 
