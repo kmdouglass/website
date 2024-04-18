@@ -21,6 +21,10 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 - **anodized**, *adj* : anodisé
 - **stainless steel**, *n* : 1. acier inoxydable, 2. inox (the cool way to say it)
 
+# Measurements
+
+- **dimensions**, *npl* : les dimensions (fpl) 
+
 # Tools and parts
 
 - **die**, *n* : une filière
