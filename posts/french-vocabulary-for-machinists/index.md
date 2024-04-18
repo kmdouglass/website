@@ -13,7 +13,7 @@ I work in a French-speaking country and frequently need to communicate with our 
 
 Here is a list of English-French vocabulary words that I have found useful. I will update it as I learn more words.
 
-*Last update: 2024-04-04*
+*Last update: 2024-04-18*
 
 # Materials and processing
 
@@ -25,16 +25,21 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 
 - **dimensions**, *npl* : les dimensions (fpl) 
 
-# Tools and parts
+# Screws, bolts, fasteners, etc.
 
-- **die**, *n* : une filière
 - **latch**, *n* : un loquet (possibly Swiss-French)
     - **push latch**, *n* : un loquet poussoir
 - **screw**, *n* : une vis
     - **cap (or head) screw**, *n* : une vis à tête
     - **countersunk cap screw**, *n* : vis à tête fraisée
 - **spring**, *n* : un ressort
-- **tap**, *n* : un taraud
 - **threading**, *n* : un filetage
     - **exterior threads** : 1. filetage extérieur, 2. filetages mâles 
     - **interior threads** : 1. filetage intérieur, 2. filetages femelles  
+
+# Tools
+
+- **die**, *n* : une filière
+- **lathe**, *n* : un tour
+- **mill**, **milling machine**, *n* : une fraiseuse
+- **tap**, *n* : un taraud
