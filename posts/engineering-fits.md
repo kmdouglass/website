@@ -2,8 +2,8 @@
 .. title: Engineering Fits
 .. slug: engineering-fits
 .. date: 2024-03-26 11:48:49 UTC+01:00
-.. tags: fits
-.. category: 3d printing
+.. tags: fits, 3d printing
+.. category: manufacturing
 .. link: 
 .. description: The basic theory of engineering fits
 .. type: text
