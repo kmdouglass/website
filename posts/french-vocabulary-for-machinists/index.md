@@ -3,7 +3,7 @@
 .. slug: french-vocabulary-for-machinists
 .. date: 2024-03-28 09:35:27 UTC+01:00
 .. tags: french
-.. category: machining
+.. category: manufacturing
 .. link: 
 .. description: 
 .. type: text
