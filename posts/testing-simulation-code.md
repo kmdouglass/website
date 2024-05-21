@@ -1,8 +1,8 @@
 <!--
-.. title: Testing Simulation Code
+.. title: Automated Testing of Simulation Code via Hypothesis Testing
 .. slug: testing-simulation-code
-.. date: 2024-05-17 09:54:40 UTC+02:00
-.. tags: cameras, simulation
+.. date: 2024-05-21 09:54:40 UTC+02:00
+.. tags: cameras, simulation, statistics
 .. category: optics
 .. link: 
 .. description: 
@@ -25,13 +25,13 @@ To test the above rule, we write out all the possible cases and write a test for
 
 I have found that a good way to identify test cases in business logic is to look for if/else statements in a rule. Each branch of the statement should be a different test.
 
-Now let's consider a physics simulation. I am an optical engineer, so I will use an example from optics. One thing I have often done in my work is to simulate the image formation process of a lens system, including the noise imparted by the camera. A simple model of a CMOS camera pixel is one that takes an input signal in photons, converts it to photoelectrons, adds shot noise and dark noise, and then converts the electron signal into analog-to-digital units. Schematically:
+Now let's consider a physics simulation. I am an optical engineer, so I will use an example from optics. One thing I have often done in my work is to simulate the image formation process of a lens system, including the noise imparted by the camera. A simple model of a CMOS camera pixel is one that takes an input signal in photons, adds shot noise, converts it to photoelectrons, adds dark noise, and then converts the electron signal into analog-to-digital units. Schematically:
 
 ```
 photons --> electrons --> ADUs
 ```
 
-Simplified Python code that models this process, including noise, is below. An instance of the camera class has a method called `snap` takes input array of photons and converts it to ADUs.
+A simplified Python code snippet that models this process, including noise, is below. An instance of the camera class has a method called `snap` that takes input array of photons and converts it to ADUs.
 
 ```python
 from dataclasses import dataclass
@@ -73,17 +73,19 @@ class Camera:
         return adu.astype(np.uint16)
 ```
 
-How can you test this code? In this case, there are no if/else statements to help us identify test cases. Some possible solutions are:
+How can we test this code? In this case, there are no if/else statements to help us identify test cases. Some possible solutions are:
 
-1. An expert can review it. But what if you don't have an expert? Or, if you are an expert, how do you know that you haven't made a mistake? I have worked professionally as both an optical and a software engineer and I can tell you that I make coding mistakes many times a day. And what if the simulation is thousands of lines of code? This solution, though useful, cannot be sufficient for testing.
+1. An expert can review it. But what if we don't have an expert? Or, if you are an expert, how do we know that we haven't made a mistake? I have worked professionally as both an optical and a software engineer and I can tell you that I make coding mistakes many times a day. And what if the simulation is thousands of lines of code? This solution, though useful, cannot be sufficient for testing.
 
 2. Compute what the results ought to be for a given set of inputs. Rules like "If the baseline is 100, and the bit depth is 12, etc., then the output is 542 ADU" are not that useful here because the output is random.
 
 3. Evaluate the code and manually check that it produces the desired results. This is similar to expert review. The problem with this approach is that you would need to recheck the code every time a change is made. One of the advantages of testing business logic is that the tests can be automated. It would be advantageous to preserve automation in testing scientific code.
 
+4. We could always fix the value of the seed for the random number generator to at least make the test deterministic, but then we would not know whether the variation in the simulation output is what we would expect from run-to-run. I'm also unsure whether the same seed produces the same results across different hardware architectures. Since the simulation is non-deterministic at its core, it would be nice to include this attribute within the test case.
+
 # Automated Testing of Simulation Results via Hypothesis Testing
 
-The solution that I have found to the above-listed problems is derived from ideas that I learned in a class on quality control that I took in college. In short, I run the simulation a number of times and compute one or more statistics from the results. The statistics are compared to their theoretical values in a hypothesis test, and, if the result is outside of a given tolerance, the test fails. If the probability of failure is made small enough, then a failure of the test **practically** indicates an error in the simulation code rather than a random failure due to the stochasitc nature of the code.
+The solution that I have found to the above-listed problems is derived from ideas that I learned in a class on quality control that I took in college. In short, we run the simulation a number of times and compute one or more statistics from the results. The statistics are compared to their theoretical values in a hypothesis test, and, if the result is outside of a given tolerance, the test fails. If the probability of failure is made small enough, then a failure of the test **practically** indicates an error in the simulation code rather than a random failure due to the stochastic output.
 
 ## Theoretical Values for Test Statistics
 
@@ -95,7 +97,7 @@ where \\( \mu_y \\) is the mean ADU count, \\( K \\) is the gain, \\( \eta \\) i
 
 $$ \sigma_y = \sqrt{K^2 \sigma_d^2 + \sigma_q^2 + K \left( \mu_y - B \right)} $$
 
-where \\( \sigma_y^2 \\) is the variance of the ADU counts, \\( \sigma_d^2 \\) is the dark noise variance, and \\( \sigma_q^2 = 1 / 12 \, \text{ADU} \\) is the quantization noise, i.e. the noise from converting an analog voltage into discrete ADU values.
+where \\( \sigma_y \\) is the standard deviation of the ADU counts, \\( \sigma_d^2 \\) is the dark noise variance, and \\( \sigma_q^2 = 1 / 12 \, \text{ADU} \\) is the quantization noise, i.e. the noise from converting an analog voltage into discrete ADU values.
 
 ## Hypothesis Testing
 
@@ -108,7 +110,7 @@ Let's first focus on the mean pixel values. To perform this hypothesis test, I r
 
 <img src="/images/camera-mean-adus.png">
 
-The mean of this distribution 190.721 ADU and the standard deviation is 3.437 ADU. The theoretical values are 191.2 ADU and 3.420 ADU, respectively. Importantly, if I re-run the simulation, then I get a different histogram.
+The mean of this distribution is 190.721 ADU and the standard deviation is 3.437 ADU. The theoretical values are 191.2 ADU and 3.420 ADU, respectively. Importantly, if I re-run the simulation, then I get a different histogram because the simulation's output is random.
 
 The above histogram is called the **sampling distribution of the mean**, and its width is proportional to the **standard error of the mean**.
 
@@ -122,7 +124,7 @@ Here \\( s \\) is my estimated standard deviation (3.437 ADU in the example abov
 
 If this looks familiar, it should. In introductory statistics classes, this approach is called [Student's one sample t-test](https://en.wikipedia.org/wiki/Student%27s_t-test). In the t-test, the value for \\( X \\) is denoted as \\( t \\) and depends on the desired confidence level and on the number of data points in the sample. (Strictly speaking, it's the number of data points minus 1.)
 
-As far as I can tell there's no automatic way to select a value of \\( X \\). I often choose 3. Why? Well, if the sampling distribution is approximately normally distributed, and the number of sample points is large, then the theoretical mean should lie within 3 standard errors of the simulated one approximately 99.7% of the time **if the algorithm is correct.** Alternatively, this means that a correct simulation will produce a result that is more than three standard errors from the theoretical mean about every 1 out of 370 test runs.
+As far as I can tell there's no rule for selecting a value of \\( X \\); rather, it's a free parameter. I often choose 3. Why? Well, if the sampling distribution is approximately normally distributed, and the number of sample points is large, then the theoretical mean should lie within 3 standard errors of the simulated one approximately 99.7% of the time **if the algorithm is correct.** Alternatively, this means that a correct simulation will produce a result that is more than three standard errors from the theoretical mean about every 1 out of 370 test runs.
 
 ### Hypothesis Testing of the Noise
 
@@ -151,7 +153,7 @@ def se_std(data, n = 1000) -> float:
     return np.std(std_sampling_distribution)
 ```
 
-Of course, the value of `n` in the function above is arbitrary. From what I can tell, setting `n` to be the size of the data is somewhat standard practice, but I cannot tell you why that is.
+Of course, the value of `n` in the function above is arbitrary. From what I can tell, setting `n` to be the size of the data is somewhat standard practice.
 
 ### Automated Hypothesis Testing
 
@@ -166,19 +168,19 @@ def test_cmos_camera(camera):
     num_pixels = 32, 32
     mean_photons = 100
     photons = (mean_photons * np.ones(num_pixels)).astype(np.uint8)
-    expected_mean = 546.88
-    expected_std = 66.9
+    expected_mean = 191.2
+    expected_std = 3.42
 
     img = camera.snap(photons)
 
     tol_mean = TOL * img.std() / np.sqrt(num_pixels[0] * num_pixels[1])
-    tol_std = TOL  * se_std(img)
+    tol_std = TOL * se_std(img)
 
     assert np.isclose(img.mean(), expected_mean, atol=tol_mean)
     assert np.isclose(img.std(), expected_std, atol=tol_std)
 ```
 
-With a `TOL` value of 3 and with the sampling distributions being more-or-less normally distributed, each assertion should fail about 1 / 370 times because the area in the tails is 1 - (1 / 370). We can put this test into our test suite and continuous integration system (C) and run it automatically using whatever tools we wish, e.g. GitHub Actions and pytest.
+With a `TOL` value of 3 and with the sampling distributions being more-or-less normally distributed, each assertion should fail about 1 / 370 times because the area in the tails of the distribution beyond three standard errors is 1 / 370. We can put this test into our test suite and continuous integration (CI) system and run it automatically using whatever tools we wish, e.g. GitHub Actions and pytest.
 
 # Discussion
 
@@ -186,18 +188,31 @@ With a `TOL` value of 3 and with the sampling distributions being more-or-less n
 
 It is an often-stated rule of thumb that automated tests should never fail randomly because it makes failures difficult to diagnose and makes you likely to ignore the tests. Here however it is in the very nature of this test that it will fail randomly from time to time. What are we to do?
 
-An easy solution would be to isolate these sorts of tests and run them separately from the deterministic ones. Then, if there is a failure of the non-deterministic tests, the CI could just run them again. If `TOL` is set so that a test failure is very rare, then any failure of these tests twice would practically indicate a failure of the algorithm to produce the theoretical results.
+An easy solution would be to isolate these sorts of tests and run them separately from the deterministic ones so that we know exactly where the error occurred. Then, if there is a failure of the non-deterministic tests, the CI could just run them again. If `TOL` is set so that a test failure is very rare, then any failure of these tests twice would practically indicate a failure of the algorithm to produce the theoretical results.
 
 ## Testing Absolute Tolerances
 
-It could be argued that what I presented here is a lot of work just to make an assertion that a simulation result is close to a known value. In other words, it's just a fancy way to test for absolute tolerances, and possibly is more complex than it needs to be. I can't say that I entirely disagree with this. If we run the simulation a few times we can get a sense of the variation in its output, and we can use these values to roughly set a tolerance that states by how much the simulated and theoretical results should differ.
+It could be argued that what I presented here is a lot of work just to make an assertion that a simulation result is close to a known value. In other words, it's just a fancy way to test for absolute tolerances, and possibly is more complex than it needs to be. I can't say that I entirely disagree with this.
 
-The value in the hypothesis testing approach is that you can know the probability of failure pretty well. Whether or not this is important probably depends on what you want to do.
+As an alternative, consider the following: if we run the simulation a few times we can get a sense of the variation in its output, and we can use these values to roughly set a tolerance that states by how much the simulated and theoretical results should differ. This is arguably faster than constructing the confidence intervals like we did above.
+
+The value in the hypothesis testing approach is that you can know the probability of failure to a high degree of accuracy. Whether or not this is important probably depends on what you want to do, but it does provide you with a deeper understanding of the behavior of the simulation that might help debug difficult problems.
 
 ## Testing for Other Types of Errors
 
 There are certainly other problems in testing simulation code that are not covered here. The above approach won't tell you directly if you have entered an equation incorrectly. It also requires theoretical values for the summary statistics of the simulation's output. If you have a theory for these already, you might argue that a simulation would be superfluous.
 
-If it's easy to implement automated tests for your simulation that are based on hypothesis testing, and if you expect the code to change often, then having a few of these sorts of tests will at least provide you a degree of confidence that everything is working as you expect as you make changes. And that is one of the goals of having tests: fearless refactoring.
+If it's easy to implement automated tests for your simulation that are based on hypothesis testing, and if you expect the code to change often, then having a few of these sorts of tests will at least provide you a degree of confidence that everything is working as you expect as you make changes. And that is one of the goals of having automated tests: fearless refactoring.
 
-# Summary 
+## Testing the Frequency of Failures
+
+I stated often that with hypothesis testing we know how often the code should fail, but we never actually tested that. We could have run the simulation a large number of times and verified that the number of failures was approximately equal to the theoretical number of failures.
+
+To my mind, it seems that this is just the exact same problem that was addressed above, but instead of testing summary statistics on the output values we test the number of failures. And since the number of failures will vary randomly, we would need a sampling distribution for this. So really this approach requires more CPU clock cycles to do the same thing because we need to run the simulation a large number of times.
+
+# Summary
+
+- Automated testing of simulation code is different than testing business logic due to its stochastic nature and inability to be reduced to "rules"
+- We can formulate hypothesis tests to determine how often the simulation produces values that are farther than a given distance from what theory predicts
+- The hypothesis tests can be translated into test cases: accepting the null hypothesis means the test passes, whereas rejecting the null hypothesis means the test fails
+- Non-deterministic testing is useful when it is quick to implement and you expect to change the code often
