@@ -120,7 +120,7 @@ To perform the hypthosesis test on the mean, I build a confidence interval aroun
 
 $$ \mu_y \pm X \frac{s}{\sqrt{N}} $$
 
-Here \\( s \\) is my estimated standard deviation (3.437 ADU in the example above), and \\( N = 10,000 \\) is the number of simulated values. Their ratio \\( \frac{s}{\sqrt{N}} \\) is an estimeate of the **standard error of the mean**. \\( X \\) is a proportionality factor that is essentially a tolerance on how close the simulated value must be to the theoretical one to be considered "equal". A larger tolerance means that it is less likely that the hypothesis test will fail, but I am less certain that the value of the simulation is exactly equal to the theoretical value.
+Here \\( s \\) is my estimated standard deviation (3.437 ADU in the example above), and \\( N = 10,000 \\) is the number of simulated values. Their ratio \\( \frac{s}{\sqrt{N}} \\) is an estimate of the **standard error of the mean**. \\( X \\) is a proportionality factor that is essentially a tolerance on how close the simulated value must be to the theoretical one to be considered "equal". A larger tolerance means that it is less likely that the hypothesis test will fail, but I am less certain that the value of the simulation is exactly equal to the theoretical value.
 
 If this looks familiar, it should. In introductory statistics classes, this approach is called [Student's one sample t-test](https://en.wikipedia.org/wiki/Student%27s_t-test). In the t-test, the value for \\( X \\) is denoted as \\( t \\) and depends on the desired confidence level and on the number of data points in the sample. (Strictly speaking, it's the number of data points minus 1.)
 
