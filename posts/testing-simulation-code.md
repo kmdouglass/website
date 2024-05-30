@@ -112,7 +112,7 @@ Let's first focus on the mean pixel values. To perform this hypothesis test, I r
 
 The mean of this distribution is 190.721 ADU and the standard deviation is 3.437 ADU. The theoretical values are 191.2 ADU and 3.420 ADU, respectively. Importantly, if I re-run the simulation, then I get a different histogram because the simulation's output is random.
 
-The above histogram is called the **sampling distribution of the mean**, and its width is proportional to the **standard error of the mean**.
+The above histogram is called the **sampling distribution of the mean**, and its width is proportional to the **standard error of the mean**. (*Edit 2024/05/30* Actually, I think I am wrong here. This is not the sampling distribution of the mean. To get it we would need to repeat the above experiment a number of times and compute the mean each time, much like I do in the following section. The set of all means from doing so would be its sampling distribution. Fortunately, the estimate of the confidence intervals in what follows should still hold because the sampling distribution of the mean tends to a normal distribution for large \\(N \\), and this allows for the expression in the equation that follows.)
 
 ### Hypothesis Testing of the Mean Pixel Value
 
