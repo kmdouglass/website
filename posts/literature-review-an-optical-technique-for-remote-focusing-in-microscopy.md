@@ -1,7 +1,7 @@
 <!--
 .. title: Literature Review: An Optical Technique for Remote Focusing in Microscopy
 .. slug: literature-review-an-optical-technique-for-remote-focusing-in-microscopy
-.. date: 2024-05-22 13:43:39 UTC+02:00
+.. date: 2024-05-30 13:43:39 UTC+02:00
 .. tags: microscopy, optics
 .. category: literature review
 .. link: 
