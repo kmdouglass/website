@@ -12,6 +12,7 @@
 <link rel="canonical" href="https://kylemdouglass.com/posts/testing-simulation-code/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
 <link rel="prev" href="../french-vocabulary-for-machinists/" title="French Vocabulary for Machinists" type="text/html">
+<link rel="next" href="../literature-review-an-optical-technique-for-remote-focusing-in-microscopy/" title="Literature Review: An Optical Technique for Remote Focusing in Microscopy" type="text/html">
 <meta property="og:site_name" content="Kyle M. Douglass">
 <meta property="og:title" content="Automated Testing of Simulation Code via Hypothesis Testing">
 <meta property="og:url" content="https://kylemdouglass.com/posts/testing-simulation-code/">
@@ -187,7 +188,7 @@ bg-dark
 <p>Let's first focus on the mean pixel values. To perform this hypothesis test, I ran the simulation code a number of times. For convenience, I chose an input signal of 1000 photons. Here's the resulting histogram:</p>
 <p><img src="../../images/camera-mean-adus.png"></p>
 <p>The mean of this distribution is 190.721 ADU and the standard deviation is 3.437 ADU. The theoretical values are 191.2 ADU and 3.420 ADU, respectively. Importantly, if I re-run the simulation, then I get a different histogram because the simulation's output is random.</p>
-<p>The above histogram is called the <strong>sampling distribution of the mean</strong>, and its width is proportional to the <strong>standard error of the mean</strong>.</p>
+<p>The above histogram is called the <strong>sampling distribution of the mean</strong>, and its width is proportional to the <strong>standard error of the mean</strong>. (<em>Edit 2024/05/30</em> Actually, I think I am wrong here. This is not the sampling distribution of the mean. To get it we would need to repeat the above experiment a number of times and compute the mean each time, much like I do in the following section. The set of all means from doing so would be its sampling distribution. Fortunately, the estimate of the confidence intervals in what follows should still hold because the sampling distribution of the mean tends to a normal distribution for large \(N \), and this allows for the expression in the equation that follows.)</p>
 <h4>Hypothesis Testing of the Mean Pixel Value</h4>
 <p>To perform the hypthosesis test on the mean, I build a confidence interval around the simulated value using the following formula:</p>
 <p>$$ \mu_y \pm X \frac{s}{\sqrt{N}} $$</p>
@@ -266,6 +267,9 @@ bg-dark
 <ul class="pager hidden-print">
 <li class="previous">
                 <a href="../french-vocabulary-for-machinists/" rel="prev" title="French Vocabulary for Machinists">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../literature-review-an-optical-technique-for-remote-focusing-in-microscopy/" rel="next" title="Literature Review: An Optical Technique for Remote Focusing in Microscopy">Next post</a>
             </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
