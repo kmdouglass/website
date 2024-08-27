@@ -21,7 +21,7 @@ Today it occurred to me that Flir's Mono16 format might not use all the values i
 array([ 16,  32,  48,  64,  96, 144], dtype=uint16)
 ```
 
-This prints all the possible, unique differences between the sorted and flattend pixel values in my particular image stack. Notice how they are all multiples of 16?
+This prints all the possible, unique differences between the sorted and flattened pixel values in my particular image stack. Notice how they are all multiples of 16?
 
 Let's look also at the sorted array of unique values itself:
 
