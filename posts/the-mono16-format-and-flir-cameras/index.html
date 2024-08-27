@@ -114,7 +114,7 @@ bg-dark
 
 <p>There are more than a million pixels in this array, yet they all take values that are integer multiples of 16.</p>
 <p>It looks like Flir's Mono16 format rescales the camera's output onto the interval [0, 65535] by introducing "gaps" between the numbers equal to 2^16 - 2^N where N is the bit-depth of the camera's ADC.</p>
-<p>But wait just a moment. Above I said that 4 bits in the Mono16 are zero, but I assumed that these were the most significant bits. If it is the least significant bits that are set to 0, then the allowed pixel values would be, for example, 
+<p>But wait just a moment. Above I said that 4 bits in the Mono16 are zero, but I assumed that these were the most significant bits. If the least significant bits that are the zero padding, then the allowed pixel values would be, for example, 
 <code>0000 0000 = 0</code>, <code>0001 0000 = 16</code>, <code>0010 0000 = 32</code>, <code>0011 0000 = 48</code>, etc. (Here I ignored the first 8 bits for clarity.)</p>
 <p>So it appears that Flir is indeed padding the 12-bit ADC data with 0's in its Mono16 format. But, somewhat counter-intuitively, <em>it is the four least significant bits that are the zero padding.</em> I say this is counter-intuitive because I have another camera that pads the most significant bits, so that the maximum pixel value is really 2^N - 1, with N being the ADC's bit-depth.</p>
     </div>
