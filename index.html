@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/the-mono16-format-and-flir-cameras/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/internet-connection-sharing-for-raspberry-pi-setups/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -65,7 +65,36 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-mono16-format-and-flir-cameras/" class="u-url">The Mono16 Format and Flir Cameras</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/internet-connection-sharing-for-raspberry-pi-setups/" class="u-url">Internet Connection Sharing for Raspberry Pi Setups</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/internet-connection-sharing-for-raspberry-pi-setups/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-09-13T15:26:11+02:00" itemprop="datePublished" title="2024-09-13 15:26">2024-09-13 15:26</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/internet-connection-sharing-for-raspberry-pi-setups/#disqus_thread" data-disqus-identifier="cache/posts/internet-connection-sharing-for-raspberry-pi-setups.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>Today I decided to set up an old Raspberry Pi 3B+ for a task in the lab. After burning the latest Raspberry Pi OS Lite image on the SD card, I booted it up and was faced with the unfortunately common problem of network access. It would have taken days to get IT to register the Pi's MAC address on our system, and I did not want to wait that long.</p>
+<p>Luckily, I had a spare network crossover cable and an extra ethernet interface on my Windows work laptop, so I plugged the Pi directly into the laptop and enabled Microsoft Internet Connection Sharing (ICS) between the network connection through which I was connected to the internet and the connection to the Pi. In my specific example:</p>
+<ol>
+<li>Press the Windows key and navigate to <code>View network connections</code>
+</li>
+<li>Right click on my internet connection (<code>Ethernet 2</code> in my case), select <code>Properties...</code>, and then the <code>Sharing</code> tab.</li>
+<li>Check <code>Allow other network users to connect...</code> and in the <code>Home networking connection:</code> dropdown, select the connection corresponding to the Pi (<code>Ethernet</code> in my case).</li>
+<li>Check <code>Allow other network users to control...</code>. I'm not sure whether this is necessary.</li>
+</ol>
+<p>Click OK and restart the Pi if it's already connected. Once it restarts, it should now have internet access through the laptop.</p>
+<p>Next I wanted to connect with SSH to the Pi from my laptop and I needed to know the Pi's IP address. Luckily, ICS uses the <code>mshome.net</code> domain name for the network, and the Raspberry Pi by default has the hostname <code>raspberrypi</code>. So getting the IP is as easy running the <code>ping raspberrypi.mshome.net</code> command in Powershell.</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-mono16-format-and-flir-cameras/" class="u-url">The Mono16 Format and Flir Cameras</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass

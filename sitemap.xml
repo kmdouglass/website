@@ -15,11 +15,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2024-08-27T12:53:00Z</lastmod>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2024-08-27T12:53:00Z</lastmod>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -32,6 +32,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/cameras/</loc>
   <lastmod>2024-05-17T09:20:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/cat_homelab/</loc>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/cat_literature-review/</loc>
@@ -62,8 +66,16 @@
   <lastmod>2024-05-22T11:46:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/networking/</loc>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/optics/</loc>
   <lastmod>2024-05-22T11:46:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/raspberry-pi/</loc>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/ray-tracing/</loc>
@@ -96,6 +108,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/fusion-360-core-concepts/</loc>
   <lastmod>2024-03-08T14:26:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/internet-connection-sharing-for-raspberry-pi-setups/</loc>
+  <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/literature-review-an-optical-technique-for-remote-focusing-in-microscopy/</loc>
