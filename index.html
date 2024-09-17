@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/internet-connection-sharing-for-raspberry-pi-setups/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/persist-internet-connection-sharing-after-reboot/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -65,7 +65,35 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/internet-connection-sharing-for-raspberry-pi-setups/" class="u-url">Internet Connection Sharing for Raspberry Pi Setups</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/persist-internet-connection-sharing-after-reboot/" class="u-url">Persist Internet Connection Sharing after Reboot</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/persist-internet-connection-sharing-after-reboot/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-09-17T09:52:27+02:00" itemprop="datePublished" title="2024-09-17 09:52">2024-09-17 09:52</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/persist-internet-connection-sharing-after-reboot/#disqus_thread" data-disqus-identifier="cache/posts/persist-internet-connection-sharing-after-reboot.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p><a href="posts/internet-connection-sharing-for-raspberry-pi-setups/">In my previous post</a> I wrote about how to use Microsoft's Internet Connection Sharing to share an internet connection on a Windows machine with a Raspberry Pi. Unfortunately, I learned that the ICS service settings do not persist after the Windows machine reboots, and as a result the ICS connection is lost.</p>
+<p>The fix is explained in <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/ics-not-work-after-computer-or-service-restart">this Microsoft Learn page</a>.</p>
+<p>To fix the issue, add a key in the Windows registry with the following information:</p>
+<ul>
+<li>Path: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\SharedAccess</li>
+<li>Type: DWORD</li>
+<li>Setting: EnableRebootPersistConnection</li>
+<li>Value: 1</li>
+</ul>
+<p>I then had to reset the shared connection by unchecking and rechecking the boxes in the <code>Sharing</code> tab of the internet connection as explained previously. After a reboot, I confirmed that I could connect to the Pi without manually re-enabling ICS.</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/internet-connection-sharing-for-raspberry-pi-setups/" class="u-url">Internet Connection Sharing for Raspberry Pi Setups</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
