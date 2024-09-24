@@ -3,7 +3,101 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 17 Sep 2024 08:08:02 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Persist Internet Connection Sharing after Reboot</title><link>https://kylemdouglass.com/posts/persist-internet-connection-sharing-after-reboot/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;&lt;a href="https://kylemdouglass.com/posts/internet-connection-sharing-for-raspberry-pi-setups/"&gt;In my previous post&lt;/a&gt; I wrote about how to use Microsoft's Internet Connection Sharing to share an internet connection on a Windows machine with a Raspberry Pi. Unfortunately, I learned that the ICS service settings do not persist after the Windows machine reboots, and as a result the ICS connection is lost.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 24 Sep 2024 14:43:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
+&lt;h2&gt;Rasbperry Pi Setup&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Enable the I2C interface if isn't already with &lt;code&gt;raspi-config&lt;/code&gt;. Verify that the I2C device file(s) are present in &lt;code&gt;/dev/&lt;/code&gt; with &lt;code&gt;ls /dev | grep i2c&lt;/code&gt;. (I had two files: &lt;code&gt;i2c-1&lt;/code&gt; and &lt;code&gt;i2c-2&lt;/code&gt;.)&lt;/li&gt;
+&lt;li&gt;Install the &lt;code&gt;i2c-tools&lt;/code&gt; package for debugging I2C interfaces.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="go"&gt;sudo apt update &amp;amp;&amp;amp; sudo apt install -y i2c-tools&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3&gt;i2cdetect&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Attach the DAC to the Raspberry Pi. The pinout is simple:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Raspberry Pi&lt;/th&gt;
+&lt;th&gt;MCP4725&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;GND&lt;/td&gt;
+&lt;td&gt;GND&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3.3V&lt;/td&gt;
+&lt;td&gt;Vcc&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SCL&lt;/td&gt;
+&lt;td&gt;SCL&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;SDA&lt;/td&gt;
+&lt;td&gt;SDA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ol&gt;
+&lt;li&gt;Run  the command &lt;code&gt;i2cdetect -y 1&lt;/code&gt;. This will check for a device on bus 1 (&lt;code&gt;/dev/i2c-1&lt;/code&gt;) and automatically accept confirmations:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="gp"&gt;leb@raspberrypi:~/$ &lt;/span&gt;i2cdetect&lt;span class="w"&gt; &lt;/span&gt;-y&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="go"&gt;     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f&lt;/span&gt;
+&lt;span class="go"&gt;00:                         -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;60: 60 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;span class="go"&gt;70: -- -- -- -- -- -- -- --&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Each I2C device must have a unique 7-bit address, i.e. 0x00 to 0x7f. The ranges [0x00, 0x07] and [0x78, 0x7f] are reserved. The above output indicates the DAC is at address 0x60. (Rows are the value of the first hexadecimal number of the address, columns are the second.)&lt;/p&gt;
+&lt;h3&gt;i2cset&lt;/h3&gt;
+&lt;p&gt;I haven't yet determined how to communicate with the DAC using &lt;code&gt;i2cset&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Python Operation&lt;/h2&gt;
+&lt;p&gt;This is modified from &lt;a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all"&gt;Sparkfun's tutorial&lt;/a&gt;. I don't know how to determine the register address from the datasheet.&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;smbus&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mh"&gt;0x60&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;register_address&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mh"&gt;0x40&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="c1"&gt;# Initialize I2C (SMBus)&lt;/span&gt;
+    &lt;span class="n"&gt;bus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;smbus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SMBus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Create a sawtooth wave 16 times&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x10000&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+        &lt;span class="c1"&gt;# Create our 12-bit number representing relative voltage&lt;/span&gt;
+        &lt;span class="n"&gt;voltage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xfff&lt;/span&gt;
+
+        &lt;span class="c1"&gt;# Shift everything left by 4 bits and separate bytes&lt;/span&gt;
+        &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;voltage&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xff0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;
+        &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+        &lt;span class="c1"&gt;# Write out I2C command: address, reg_write_dac, msg[0], msg[1]&lt;/span&gt;
+        &lt;span class="n"&gt;bus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_i2c_block_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;register_address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Misc.&lt;/h2&gt;
+&lt;h3&gt;Basic Calculator &lt;code&gt;bc&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;This is a command line calculator and can be used for hexadecimal, binary, and decimal conversions. Install with &lt;code&gt;apt install bc&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="gp"&gt;# &lt;/span&gt;Convert&lt;span class="w"&gt; &lt;/span&gt;0x40&lt;span class="w"&gt; &lt;/span&gt;to&lt;span class="w"&gt; &lt;/span&gt;binary
+&lt;span class="go"&gt;echo "ibase=16; obase=2; 40" | bc&lt;/span&gt;
+
+&lt;span class="gp"&gt;# &lt;/span&gt;Convert&lt;span class="w"&gt; &lt;/span&gt;0x40&lt;span class="w"&gt; &lt;/span&gt;to&lt;span class="w"&gt; &lt;/span&gt;decimal
+&lt;span class="go"&gt;echo "ibase=16; 40" | bc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Note that hexadecimal values must be uppercase, e.g. 0xC7, not 0xc7!&lt;/strong&gt;&lt;/p&gt;</description><category>i2c</category><category>raspberry pi</category><guid>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</guid><pubDate>Tue, 24 Sep 2024 13:01:45 GMT</pubDate></item><item><title>Persist Internet Connection Sharing after Reboot</title><link>https://kylemdouglass.com/posts/persist-internet-connection-sharing-after-reboot/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;&lt;a href="https://kylemdouglass.com/posts/internet-connection-sharing-for-raspberry-pi-setups/"&gt;In my previous post&lt;/a&gt; I wrote about how to use Microsoft's Internet Connection Sharing to share an internet connection on a Windows machine with a Raspberry Pi. Unfortunately, I learned that the ICS service settings do not persist after the Windows machine reboots, and as a result the ICS connection is lost.&lt;/p&gt;
 &lt;p&gt;The fix is explained in &lt;a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/ics-not-work-after-computer-or-service-restart"&gt;this Microsoft Learn page&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To fix the issue, add a key in the Windows registry with the following information:&lt;/p&gt;
 &lt;ul&gt;

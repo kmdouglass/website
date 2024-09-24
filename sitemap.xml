@@ -15,11 +15,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2024-09-17T07:58:00Z</lastmod>
+  <lastmod>2024-09-24T14:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2024-09-13T13:40:00Z</lastmod>
+  <lastmod>2024-09-24T14:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -60,6 +60,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/french/</loc>
   <lastmod>2024-03-28T08:48:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/i2c/</loc>
+  <lastmod>2024-09-24T14:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/microscopy/</loc>
@@ -120,6 +124,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/persist-internet-connection-sharing-after-reboot/</loc>
   <lastmod>2024-09-17T07:58:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</loc>
+  <lastmod>2024-09-24T14:43:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/testing-simulation-code/</loc>

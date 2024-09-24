@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/persist-internet-connection-sharing-after-reboot/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/raspberry-pi-i2c-quickstart/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -65,7 +65,119 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/persist-internet-connection-sharing-after-reboot/" class="u-url">Persist Internet Connection Sharing after Reboot</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/raspberry-pi-i2c-quickstart/" class="u-url">Raspberry Pi I2C Quickstart</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/raspberry-pi-i2c-quickstart/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-09-24T15:01:45+02:00" itemprop="datePublished" title="2024-09-24 15:01">2024-09-24 15:01</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/raspberry-pi-i2c-quickstart/#disqus_thread" data-disqus-identifier="cache/posts/raspberry-pi-i2c-quickstart.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>Below are my notes concerning the control of a <a href="https://www.sparkfun.com/products/12918">Sparkfun MCP4725 12-bit DAC</a> over I2C with a Raspberry Pi.</p>
+<h2>Rasbperry Pi Setup</h2>
+<ol>
+<li>Enable the I2C interface if isn't already with <code>raspi-config</code>. Verify that the I2C device file(s) are present in <code>/dev/</code> with <code>ls /dev | grep i2c</code>. (I had two files: <code>i2c-1</code> and <code>i2c-2</code>.)</li>
+<li>Install the <code>i2c-tools</code> package for debugging I2C interfaces.</li>
+</ol>
+<div class="code"><pre class="code literal-block"><span class="go">sudo apt update &amp;&amp; sudo apt install -y i2c-tools</span>
+</pre></div>
+
+<h3>i2cdetect</h3>
+<ol>
+<li>Attach the DAC to the Raspberry Pi. The pinout is simple:</li>
+</ol>
+<table>
+<thead><tr>
+<th>Raspberry Pi</th>
+<th>MCP4725</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+<tr>
+<td>3.3V</td>
+<td>Vcc</td>
+</tr>
+<tr>
+<td>SCL</td>
+<td>SCL</td>
+</tr>
+<tr>
+<td>SDA</td>
+<td>SDA</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Run  the command <code>i2cdetect -y 1</code>. This will check for a device on bus 1 (<code>/dev/i2c-1</code>) and automatically accept confirmations:</li>
+</ol>
+<div class="code"><pre class="code literal-block"><span class="gp">leb@raspberrypi:~/$ </span>i2cdetect<span class="w"> </span>-y<span class="w"> </span><span class="m">1</span>
+<span class="go">     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f</span>
+<span class="go">00:                         -- -- -- -- -- -- -- --</span>
+<span class="go">10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">60: 60 -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</span>
+<span class="go">70: -- -- -- -- -- -- -- --</span>
+</pre></div>
+
+<p>Each I2C device must have a unique 7-bit address, i.e. 0x00 to 0x7f. The ranges [0x00, 0x07] and [0x78, 0x7f] are reserved. The above output indicates the DAC is at address 0x60. (Rows are the value of the first hexadecimal number of the address, columns are the second.)</p>
+<h3>i2cset</h3>
+<p>I haven't yet determined how to communicate with the DAC using <code>i2cset</code>.</p>
+<h2>Python Operation</h2>
+<p>This is modified from <a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all">Sparkfun's tutorial</a>. I don't know how to determine the register address from the datasheet.</p>
+<div class="code"><pre class="code literal-block"><span class="kn">import</span> <span class="nn">smbus</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">device_address</span><span class="o">=</span><span class="mh">0x60</span><span class="p">,</span> <span class="n">register_address</span><span class="o">=</span><span class="mh">0x40</span><span class="p">):</span>
+    <span class="c1"># Initialize I2C (SMBus)</span>
+    <span class="n">bus</span> <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+
+    <span class="c1"># Create a sawtooth wave 16 times</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mh">0x10000</span><span class="p">):</span>
+
+        <span class="c1"># Create our 12-bit number representing relative voltage</span>
+        <span class="n">voltage</span> <span class="o">=</span> <span class="n">i</span> <span class="o">&amp;</span> <span class="mh">0xfff</span>
+
+        <span class="c1"># Shift everything left by 4 bits and separate bytes</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="n">voltage</span> <span class="o">&amp;</span> <span class="mh">0xff0</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="p">,</span> <span class="p">(</span><span class="n">msg</span> <span class="o">&amp;</span> <span class="mh">0xf</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">]</span>
+
+        <span class="c1"># Write out I2C command: address, reg_write_dac, msg[0], msg[1]</span>
+        <span class="n">bus</span><span class="o">.</span><span class="n">write_i2c_block_data</span><span class="p">(</span><span class="n">device_address</span><span class="p">,</span> <span class="n">register_address</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+<h2>Misc.</h2>
+<h3>Basic Calculator <code>bc</code>
+</h3>
+<p>This is a command line calculator and can be used for hexadecimal, binary, and decimal conversions. Install with <code>apt install bc</code>.</p>
+<div class="code"><pre class="code literal-block"><span class="gp"># </span>Convert<span class="w"> </span>0x40<span class="w"> </span>to<span class="w"> </span>binary
+<span class="go">echo "ibase=16; obase=2; 40" | bc</span>
+
+<span class="gp"># </span>Convert<span class="w"> </span>0x40<span class="w"> </span>to<span class="w"> </span>decimal
+<span class="go">echo "ibase=16; 40" | bc</span>
+</pre></div>
+
+<p><strong>Note that hexadecimal values must be uppercase, e.g. 0xC7, not 0xc7!</strong></p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/persist-internet-connection-sharing-after-reboot/" class="u-url">Persist Internet Connection Sharing after Reboot</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
