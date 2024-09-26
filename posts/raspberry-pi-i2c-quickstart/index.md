@@ -7,6 +7,7 @@
 .. link: 
 .. description: 
 .. type: text
+.. has_math: true
 -->
 
 Below are my notes concerning the control of a [Sparkfun MCP4725 12-bit DAC](https://www.sparkfun.com/products/12918) over I2C with a Raspberry Pi.
@@ -22,7 +23,7 @@ sudo apt update && sudo apt install -y i2c-tools
 
 ## i2cdetect
 
-1. Attach the DAC to the Raspberry Pi. The pinout is simple:
+Attach the DAC to the Raspberry Pi. The pinout is simple:
 
 | Raspberry Pi | MCP4725 |
 |--------------|---------|
@@ -31,7 +32,7 @@ sudo apt update && sudo apt install -y i2c-tools
 | SCL          | SCL     |
 | SDA          | SDA     |
 
-2. Run  the command `i2cdetect -y 1`. This will check for a device on bus 1 (`/dev/i2c-1`) and automatically accept confirmations:
+Next, run  the command `i2cdetect -y 1`. This will check for a device on bus 1 (`/dev/i2c-1`) and automatically accept confirmations:
 
 ```console
 leb@raspberrypi:~/$ i2cdetect -y 1
@@ -50,36 +51,82 @@ Each I2C device must have a unique 7-bit address, i.e. 0x00 to 0x7f. The ranges 
 
 ## i2cset
 
-I haven't yet determined how to communicate with the DAC using `i2cset`.
+`i2cset` is a command line tool that is part of `i2c-tools` and that is used to write data to I2C devices. I can set the voltage output of the DAC to 0 as follows:
 
-# Python Operation
+```console
+i2cset -y 1 0x60 0x40 0x00 0x00 i
+```
 
-This is modified from [Sparkfun's tutorial](https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all). I don't know how to determine the register address from the datasheet.
+The arguments mean the following:
+
+- **-y** : Auto-confirm
+- **1** : Use the device on bus 1
+- **0x60** : Use the device at address **0x60**
+- **0x40** : This is a command byte
+- **0x00 0x00** : These two data bytes specify the DAC output level
+- **i** : This is the write mode. `i` means I2C block write: [https://docs.kernel.org/i2c/smbus-protocol.html#i2c-block-write](https://docs.kernel.org/i2c/smbus-protocol.html#i2c-block-write)
+
+### Command byte
+
+The command byte is explained on pages 23 and 25 of the [MCP4725 datasheet](https://ww1.microchip.com/downloads/en/devicedoc/22039d.pdf). From most-significant to least-significant bits, the bits mean:
+
+1. **C2** : command bit
+2. **C1** : command bit
+3. **C0** : command bit 
+4. **X** : unused
+5. **X** : unused
+6. **PD1** : Power down select
+7. **PD0** : Power down select
+8. **X** : unused
+
+According to Table 6-2 and Figure 6-2, `C2, C1, C0 = 0, 1, 0` identifies the command to write to the DAC register and NOT also to the EEPROM. In normal operation, the power down bits are 0, 0 (page 28).
+
+So, to write to the DAC register, we want to send `0b01000000` which in hexadecimal is `0x40`.
+
+### Data bytes to voltage
+
+The data bytes are explained in Figure 6-2 of the datasheet. The first byte contains bits 11-4, and the second byte bits 3-0 in the most-significant bits:
+
+```D11 D10 D9 D8   D7 D6 D5 D4 | D3 D2 D1 D0  X X X X```
+
+12-bits are used because this is a 12-bit DAC. The mapping between bytes and voltage is:
+
+| Data bytes, hex | Data bytes, decimal | Voltage |
+|-----------------|---------------------|---------|
+| 0x00 0x00       | 0                   | 0       |
+| 0xFF 0xF0       | 65520               | V_max   |
+
+where V_max is the voltage supplied to the chip's Vcc pin (3.3V in my case). The output step size is \\( \Delta V = V_{max} / 4096 \\) or about 0.8 mV.
+
+# Control via Python
+
+This is modified from [Sparkfun's tutorial](https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all) and uses the smbus Python bindings. Be aware that the tutorial example has a bug in how it prepares the list of bytes to send to the DAC.
 
 ```python
 import smbus
 
 
-def main(channel=1, device_address=0x60, register_address=0x40):
-    # Initialize I2C (SMBus)
+OUTPUT_MAX: int = 4095
+V_MAX = 3.3
+
+
+def send(output: float, channel: int = 1, device_address: int = 0x60, command_byte: int = 0x40):
+    assert output > 0.0 and output <= 1.0, "Output voltage must be expressed as fraction of the maximum in the range [0.0, 1.0]"
+
     bus = smbus.SMBus(channel)
 
-    # Create a sawtooth wave 16 times
-    for i in range(0x10000):
+    output_bytes = int(output * OUTPUT_MAX) & 0xfff
+    data_byte_0: int = (output_bytes & 0xff0) >> 4  # First data byte
+    data_bytes: list[int] = [data_byte_0, (output_bytes & 0xf) << 4]  # Second data byte
 
-        # Create our 12-bit number representing relative voltage
-        voltage = i & 0xfff
-
-        # Shift everything left by 4 bits and separate bytes
-        msg = (voltage & 0xff0) >> 4
-        msg = [msg, (msg & 0xf) << 4]
-
-        # Write out I2C command: address, reg_write_dac, msg[0], msg[1]
-        bus.write_i2c_block_data(device_address, register_address, msg)
+    bus.write_i2c_block_data(device_address, command_byte, data_bytes)
 
 
 if __name__ == "__main__":
-    main()
+    output: float = 0.42
+    send(output)
+
+    print(f"Estimated output: {output * V_MAX}")
 
 ```
 

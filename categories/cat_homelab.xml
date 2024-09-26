@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 24 Sep 2024 14:43:16 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 26 Sep 2024 09:35:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
 &lt;h2&gt;Rasbperry Pi Setup&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;Enable the I2C interface if isn't already with &lt;code&gt;raspi-config&lt;/code&gt;. Verify that the I2C device file(s) are present in &lt;code&gt;/dev/&lt;/code&gt; with &lt;code&gt;ls /dev | grep i2c&lt;/code&gt;. (I had two files: &lt;code&gt;i2c-1&lt;/code&gt; and &lt;code&gt;i2c-2&lt;/code&gt;.)&lt;/li&gt;
@@ -13,9 +13,7 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3&gt;i2cdetect&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;Attach the DAC to the Raspberry Pi. The pinout is simple:&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;Attach the DAC to the Raspberry Pi. The pinout is simple:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -42,9 +40,7 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;ol&gt;
-&lt;li&gt;Run  the command &lt;code&gt;i2cdetect -y 1&lt;/code&gt;. This will check for a device on bus 1 (&lt;code&gt;/dev/i2c-1&lt;/code&gt;) and automatically accept confirmations:&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;Next, run  the command &lt;code&gt;i2cdetect -y 1&lt;/code&gt;. This will check for a device on bus 1 (&lt;code&gt;/dev/i2c-1&lt;/code&gt;) and automatically accept confirmations:&lt;/p&gt;
 &lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="gp"&gt;leb@raspberrypi:~/$ &lt;/span&gt;i2cdetect&lt;span class="w"&gt; &lt;/span&gt;-y&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;
 &lt;span class="go"&gt;     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f&lt;/span&gt;
 &lt;span class="go"&gt;00:                         -- -- -- -- -- -- -- --&lt;/span&gt;
@@ -59,32 +55,85 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 
 &lt;p&gt;Each I2C device must have a unique 7-bit address, i.e. 0x00 to 0x7f. The ranges [0x00, 0x07] and [0x78, 0x7f] are reserved. The above output indicates the DAC is at address 0x60. (Rows are the value of the first hexadecimal number of the address, columns are the second.)&lt;/p&gt;
 &lt;h3&gt;i2cset&lt;/h3&gt;
-&lt;p&gt;I haven't yet determined how to communicate with the DAC using &lt;code&gt;i2cset&lt;/code&gt;.&lt;/p&gt;
-&lt;h2&gt;Python Operation&lt;/h2&gt;
-&lt;p&gt;This is modified from &lt;a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all"&gt;Sparkfun's tutorial&lt;/a&gt;. I don't know how to determine the register address from the datasheet.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;i2cset&lt;/code&gt; is a command line tool that is part of &lt;code&gt;i2c-tools&lt;/code&gt; and that is used to write data to I2C devices. I can set the voltage output of the DAC to 0 as follows:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="go"&gt;i2cset -y 1 0x60 0x40 0x00 0x00 i&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The arguments mean the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;-y&lt;/strong&gt; : Auto-confirm&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt; : Use the device on bus 1&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;0x60&lt;/strong&gt; : Use the device at address &lt;strong&gt;0x60&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;0x40&lt;/strong&gt; : This is a command byte&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;0x00 0x00&lt;/strong&gt; : These two data bytes specify the DAC output level&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;i&lt;/strong&gt; : This is the write mode. &lt;code&gt;i&lt;/code&gt; means I2C block write: &lt;a href="https://docs.kernel.org/i2c/smbus-protocol.html#i2c-block-write"&gt;https://docs.kernel.org/i2c/smbus-protocol.html#i2c-block-write&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Command byte&lt;/h4&gt;
+&lt;p&gt;The command byte is explained on pages 23 and 25 of the &lt;a href="https://ww1.microchip.com/downloads/en/devicedoc/22039d.pdf"&gt;MCP4725 datasheet&lt;/a&gt;. From most-significant to least-significant bits, the bits mean:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;C2&lt;/strong&gt; : command bit&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C1&lt;/strong&gt; : command bit&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C0&lt;/strong&gt; : command bit &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;X&lt;/strong&gt; : unused&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;X&lt;/strong&gt; : unused&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PD1&lt;/strong&gt; : Power down select&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;PD0&lt;/strong&gt; : Power down select&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;X&lt;/strong&gt; : unused&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;According to Table 6-2 and Figure 6-2, &lt;code&gt;C2, C1, C0 = 0, 1, 0&lt;/code&gt; identifies the command to write to the DAC register and NOT also to the EEPROM. In normal operation, the power down bits are 0, 0 (page 28).&lt;/p&gt;
+&lt;p&gt;So, to write to the DAC register, we want to send &lt;code&gt;0b01000000&lt;/code&gt; which in hexadecimal is &lt;code&gt;0x40&lt;/code&gt;.&lt;/p&gt;
+&lt;h4&gt;Data bytes to voltage&lt;/h4&gt;
+&lt;p&gt;The data bytes are explained in Figure 6-2 of the datasheet. The first byte contains bits 11-4, and the second byte bits 3-0 in the most-significant bits:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;D11 D10 D9 D8   D7 D6 D5 D4 | D3 D2 D1 D0  X X X X&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;12-bits are used because this is a 12-bit DAC. The mapping between bytes and voltage is:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Data bytes, hex&lt;/th&gt;
+&lt;th&gt;Data bytes, decimal&lt;/th&gt;
+&lt;th&gt;Voltage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0x00 0x00&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;0xFF 0xF0&lt;/td&gt;
+&lt;td&gt;65520&lt;/td&gt;
+&lt;td&gt;V_max&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;where V_max is the voltage supplied to the chip's Vcc pin (3.3V in my case). The output step size is \( \Delta V = V_{max} / 4096 \) or about 0.8 mV.&lt;/p&gt;
+&lt;h2&gt;Control via Python&lt;/h2&gt;
+&lt;p&gt;This is modified from &lt;a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all"&gt;Sparkfun's tutorial&lt;/a&gt; and uses the smbus Python bindings. Be aware that the tutorial example has a bug in how it prepares the list of bytes to send to the DAC.&lt;/p&gt;
 &lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;smbus&lt;/span&gt;
 
 
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mh"&gt;0x60&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;register_address&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mh"&gt;0x40&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="c1"&gt;# Initialize I2C (SMBus)&lt;/span&gt;
+&lt;span class="n"&gt;OUTPUT_MAX&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4095&lt;/span&gt;
+&lt;span class="n"&gt;V_MAX&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;3.3&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0x60&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command_byte&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mh"&gt;0x40&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mf"&gt;0.0&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"Output voltage must be expressed as fraction of the maximum in the range [0.0, 1.0]"&lt;/span&gt;
+
     &lt;span class="n"&gt;bus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;smbus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SMBus&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;channel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
-    &lt;span class="c1"&gt;# Create a sawtooth wave 16 times&lt;/span&gt;
-    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mh"&gt;0x10000&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;output_bytes&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;OUTPUT_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xfff&lt;/span&gt;
+    &lt;span class="n"&gt;data_byte_0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output_bytes&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xff0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;  &lt;span class="c1"&gt;# First data byte&lt;/span&gt;
+    &lt;span class="n"&gt;data_bytes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;data_byte_0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output_bytes&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# Second data byte&lt;/span&gt;
 
-        &lt;span class="c1"&gt;# Create our 12-bit number representing relative voltage&lt;/span&gt;
-        &lt;span class="n"&gt;voltage&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xfff&lt;/span&gt;
-
-        &lt;span class="c1"&gt;# Shift everything left by 4 bits and separate bytes&lt;/span&gt;
-        &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;voltage&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xff0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;
-        &lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;msg&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xf&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-
-        &lt;span class="c1"&gt;# Write out I2C command: address, reg_write_dac, msg[0], msg[1]&lt;/span&gt;
-        &lt;span class="n"&gt;bus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_i2c_block_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;register_address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;msg&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;bus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_i2c_block_data&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;device_address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;command_byte&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data_bytes&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
 
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;"__main__"&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;float&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.42&lt;/span&gt;
+    &lt;span class="n"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;f&lt;/span&gt;&lt;span class="s2"&gt;"Estimated output: &lt;/span&gt;&lt;span class="si"&gt;{&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;V_MAX&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;h2&gt;Misc.&lt;/h2&gt;
