@@ -5,7 +5,7 @@
 .. tags: raspberry pi, i2c
 .. category: homelab
 .. link: 
-.. description: 
+.. description: Get started with I2C on the Raspberry Pi with a MCP4725 DAC
 .. type: text
 .. has_math: true
 -->
