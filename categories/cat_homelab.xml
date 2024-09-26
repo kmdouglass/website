@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 26 Sep 2024 09:35:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 26 Sep 2024 14:13:47 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
 &lt;h2&gt;Rasbperry Pi Setup&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;Enable the I2C interface if isn't already with &lt;code&gt;raspi-config&lt;/code&gt;. Verify that the I2C device file(s) are present in &lt;code&gt;/dev/&lt;/code&gt; with &lt;code&gt;ls /dev | grep i2c&lt;/code&gt;. (I had two files: &lt;code&gt;i2c-1&lt;/code&gt; and &lt;code&gt;i2c-2&lt;/code&gt;.)&lt;/li&gt;
