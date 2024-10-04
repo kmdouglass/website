@@ -11,7 +11,8 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/raspberry-pi-i2c-quickstart/" type="text/html">
+<link rel="next" href="index-1.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/github-cli-authorization-with-a-fine-grained-access-token/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -65,7 +66,30 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/raspberry-pi-i2c-quickstart/" class="u-url">Raspberry Pi I2C Quickstart</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" class="u-url">GitHub CLI Authorization with a Fine-grained Access Token</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-10-04T14:18:48+02:00" itemprop="datePublished" title="2024-10-04 14:18">2024-10-04 14:18</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/github-cli-authorization-with-a-fine-grained-access-token/#disqus_thread" data-disqus-identifier="cache/posts/github-cli-authorization-with-a-fine-grained-access-token.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>It is a good idea to use fine-grained access tokens for shared PCs in the lab that require access to private GitHub repos so that you can restrict the scope of their use to specific repositories and not use your own personal SSH keys on the shared machines. I am experimenting with the GitHub command line tool <code>gh</code> to authenticate with GitHub using fine-grained access tokens and make common remote operations on repos easier.</p>
+<p>Today I encountered a subtle problem in the <code>gh</code> authentication process. If you set the protocol to <code>ssh</code> during login, then it you will not have access to the repos that you granted permissions to in the fine-grained access token. This can lead to a lot of head scratching because it's not at all clear which permissions map to which git operations. In other words, what you think is a specific permissions error with the token is actually an authentication error.</p>
+<p>To avoid the problem, be sure to specify <code>https</code> and not <code>ssh</code> as the protocol during authorization:</p>
+<div class="code"><pre class="code literal-block"><span class="go"> echo "$ACCESS_TOKEN" | gh auth login -p https --with-token</span>
+</pre></div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/raspberry-pi-i2c-quickstart/" class="u-url">Raspberry Pi I2C Quickstart</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -895,81 +919,13 @@ bg-dark
 <h3>Telecentric lens design</h3>
 <p>So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.</p>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/fusion-360-core-concepts/" class="u-url">Fusion 360 Core Concepts</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/fusion-360-core-concepts/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-03-08T15:16:22+01:00" itemprop="datePublished" title="2024-03-08 15:16">2024-03-08 15:16</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/fusion-360-core-concepts/#disqus_thread" data-disqus-identifier="cache/posts/fusion-360-core-concepts.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p>I decided recently to learn Fusion 360 to help with some custom optomechanical designs that I need in the lab. The following are my notes about its core concepts.</p>
-<h2>Assemblies</h2>
-<p>An assembly is a group of parts in one design file.</p>
-<p>In CAD, there are two ways to create assemblies:</p>
-<ol>
-<li>
-<strong>Bottom-up</strong><ol>
-<li>Create parts</li>
-<li>Add parts to the assembly</li>
-</ol>
-</li>
-<li>
-<strong>Top-down</strong> (used by Fusion 360)<ol>
-<li>Start with an assembly</li>
-<li>Add parts to it</li>
-</ol>
-</li>
-</ol>
-<h2>Bodies vs. components</h2>
-<h3>Bodies</h3>
-<p>A body is a 3D shape used to add or remove components.</p>
-<p>There are two core types:</p>
-<ol>
-<li>Solid bodies</li>
-<li>Surface bodies (denoted by a yellow face)</li>
-</ol>
-<p>Other types include T-Splines (created in the Form environment) used to create freeform shapes, and mesh bodies.</p>
-<p><strong>Bodies must be of the same type to interact with one another.</strong></p>
-<h3>Components</h3>
-<p>A component is a part or "container" used within an assembly.</p>
-<p>Components can contain</p>
-<ul>
-<li>bodies</li>
-<li>construction planes</li>
-<li>sketches</li>
-<li>canvases</li>
-<li>origin planes</li>
-<li>other components (a.k.a. <strong>subassemblies</strong>)</li>
-</ul>
-<h2>Joints</h2>
-<p>Joints are how components are forced to stay together.</p>
-<h2>Guidelines</h2>
-<ol>
-<li>Always start an assembly with a new component</li>
-<li>Always rename components and bodies right after creation</li>
-</ol>
-<h2>References</h2>
-<ol>
-<li><a href="https://www.youtube.com/watch?v=TzG2deElWqI&amp;t=0s">Bodies vs Components</a></li>
-</ol>
-</div>
     </article>
 </div>
 
-
-
-    
-       <script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        <ul class="pager postindexpager clearfix">
+<li class="next"><a href="index-1.html" rel="next">Older posts</a></li>
+        </ul>
+<script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script><!--End of body content--><footer id="footer">
             Contents © 2024         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         

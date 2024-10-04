@@ -3,7 +3,11 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 26 Sep 2024 14:13:48 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 04 Oct 2024 12:27:49 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GitHub CLI Authorization with a Fine-grained Access Token</title><link>https://kylemdouglass.com/posts/github-cli-authorization-with-a-fine-grained-access-token/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;It is a good idea to use fine-grained access tokens for shared PCs in the lab that require access to private GitHub repos so that you can restrict the scope of their use to specific repositories and not use your own personal SSH keys on the shared machines. I am experimenting with the GitHub command line tool &lt;code&gt;gh&lt;/code&gt; to authenticate with GitHub using fine-grained access tokens and make common remote operations on repos easier.&lt;/p&gt;
+&lt;p&gt;Today I encountered a subtle problem in the &lt;code&gt;gh&lt;/code&gt; authentication process. If you set the protocol to &lt;code&gt;ssh&lt;/code&gt; during login, then it you will not have access to the repos that you granted permissions to in the fine-grained access token. This can lead to a lot of head scratching because it's not at all clear which permissions map to which git operations. In other words, what you think is a specific permissions error with the token is actually an authentication error.&lt;/p&gt;
+&lt;p&gt;To avoid the problem, be sure to specify &lt;code&gt;https&lt;/code&gt; and not &lt;code&gt;ssh&lt;/code&gt; as the protocol during authorization:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="go"&gt; echo "$ACCESS_TOKEN" | gh auth login -p https --with-token&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><category>github</category><guid>https://kylemdouglass.com/posts/github-cli-authorization-with-a-fine-grained-access-token/</guid><pubDate>Fri, 04 Oct 2024 12:18:48 GMT</pubDate></item><item><title>Raspberry Pi I2C Quickstart</title><link>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Below are my notes concerning the control of a &lt;a href="https://www.sparkfun.com/products/12918"&gt;Sparkfun MCP4725 12-bit DAC&lt;/a&gt; over I2C with a Raspberry Pi.&lt;/p&gt;
 &lt;h2&gt;Rasbperry Pi Setup&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;Enable the I2C interface if isn't already with &lt;code&gt;raspi-config&lt;/code&gt;. Verify that the I2C device file(s) are present in &lt;code&gt;/dev/&lt;/code&gt; with &lt;code&gt;ls /dev | grep i2c&lt;/code&gt;. (I had two files: &lt;code&gt;i2c-1&lt;/code&gt; and &lt;code&gt;i2c-2&lt;/code&gt;.)&lt;/li&gt;
@@ -646,51 +650,4 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;h3&gt;Marginal ray trace&lt;/h3&gt;
 &lt;p&gt;At first the marginal ray trace was a bit confusing because the entrance pupil is at infinity. How can the marginal ray, which intersects the pupil at its edge, be traced when the pupil is at infinity? Then I remembered that I don't aim for the edge of the pupil when tracing the marginal ray. Instead, I launch a ray from the axis in the object plane at a random angle taking the surface with the smallest ray height as the aperture stop. (I chose a paraxial angle of 1 in the table above. Technically, this is called a pseudo-marginal ray. The real marginal ray is calculated from it by rescaling the surface intersection heights by the aperture stop semi-diameter.) Once you have the marginal ray in image space, just find its intersection with the axis to determine the image location.&lt;/p&gt;
 &lt;h3&gt;Telecentric lens design&lt;/h3&gt;
-&lt;p&gt;So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.&lt;/p&gt;</description><category>ray tracing</category><category>telecentricity</category><guid>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</guid><pubDate>Mon, 11 Mar 2024 07:59:17 GMT</pubDate></item><item><title>Fusion 360 Core Concepts</title><link>https://kylemdouglass.com/posts/fusion-360-core-concepts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I decided recently to learn Fusion 360 to help with some custom optomechanical designs that I need in the lab. The following are my notes about its core concepts.&lt;/p&gt;
-&lt;h2&gt;Assemblies&lt;/h2&gt;
-&lt;p&gt;An assembly is a group of parts in one design file.&lt;/p&gt;
-&lt;p&gt;In CAD, there are two ways to create assemblies:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Bottom-up&lt;/strong&gt;&lt;ol&gt;
-&lt;li&gt;Create parts&lt;/li&gt;
-&lt;li&gt;Add parts to the assembly&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Top-down&lt;/strong&gt; (used by Fusion 360)&lt;ol&gt;
-&lt;li&gt;Start with an assembly&lt;/li&gt;
-&lt;li&gt;Add parts to it&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;Bodies vs. components&lt;/h2&gt;
-&lt;h3&gt;Bodies&lt;/h3&gt;
-&lt;p&gt;A body is a 3D shape used to add or remove components.&lt;/p&gt;
-&lt;p&gt;There are two core types:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Solid bodies&lt;/li&gt;
-&lt;li&gt;Surface bodies (denoted by a yellow face)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Other types include T-Splines (created in the Form environment) used to create freeform shapes, and mesh bodies.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Bodies must be of the same type to interact with one another.&lt;/strong&gt;&lt;/p&gt;
-&lt;h3&gt;Components&lt;/h3&gt;
-&lt;p&gt;A component is a part or "container" used within an assembly.&lt;/p&gt;
-&lt;p&gt;Components can contain&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;bodies&lt;/li&gt;
-&lt;li&gt;construction planes&lt;/li&gt;
-&lt;li&gt;sketches&lt;/li&gt;
-&lt;li&gt;canvases&lt;/li&gt;
-&lt;li&gt;origin planes&lt;/li&gt;
-&lt;li&gt;other components (a.k.a. &lt;strong&gt;subassemblies&lt;/strong&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;Joints&lt;/h2&gt;
-&lt;p&gt;Joints are how components are forced to stay together.&lt;/p&gt;
-&lt;h2&gt;Guidelines&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;Always start an assembly with a new component&lt;/li&gt;
-&lt;li&gt;Always rename components and bodies right after creation&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2&gt;References&lt;/h2&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;a href="https://www.youtube.com/watch?v=TzG2deElWqI&amp;amp;t=0s"&gt;Bodies vs Components&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description><category>cad</category><guid>https://kylemdouglass.com/posts/fusion-360-core-concepts/</guid><pubDate>Fri, 08 Mar 2024 14:16:22 GMT</pubDate></item></channel></rss>
+&lt;p&gt;So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.&lt;/p&gt;</description><category>ray tracing</category><category>telecentricity</category><guid>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</guid><pubDate>Mon, 11 Mar 2024 07:59:17 GMT</pubDate></item></channel></rss>
