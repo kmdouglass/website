@@ -150,7 +150,7 @@ The fields are defined on a region of circular support that is centered on this 
 
 The boxes that are bound by the gray lines indicate the location of each field sample. The \\( \left( x_{\infty} , y_{\infty} \right) \\) and the \\( \left( k_x, k_y \right) \\) coordinate systems are sampled at the center of each gray box. The origin is therefore not sampled, which will help avoid division by zero errors when the fields are eventually computed.
 
-The figure suggests that we could create only one mesh and scale it by either \\( f \text{NA} \\) or \\( k_0 \text{NA} \\) depending on which coordinate system we are working with. The normalized coordinates become \\( \left( x_{\infty} / \left( f \text{NA} \right), y_{\infty} / \left( f \text{NA} \right) \right) \\) and \\( \left( \left( k_x / \left( k_0 \text{NA} \right), k_y \right) / \left( k_0 \text{NA} \right) \right) \\).
+The figure suggests that we could create only one mesh and scale it by either \\( f \text{NA} \\) or \\( k_0 \text{NA} \\) depending on which coordinate system we are working with. The normalized coordinates become \\( \left( x_{\infty} / \left( f \text{NA} \right), y_{\infty} / \left( f \text{NA} \right) \right) \\) and \\( \left( k_x / \left( k_0 \text{NA} \right), k_y / \left( k_0 \text{NA} \right) \right) \\).
 
 ## 1D Mesh Example
 
