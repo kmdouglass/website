@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/github-cli-authorization-with-a-fine-grained-access-token/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/coordinate-systems-for-modeling-microscope-objectives/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,175 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" class="u-url">GitHub CLI Authorization with a Fine-grained Access Token</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/coordinate-systems-for-modeling-microscope-objectives/" class="u-url">Coordinate Systems for Modeling Microscope Objectives</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/coordinate-systems-for-modeling-microscope-objectives/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-11-21T10:52:48+01:00" itemprop="datePublished" title="2024-11-21 10:52">2024-11-21 10:52</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/coordinate-systems-for-modeling-microscope-objectives/#disqus_thread" data-disqus-identifier="cache/posts/coordinate-systems-for-modeling-microscope-objectives.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>A common model for infinity corrected microscope objectives is that of an aplanatic and telecentric optical system. In many developments of this model, emphasis is placed upon the calculation of the electric field near the focus. However, this has the effect that the definition of the coordinate systems and geometry are conflated with the determination of the fields. In addition, making the model amenable to computation often occurs as an afterthought.</p>
+<p>In this post I will explore the geometry of an aplanatic system for modeling high NA objectives with an emphasis on computational implementations. My approach follows Novotny and Hecht<sup id="fnref:1"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:1">1</a></sup> and Herrera and Quinto-Su<sup id="fnref:2"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2">2</a></sup>.</p>
+<h2>The Model Components</h2>
+<p>The model system is illustrated below:</p>
+<figure><img src="images/aplanatic-telecentric-system.png"><figcaption>A high NA, infinity corrected microscope objective as an aplanatic and telecentric optical system.
+</figcaption></figure><p>In this model, we abstract over the details of the objective by representing it as four surfaces:</p>
+<ol>
+<li>A back focal plane containing an aperture stop</li>
+<li>A back principal plane, \( P \)</li>
+<li>A front principal surface, \( P' \)</li>
+<li>A front focal plane</li>
+</ol>
+<p>The space to the left of the back principal plane is called the infinity space. The space to the right of the front principal surface is called the sample space.</p>
+<p>We let the infinity space refractive index \( n_1 = 1 \) because it is in air. The refractive index \( n_2 \) is the refractive index of the immersion medium.</p>
+<p>The unit vectors \( \mathbf{n} \) are not used in this discussion; they are relevant for computing the fields.</p>
+<h3>Assumptions</h3>
+<p>We make one assumption: the system obeys the sine condition. The meaning of this will be explained later.</p>
+<p>An aplanatic system is one that obeys the sine condition.</p>
+<p>We will not assume the intensity law to conserve energy because it is only necessary when computing the electric field near the focus.</p>
+<h3>The Aperture Stop and Back Focal Plane</h3>
+<p>The aperture stop (AS) of an optical system is the element that limits the angle of the marginal ray.</p>
+<p>The system is telecentric because the aperture stop is located in the back focal plane (BFP). We can shape the focal field by spatially modulating any of the amplitude, phase, or polarization of the incident light in a plane conjugate to the BFP.</p>
+<h3>The Back Principal Plane</h3>
+<p>This is the plane in infinity space at which rays appear to refract. It is a plane because rays coming from a point in the front focal plane all emerge into the infinity space in the same direction.</p>
+<p>Strictly speaking, focus field calculations require us to propagate the field from the AS to the back principal plane before computing the Debye diffraction integral, but this step is often omitted<sup id="fnref:3"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:3">3</a></sup>. The assumptions of paraxial optics should hold here.</p>
+<h3>The Front Principal Surface</h3>
+<p>The front principal surface is the surface at which rays appear to refract in the sample space. It is a surface because</p>
+<ol>
+<li>this is a non-paraxial system, and</li>
+<li>we assumed the sine condition.</li>
+</ol>
+<p>The sine condition states that refraction of a ray coming from an on-axis point in the front focal plane occurs on a spherical cap centered upon the focal point. The distance from the optical axis of the point of intersection of the ray with the surface is proportional to the sine of the angle that the ray makes with the axis.</p>
+<p>The principal surface is in the far field of the electric field coming from the focal region. For this reason, we can represent a point on this surface as representing a single ray or a plane wave<sup id="fnref2:1"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:1">1</a></sup>.</p>
+<h3>The Front Focal Plane</h3>
+<p>This plane is located a distance \( n_2 f \) from the principal surface<sup id="fnref:4"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:4">4</a></sup>. It is not at a distance \( f \) from this surface. This is a result of imaging in an immersion medium.</p>
+<h2>Geometry and Coordinate Systems</h2>
+<h3>The Aperture Stop Radius</h3>
+<p>The aperture stop radius \( R \) corresponds to the distance from the axis to the point where the marginal ray intersects the front prinicpal surface. In the sample space, the marginal ray travels at an angle \( \theta_{max} \) with respect to the axis.</p>
+<p>Under the sine condition, this height is</p>
+<p>$$ R = n_2 f \sin{ \theta_{max} } = f \, \text{NA} $$</p>
+<p>The right-most expression uses the definition of the numerical aperture \( \text{NA} \equiv n \sin{ \theta_{max} } \).</p>
+<p>Compare this result to the oft-cited expression for the entrance pupil diameter of an objective lens: \( D = 2 f \, \text{NA} \). They are the same. This makes sense because an entrance pupil is either</p>
+<ol>
+<li>an image of an aperture stop, or</li>
+<li>a physical stop.</li>
+</ol>
+<h3>The Back Principal Plane</h3>
+<p>There are two independent coordinate systems in the back principal plane:</p>
+<ol>
+<li>the spatial coordinate system defining the far field positions \( \left( x_{\infty} , y_{\infty} \right) \), and</li>
+<li>the coordinate system of the angular spectrum of plane waves \( \left( k_x, k_y \right) \).</li>
+</ol>
+<h4>The Far Field Coordinate System</h4>
+<p>The far field coordinate system may be written in Cartesian form as \( \left( x_{\infty} , y_{\infty} \right) \). It also has a cylindrical representation as</p>
+<p>$$\begin{eqnarray}
+\rho &amp;=&amp; \sqrt{x_{\infty}^2 + y_{\infty}^2} \\
+\phi &amp;=&amp; \arctan \left( \frac{y_{\infty}}{x_{\infty}} \right)
+\end{eqnarray}$$</p>
+<p>The cylindrical representation appears to be preferred in textbook developments of the model. The Cartesian representation is likely preferred for computational models because it works naturally with two-dimensional arrays of numbers, and because beam shaping elements such as spatial light modulators are rectangular arrays of pixels<sup id="fnref2:2"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2">2</a></sup>.</p>
+<h4>The Angular Spectrum Coordinate System</h4>
+<p>Each point in the angular spectrum coordinate system represents a plane wave in the sample space that is traveling at an angle \( \theta \) to the axis according to:</p>
+<p>$$\begin{eqnarray}
+k_x &amp;=&amp; k \sin \theta \cos \phi \\
+k_y &amp;=&amp; k \sin \theta \sin \phi \\
+k_z &amp;=&amp; k \cos \theta
+\end{eqnarray}$$</p>
+<p>where \( k = 2 \pi n_2 / \lambda = n_2 k_0 \).</p>
+<p>Along the y-axis ( \( x_{\infty} = 0 \) ), the maximum value of \( k_y \) is \(n_2 k_0 \sin \theta_{max} = k_0 \, \text{NA} \).</p>
+<p>Substitute in the expression \( \text{NA} = R / f \) and we get \(k_{y, max} = k_0 R / f\). But \( R = y_{\infty, max} \). This (and similar reasoning for the x-axis) implies that:</p>
+<p>$$\begin{eqnarray}
+k_x &amp;=&amp; k_0 x_{\infty} / f \\
+k_y &amp;=&amp; k_0 y_{\infty} / f
+\end{eqnarray}$$</p>
+<p>The above equations link the angular spectrum coordinate system to the far field coordinate system. They are no longer independent once \( f \) and \( \lambda \) are specified.</p>
+<h2>Numerical Meshes</h2>
+<p>There are four free parameters for defining the coordinate systems of the numerical meshes:</p>
+<ol>
+<li>The numerical aperture, \( \text{NA} \)</li>
+<li>The wavelength, \( \lambda \)</li>
+<li>The focal length, \( f \)</li>
+<li>The linear mesh size, \( L \)</li>
+</ol>
+<p>Below is a figure that illustrates the construction of the meshes. Both the far field and angular spectrum coordinate systems are represented by a \( L \times L \) array. \( L = 16 \) in the figure below. In general the value of \( L \) should be a power of 2 to help ensure the efficiency of the Fast Fourier Transform (FFT). By considering only powers of 2, we need only consider arrays of even size as well.</p>
+<figure><img src="images/pupil-function-simulation-mesh.png"><figcaption>A numeric mesh representing the far field and angular spectrum coordinate systems of a microscope objective. Fields are sampled at the center of each mesh pixel.</figcaption></figure><p>The fields are defined on a region of circular support that is centered on this array. The radius of the domain of the far field coordinate system is \( f \text{NA} \); the radius of the domain of the angular spectrum coordinate system is \( k_0 \text{NA} \).</p>
+<p>The boxes that are bound by the gray lines indicate the location of each field sample. The \( \left( x_{\infty} , y_{\infty} \right) \) and the \( \left( k_x, k_y \right) \) coordinate systems are sampled at the center of each gray box. The origin is therefore not sampled, which will help avoid division by zero errors when the fields are eventually computed.</p>
+<p>The figure suggests that we could create only one mesh and scale it by either \( f \text{NA} \) or \( k_0 \text{NA} \) depending on which coordinate system we are working with. The normalized coordinates become \( \left( x_{\infty} / \left( f \text{NA} \right), y_{\infty} / \left( f \text{NA} \right) \right) \) and \( \left( \left( k_x / \left( k_0 \text{NA} \right), k_y \right) / \left( k_0 \text{NA} \right) \right) \).</p>
+<h3>1D Mesh Example</h3>
+<p>As an example, let \( L = 16 \). To four decimal places, the normalized coordinates are \( -1.0000, -0.8667, \ldots, -0.0667, 0.0667, \ldots, 0.8667, 1.0000 \).</p>
+<p>The spacing between array elements is \( 2 / \left( L - 1 \right) = 0.1333 \). Note that 0 is not included in the 1D mesh as it goes from -0.0667 to 0.0667.</p>
+<p>A 2D mesh is easily constructed from the 1D mesh using tools such as NumPy's <a href="https://numpy.org/doc/stable/reference/generated/numpy.meshgrid.html">meshgrid</a>.</p>
+<h3>Back Principal Plane Mesh Spacings</h3>
+<p>In the x-direction, the mesh spacing of the far field coordinate system is</p>
+<p>$$ \Delta x_{\infty} = 2 R / \left( L - 1 \right) = 2 f \text{NA} / \left( L - 1 \right) $$</p>
+<p>In the \( k_x \)-direction, the mesh spacing of the angular spectrum coordinate system is</p>
+<p>$$ \Delta k_x = 2 k_{max} / \left( L - 1 \right) = 2 k_0 \text{NA} / \left( L - 1 \right) $$</p>
+<p>Note the symmetry between these two expressions. One scales with \( f \text{NA} \) and the other \( k_0 \text{NA} \). Recall that these are free parameters of the model.</p>
+<h3>Sample Space Mesh Spacing</h3>
+<p>It is interesting to compute the spacing between mesh elements \( \Delta x \) in the sample space when the fields are eventually computed.</p>
+<p>The sampling angular frequency in the sample space is \( k_S = 2 \pi / \Delta x \).</p>
+<p>The Nyquist-Shannon sampling theory states that the maximum informative angular frequency is \( k_{max} = k_S / 2 \).</p>
+<p>From the previous section, we know that \( k_{max} = \left(L - 1 \right) \Delta k_x / 2 \), and that \( \Delta k_x = 2 k_0 \text{NA} / \left( L - 1 \right) \).</p>
+<p>Combining all the previous expressions and simplifying, we get:</p>
+<p>$$\begin{eqnarray}
+k_S &amp;=&amp; 2 k_{max} \\
+2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \Delta k_x \\
+2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \left[ 2 k_0 \text{NA} / \left( L - 1 \right) \right] \\
+2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \left[ 2 \left(2 \pi / \lambda \right) \text{NA} / \left( L - 1 \right) \right]
+\end{eqnarray}$$</p>
+<p>Solving the above expression for \( \Delta x \), we arrive at</p>
+<p>$$ \Delta x = \frac{\lambda}{2 \text{NA}} $$</p>
+<p>which is of course the Abbe diffraction limit.</p>
+<h3>Effect of not Sampling the Origin</h3>
+<p>Herrera and Quinto-Su<sup id="fnref3:2"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2">2</a></sup> point out that an error will be introduced if we naively apply the FFT to compute the field components in the \( \left( k_x, k_y \right) \) coordinate system because the origin is not sampled, whereas the FFT assumes that we sample the zero frequency component. The effect is that the result of the FFT has a constant phase error that accounts for a half-pixel shift in each direction of the mesh.</p>
+<p>Consider again the 1D mesh example with \(L = 16 \): \( -1.0000, -0.8667, \ldots, -0.0667, 0.0667, \ldots, 0.8667, 1.0000 \)</p>
+<p>In Python and other languages that index arrays starting at 0, the origin is located at \(L / 2 - 0.5 \), i.e. halfway between the samples at index 7 and 8. A lateral shift in Fourier space is equivalent to a phase shift in real space:</p>
+<p>$$ \phi_{shift} \left(X, Y \right) =  -j 2 \pi \frac{0.5}{L} X - j 2 \pi \frac{0.5}{L} Y $$</p>
+<p>where \( X \) and \( Y \) are normalized coordinates.</p>
+<p>At this point, I am uncertain whether the phasor with the above argument needs to be multiplied or divided with the result of the FFT because 1. there are a few typos in the signs for the coordinate system bounds in the manuscript of Herrera and Quinto-Su, and 2. the correction was developed for use in MATLAB, which indexes arrays starting at 1. Once the fields are computed, it would be easy to verify the correct sign of the phase terms following the procedure outlined in Figure 3 of Herrera and Quinto-Su's manuscript.</p>
+<h3>Structure of the Algorithm</h3>
+<p>The algorithm to compute the focus fields will proceed as follows:</p>
+<ol>
+<li>(optional) Propgate the inputs fields from the AS to the back principal plane using paraxial wave propagation</li>
+<li>Input the sampled fields in the back principal plane in the \( \left( x_{\infty}, y_{\infty} \right) \) coordinate system</li>
+<li>Transform the fields to the \( \left( k_x, k_y \right) \) coordinate system</li>
+<li>Compute the fields in the \( \left(x, y, z \right) \) coordinate system using the FFT</li>
+</ol>
+<h2>Additional Remarks</h2>
+<ul>
+<li>Zero padding the mesh will increase the sample space resolution beyond the Abbe limit, but since the fields remain zero outside of the support, no new information is added.</li>
+<li>On the other hand, zero padding might be required when computing fields going from the sample space to the back principal plane to faithfully reproduce any evanescent components.</li>
+<li>Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coodrdinate systems, whereas energy conservation is used when computing the fields.</li>
+<li>This post did not explain how to compute the fields.</li>
+</ul>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Lukas Novotny and Bert Hecht, "Principles of Nano-Optics," Cambridge University Press (2006). <a href="https://doi.org/10.1017/CBO9780511813535">https://doi.org/10.1017/CBO9780511813535</a> <a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref2:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p>Isael Herrera and Pedro A. Quinto-Su, "Simple computer program to calculate arbitrary tightly focused (propagating and evanescent) vector light fields," arXiv:2211.06725 (2022). <a href="https://doi.org/10.48550/arXiv.2211.06725">https://doi.org/10.48550/arXiv.2211.06725</a> <a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:2" title="Jump back to footnote 2 in the text">↩</a><a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref2:2" title="Jump back to footnote 2 in the text">↩</a><a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref3:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+<li id="fn:3">
+<p>Marcel Leutenegger, Ramachandra Rao, Rainer A. Leitgeb, and Theo Lasser, "Fast focus field calculations," Opt. Express 14, 11277-11291 (2006). <a href="https://doi.org/10.1364/OE.14.011277">https://doi.org/10.1364/OE.14.011277</a> <a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:3" title="Jump back to footnote 3 in the text">↩</a></p>
+</li>
+<li id="fn:4">
+<p>Sun-Uk Hwang and Yong-Gu Lee, "Simulation of an oil immersion objective lens: A simplified ray-optics model considering Abbe’s sine condition," Opt. Express 16, 21170-21183 (2008). <a href="https://doi.org/10.1364/OE.16.021170">https://doi.org/10.1364/OE.16.021170</a> <a class="footnote-backref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:4" title="Jump back to footnote 4 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" class="u-url">GitHub CLI Authorization with a Fine-grained Access Token</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -768,157 +936,6 @@ bg-dark
 <em>Press fit</em> : Requires more force, likely using a press</li>
 </ol>
 </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-simple-object-space-telecentric-system/" class="u-url">A Simple Object-Space Telecentric System</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/a-simple-object-space-telecentric-system/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-03-11T08:59:17+01:00" itemprop="datePublished" title="2024-03-11 08:59">2024-03-11 08:59</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/a-simple-object-space-telecentric-system/#disqus_thread" data-disqus-identifier="cache/posts/a-simple-object-space-telecentric-system.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <h2>Object-space telecentricity</h2>
-<p>I have been working on a software package recently for optical systems design. The process of building the package has proceeded like this:</p>
-<ol>
-<li>Think of a particular case that I want to model; for example an infinite conjugate afocal system</li>
-<li>Implement it in the code</li>
-<li>Discover that the code doesn't work</li>
-<li>Create a test case that helps debug the code</li>
-<li>Repeat</li>
-</ol>
-<p>I am modeling a telecentric lens in the current iteration of this loop. To keep things simple, I am limiting myself to an <a href="https://en.wikipedia.org/wiki/Telecentric_lens#Object-space_telecentric_lenses">object-space telecentric system</a>. This was more challenging than I expected. In part, the reason is that I was trying to infer whether a system was or was not telecentric from the lens prescription data and a ray trace, which has two problems:</p>
-<ol>
-<li>I need to do a floating point comparison between two numbers to say whether a system is telecentric. Either the chief ray angle in object-space has to be zero or the entrance pupil must be located at infinity. Floating point comparisons are notoriously difficult to get right, and if you're doing them then you might want to rethink what you're trying to model.</li>
-<li>Numerous checks are needed before we can even trace any rays. For example, I should check first whether the user placed the object at infinity. This would form the image in the same plane as the aperture stop, which does not really make sense.</li>
-</ol>
-<p>I find it interesting that <a href="https://support.zemax.com/hc/en-us/articles/1500005488201-Modeling-a-lens-that-is-telecentric-in-image-space">Zemax addresses these problems</a> by introducing object-space telecentricity as an extra boolean flag that forces the chief ray angle to be zero in the object-space. In other words, the user needs to know what they're doing and to specify that they want telecentricity from the beginning.</p>
-<h2>An object-space telecentric example</h2>
-<p>I adapted the following example from lens data presented in this video: <a href="https://www.youtube.com/watch?v=JfstTsuNAz0">https://www.youtube.com/watch?v=JfstTsuNAz0</a>. Notably, the object distance was increased by nearly a factor of two from what was given in the video so that the image plane was at a finite distance from the lens. Paraxial ray trace results were computed by hand.</p>
-<table border="1">
-<caption>
-        A simple object-space telecentric system comprising a planoconvex lens and a stop.
-    </caption>
-    <thead><tr>
-<th scope="row">Surface</th>
-            <th>0</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-        </tr></thead>
-<tbody><tr>
-<th scope="row">Comment</th>
-            <td>OBJ</td>
-            <td></td>
-            <td></td>
-            <td>STOP</td>
-            <td>IMG</td>
-        </tr></tbody>
-<tbody>
-<tr>
-<th scope="row">\( R \)</th>
-            <td></td>
-            <td>\( \infty \)</td>
-            <td>-9.750</td>
-            <td></td>
-            <td></td>
-        </tr>
-<tr>
-<th scope="row">\( t \)</th>
-            <td>29.4702</td>
-            <td>2</td>
-            <td>15.97699</td>
-            <td>17.323380</td>
-            <td></td>
-        </tr>
-<tr>
-<th scope="row">\( n \)</th>
-            <td>1</td>
-            <td>1.610248</td>
-            <td>1</td>
-            <td>1</td>
-            <td></td>
-        </tr>
-</tbody>
-<tbody>
-<tr>
-<th scope="row">\( C \)</th>
-            <td></td>
-            <td>0</td>
-            <td>-0.10256</td>
-            <td></td>
-            <td></td>
-         </tr>
-<tr>
-<th scope="row">\( -\Phi \)</th>
-            <td></td>
-            <td>0</td>
-            <td>-0.06259</td>
-            <td></td>
-            <td></td>
-        </tr>
-<tr>
-<th scope="row">\( t/n \)</th>
-            <td>29.4702</td>
-            <td>1.24204</td>
-            <td>15.97699</td>
-            <td>17.323380</td>
-            <td></td>
-        </tr>
-</tbody>
-<tbody>
-<tr>
-<th scope="row">\( y \)</th>
-            <td>0</td>
-            <td>29.4702</td>
-            <td>30.712240</td>
-            <td>15.97699</td>
-            <td>0</td>
-        </tr>
-<tr>
-<th scope="row">\( nu \)</th>
-            <td>1</td>
-            <td>1</td>
-            <td>-0.922279</td>
-            <td>-0.922279</td>
-            <td></td>
-        </tr>
-</tbody>
-<tbody>
-<tr>
-<th scope="row">\( \bar{y} \)</th>
-            <td>1</td>
-            <td>1</td>
-            <td>1</td>
-            <td>0</td>
-            <td>-1.084270</td>
-        </tr>
-<tr>
-<th scope="row">\( n \bar{u} \)</th>
-            <td>0</td>
-            <td>0</td>
-            <td>-0.06259</td>
-            <td>-0.06259</td>
-            <td></td>
-        </tr>
-</tbody>
-</table>
-<p>This system is shown below with lens semi-diameters of 5 mm. Note that the stop is at the paraxial focus of the lens. The rays in the sketch cross the axis before the stop because of spherical aberration.</p>
-<p><svg viewbox="0, 0, 1344, 150" width="120%" fill="none" stroke="black" xmlns="http://www.w3.org/2000/svg"><path d="M 632.646354675293 142.5 L 632.646354675293 142.5 L 632.646354675293 142.5 L 632.646354675293 135.39473819732666 L 632.646354675293 128.2894731760025 L 632.646354675293 121.18420815467834 L 632.646354675293 114.078946352005 L 632.646354675293 106.97368454933167 L 632.646354675293 99.86841952800751 L 632.646354675293 92.76315450668335 L 632.646354675293 85.65789270401001 L 632.646354675293 78.55263090133667 L 632.646354675293 71.44736909866333 L 632.646354675293 64.34210085868835 L 632.646354675293 57.236839056015015 L 632.646354675293 50.131577253341675 L 632.646354675293 43.0263090133667 L 632.646354675293 35.92104721069336 L 632.646354675293 28.81578540802002 L 632.646354675293 21.71052360534668 L 632.646354675293 14.60526180267334 L 632.646354675293 7.5 L 632.646354675293 7.5 L 641.0208705067635 7.5 L 641.0208705067635 7.5 L 644.972696185112 14.60526180267334 L 648.3765449523926 21.71052360534668 L 651.27783036232 28.81578540802002 L 653.7113556861877 35.92104721069336 L 655.7038663029671 43.0263090133667 L 657.275763630867 50.131577253341675 L 658.4422525763512 57.236839056015015 L 659.2141510248184 64.34210085868835 L 659.5984016060829 71.44736909866333 L 659.5984016060829 78.55263090133667 L 659.2141510248184 85.65789270401001 L 658.4422541856766 92.76315450668335 L 657.275763630867 99.86841952800751 L 655.7038679122925 106.97368454933167 L 653.7113556861877 114.078946352005 L 651.2778335809708 121.18420815467834 L 648.3765481710434 128.2894731760025 L 644.972696185112 135.39473819732666 L 641.0208705067635 142.5 L 641.0208705067635 142.5 L 632.646354675293 142.5 Z" stroke="black" stroke-width="1" stroke-linejoin="bevel" fill="none"></path><path d="M 632.646354675293 142.5 L 632.646354675293 142.5 L 632.646354675293 135.39473819732666 L 632.646354675293 128.2894731760025 L 632.646354675293 121.18420815467834 L 632.646354675293 114.078946352005 L 632.646354675293 106.97368454933167 L 632.646354675293 99.86841952800751 L 632.646354675293 92.76315450668335 L 632.646354675293 85.65789270401001 L 632.646354675293 78.55263090133667 L 632.646354675293 71.44736909866333 L 632.646354675293 64.34210085868835 L 632.646354675293 57.236839056015015 L 632.646354675293 50.131577253341675 L 632.646354675293 43.0263090133667 L 632.646354675293 35.92104721069336 L 632.646354675293 28.81578540802002 L 632.646354675293 21.71052360534668 L 632.646354675293 14.60526180267334 L 632.646354675293 7.5" stroke="black" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 875.3357162475586 142.5 L 875.3357162475586 142.5 L 875.3357162475586 81.75" stroke="black" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 875.3357162475586 68.25 L 875.3357162475586 68.25 L 875.3357162475586 7.5" stroke="black" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 641.0208705067635 142.5 L 641.0208705067635 142.5 L 644.972696185112 135.39473819732666 L 648.3765481710434 128.2894731760025 L 651.2778335809708 121.18420815467834 L 653.7113556861877 114.078946352005 L 655.7038679122925 106.97368454933167 L 657.275763630867 99.86841952800751 L 658.4422541856766 92.76315450668335 L 659.2141510248184 85.65789270401001 L 659.5984016060829 78.55263090133667 L 659.5984016060829 71.44736909866333 L 659.2141510248184 64.34210085868835 L 658.4422525763512 57.236839056015015 L 657.275763630867 50.131577253341675 L 655.7038663029671 43.0263090133667 L 653.7113556861877 35.92104721069336 L 651.27783036232 28.81578540802002 L 648.3765449523926 21.71052360534668 L 644.972696185112 14.60526180267334 L 641.0208705067635 7.5" stroke="black" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 1109.2013397216797 142.5 L 1109.2013397216797 142.5 L 1109.2013397216797 135.39473819732666 L 1109.2013397216797 128.2894731760025 L 1109.2013397216797 121.18420815467834 L 1109.2013397216797 114.078946352005 L 1109.2013397216797 106.97368454933167 L 1109.2013397216797 99.86841952800751 L 1109.2013397216797 92.76315450668335 L 1109.2013397216797 85.65789270401001 L 1109.2013397216797 78.55263090133667 L 1109.2013397216797 71.44736909866333 L 1109.2013397216797 64.34210085868835 L 1109.2013397216797 57.236839056015015 L 1109.2013397216797 50.131577253341675 L 1109.2013397216797 43.0263090133667 L 1109.2013397216797 35.92104721069336 L 1109.2013397216797 28.81578540802002 L 1109.2013397216797 21.71052360534668 L 1109.2013397216797 14.60526180267334 L 1109.2013397216797 7.5" stroke="#999999" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 142.5 L 234.7986602783203 142.5 L 234.7986602783203 135.39473819732666 L 234.7986602783203 128.2894731760025 L 234.7986602783203 121.18420815467834 L 234.7986602783203 114.078946352005 L 234.7986602783203 106.97368454933167 L 234.7986602783203 99.86841952800751 L 234.7986602783203 92.76315450668335 L 234.7986602783203 85.65789270401001 L 234.7986602783203 78.55263090133667 L 234.7986602783203 71.44736909866333 L 234.7986602783203 64.34210085868835 L 234.7986602783203 57.236839056015015 L 234.7986602783203 50.131577253341675 L 234.7986602783203 43.0263090133667 L 234.7986602783203 35.92104721069336 L 234.7986602783203 28.81578540802002 L 234.7986602783203 21.71052360534668 L 234.7986602783203 14.60526180267334 L 234.7986602783203 7.5" stroke="#999999" stroke-width="1" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 115.5 L 234.7986602783203 115.5 L 632.646354675293 115.5 L 653.2606882452965 115.5 L 875.3357162475586 69.18727111816406 L 1109.2013397216797 20.41567325592041" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 75 L 234.7986602783203 75 L 632.646354675293 75 L 659.646354675293 75 L 875.3357162475586 75 L 1109.2013397216797 75" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 34.5 L 234.7986602783203 34.5 L 632.646354675293 34.5 L 653.2606882452965 34.5 L 875.3357162475586 80.81272888183594 L 1109.2013397216797 129.5843267440796" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 2451228.234375 L 234.7986602783203 2451228.234375 L 632.646354675293 2451193.4296875" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 2451187.734375 L 234.7986602783203 2451187.734375 L 632.646354675293 2451152.9296875" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path><path d="M 234.7986602783203 2451147.234375 L 234.7986602783203 2451147.234375 L 632.646354675293 2451112.4296875" stroke="red" stroke-width="0.5" stroke-linejoin="miter" fill="none"></path></svg></p>
-<h2>Remarks</h2>
-<h3>Marginal ray trace</h3>
-<p>At first the marginal ray trace was a bit confusing because the entrance pupil is at infinity. How can the marginal ray, which intersects the pupil at its edge, be traced when the pupil is at infinity? Then I remembered that I don't aim for the edge of the pupil when tracing the marginal ray. Instead, I launch a ray from the axis in the object plane at a random angle taking the surface with the smallest ray height as the aperture stop. (I chose a paraxial angle of 1 in the table above. Technically, this is called a pseudo-marginal ray. The real marginal ray is calculated from it by rescaling the surface intersection heights by the aperture stop semi-diameter.) Once you have the marginal ray in image space, just find its intersection with the axis to determine the image location.</p>
-<h3>Telecentric lens design</h3>
-<p>So how would an object-space telecentric design be implemented in software? First, I'd set an option that would force the chief ray angle to 0 in the object space. Then, I'd simply place a solve on the aperture stop that puts it at the location where the chief ray intersects the axis.</p>
-    </div>
     </article>
 </div>
 

@@ -15,7 +15,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2024-11-15T09:29:00Z</lastmod>
+  <lastmod>2024-11-21T09:55:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
@@ -103,11 +103,15 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2024-11-15T09:29:00Z</lastmod>
+  <lastmod>2024-11-21T09:55:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
   <lastmod>2024-03-11T08:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</loc>
+  <lastmod>2024-11-21T09:55:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/engineering-fits/</loc>
@@ -132,6 +136,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/literature-review-an-optical-technique-for-remote-focusing-in-microscopy/</loc>
   <lastmod>2024-05-22T11:46:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/maximum-likelihood-estimation-and-photon-counting/</loc>
+  <lastmod>2024-11-05T08:30:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/persist-internet-connection-sharing-after-reboot/</loc>
