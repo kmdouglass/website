@@ -2,10 +2,10 @@
 .. title: Coordinate Systems for Modeling Microscope Objectives
 .. slug: coordinate-systems-for-modeling-microscope-objectives
 .. date: 2024-11-21 10:52:48 UTC+01:00
-.. tags: 
-.. category: 
+.. tags: optics, microscopy
+.. category: optics
 .. link: 
-.. description: 
+.. description: I construct the geometry and numerical meshes for simulating focusing by a high NA microscope objective.
 .. type: text
 .. has_math: true
 -->
