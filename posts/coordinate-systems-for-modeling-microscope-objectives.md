@@ -224,8 +224,9 @@ The algorithm to compute the focus fields will proceed as follows:
 
 - Zero padding the mesh will increase the sample space resolution beyond the Abbe limit, but since the fields remain zero outside of the support, no new information is added.
 - On the other hand, zero padding might be required when computing fields going from the sample space to the back principal plane to faithfully reproduce any evanescent components.
-- Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coodrdinate systems, whereas energy conservation is used when computing the fields.
+- Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coordinate systems, whereas energy conservation is used when computing the fields.
 - This post did not explain how to compute the fields.
+- Herrera and Quinto-Su (and possibly also Novotny and Hecht) appear to use an "effective" focal length which can be obtained by multiplying the one that I use by the sample space refractive index. I prefer my formulation because it is consistent with geometric optics and the well-known expression for the diameter of an objective's entrance pupil. When the fields are calculated, however, I do not yet know whether the arguments of the phasors of the Debye integral will require modification.
 
 
 [^1]: Lukas Novotny and Bert Hecht, "Principles of Nano-Optics," Cambridge University Press (2006). [https://doi.org/10.1017/CBO9780511813535](https://doi.org/10.1017/CBO9780511813535)
