@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 12 Dec 2024 12:48:15 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Coordinate Systems for Modeling Microscope Objectives</title><link>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;A common model for infinity corrected microscope objectives is that of an aplanatic and telecentric optical system. In many developments of this model, emphasis is placed upon the calculation of the electric field near the focus. However, this has the effect that the definition of the coordinate systems and geometry are conflated with the determination of the fields. In addition, making the model amenable to computation often occurs as an afterthought.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 12 Dec 2024 12:49:50 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Coordinate Systems for Modeling Microscope Objectives</title><link>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;A common model for infinity corrected microscope objectives is that of an aplanatic and telecentric optical system. In many developments of this model, emphasis is placed upon the calculation of the electric field near the focus. However, this has the effect that the definition of the coordinate systems and geometry are conflated with the determination of the fields. In addition, making the model amenable to computation often occurs as an afterthought.&lt;/p&gt;
 &lt;p&gt;In this post I will explore the geometry of an aplanatic system for modeling high NA objectives with an emphasis on computational implementations. My approach follows Novotny and Hecht&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; and Herrera and Quinto-Su&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;h2&gt;The Model Components&lt;/h2&gt;
 &lt;p&gt;The model system is illustrated below:&lt;/p&gt;
@@ -628,6 +628,7 @@ k_S &amp;amp;=&amp;amp; 2 k_{max} \\
 &lt;h3&gt;Basic Concepts&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;current&lt;/strong&gt;, &lt;em&gt;n&lt;/em&gt; : le courant&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;power&lt;/strong&gt;, &lt;em&gt;n&lt;/em&gt; : la puissance&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;voltage&lt;/strong&gt;, &lt;em&gt;n&lt;/em&gt; : la tension&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3&gt;Connectors&lt;/h3&gt;

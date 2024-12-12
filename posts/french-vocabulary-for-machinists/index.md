@@ -51,6 +51,7 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 ## Basic Concepts
 
 - **current**, *n* : le courant
+- **power**, *n* : la puissance
 - **voltage**, *n* : la tension
 
 ## Connectors
