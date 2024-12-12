@@ -56,3 +56,4 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 ## Connectors
 
 - **connector**, *n* : la cosse
+- **pin (for a PCB)**, *n* : la barrette
