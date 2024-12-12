@@ -11,9 +11,11 @@
 
 I work in a French-speaking country and frequently need to communicate with our machinists, many of whom do not speak English.
 
+I started with vocabulary for machinists, but I have expanded it to other domains as well.
+
 Here is a list of English-French vocabulary words that I have found useful. I will update it as I learn more words.
 
-*Last update: 2024-04-18*
+*Last update: 2024-12-12*
 
 # Materials and processing
 
@@ -43,3 +45,14 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 - **lathe**, *n* : un tour
 - **mill**, **milling machine**, *n* : une fraiseuse
 - **tap**, *n* : un taraud
+
+# Electronics
+
+## Basic Concepts
+
+- **current**, *n* : le courant
+- **voltage**, *n* : la tension
+
+## Connectors
+
+- **connector**, *n* : la cosse
