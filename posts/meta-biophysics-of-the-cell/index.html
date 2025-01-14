@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I describe the heuristics I use as an engineer to work with cell biologists.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meta-Biophysics of the Cell | Kyle M. Douglass</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/posts/meta-biophysics-of-the-cell/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
+<link rel="prev" href="../coordinate-systems-for-modeling-microscope-objectives/" title="Coordinate Systems for Modeling Microscope Objectives" type="text/html">
+<meta property="og:site_name" content="Kyle M. Douglass">
+<meta property="og:title" content="Meta-Biophysics of the Cell">
+<meta property="og:url" content="https://kylemdouglass.com/posts/meta-biophysics-of-the-cell/">
+<meta property="og:description" content="I describe the heuristics I use as an engineer to work with cell biologists.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-01-14T17:07:30+01:00">
+<meta property="article:tag" content="biophysics">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../../">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+                </li>
+<li class="nav-item">
+<a href="https://kmdouglass.github.io/" class="nav-link">Previous</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Meta-Biophysics of the Cell</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2025-01-14T17:07:30+01:00" itemprop="datePublished" title="2025-01-14 17:07">2025-01-14 17:07</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/meta-biophysics-of-the-cell.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>I work in a biophysics lab applying microscopy techniques to study cell biology. I am not a biologist, and I was not trained as one. I therefore have had to develop heuristics to help me understand what cell biologists do and to communicate with them effectively.</p>
+<p>In this post, I present these heuristics as a sort of model for how I think that cell biologists think. I collectively call them "Meta-Biophysics of the Cell" because:</p>
+<ol>
+<li>they model the models of cell biologists, hence they are a meta-model,</li>
+<li>they are inspired by physics and quantitative modeling, and</li>
+<li>I limit myself to cellular processes and not, for example, in vitro or organismal studies.</li>
+</ol>
+<p>Furthermore, they are heavily biased by my work in microscopy.</p>
+<p>These heuristics may very well be wrong. I do not pretend to understand biology nearly as well as a biologist. If you think I am wrong, please do not hesitate to leave a comment and explain why.</p>
+<p>They also are certainly not complete. I present here only what I think the most important heuristics are.</p>
+<h2>Biologists want to know distributions of proteins across space and time</h2>
+<p>Cell biology is concerned with understanding the structure and behavior of cells as complex phenomena that emerge from the interactions of molecules. The types of these molecules may be proteins, nucleic acids, lipids, or some other type. I will use the term "protein" generally because </p>
+<ol>
+<li>it's easier than always listing all the types of molecules,</li>
+<li>it's more precise than just saying "molecule"</li>
+<li>there are at least 10,000 different types of proteins in the human cell, making proteins a core building block of the cell, and</li>
+<li>these heuristics do not change if you substitute another type of molecule for the word "protein."</li>
+</ol>
+<p>Within a single cell, we can model the number of proteins at a point in space and a point in time with a function \( N \left( \mathbf{r}, t \right) \). This is a spatiotemporal distribution for protein number density. Its dimensions are in numbers of proteins per unit of volume.</p>
+<p>A single protein can be represented as a point in space and time, such as a delta function:</p>
+<p>$$ N \left( \mathbf{r}, t \right) = \delta \left( \mathbf{r}, t \right) $$</p>
+<p>Of course a real protein occupies some volume and is not a point, but at the level of a cell I think that this is an adequate model for what cell biologists want to know about protein distributions.</p>
+<p>But wait. There are more than ten thousand types of proteins within the cell. Some proteins are of high abundance, and some are very rare. So it is not sufficient merely to count proteins in space and time: we also need to identify their types. For this, I assign a unique ID to each type that I call \( s \) for "species". Our model now becomes a function of another variable, one that is categorical rather than continuous:</p>
+<p>$$ N \left( \mathbf{r}, t ; s\right) $$</p>
+<p>Below I show a simplified schematic of the volume that this model occupies. It is simplified because I show only one spatial dimension (otherwise it would be a five dimensional hypervolume). I saw a figure like this once in a paper about a decade ago, but sadly I cannot find it to credit it.</p>
+<figure><img src="../../images/protein-distributions.png"><figcaption>A cell can be represented as a "volume" of spatiotemporal distributions where one spatiotemporal slice belongs to each protein species.</figcaption></figure><p>The \( x \) and \( t \) dimensions are continuous; the \( s \) dimension is a discrete, categorical variable. Each \( s \) slice is the spatiotemporal distribution of that protein within a single cell. Each point in the volume is the protein density for that point in space and time and for that species of protein.</p>
+<p>Individual proteins might also vary amongst themselves as in, for example, post translation modifications. This is not really a problem for the above model because we can use a different value for the \( s \) of each variant.</p>
+<h3>Creation and degradation of a protein</h3>
+<p>The appearance and disappearance of a protein is modeled as a non-zero value over a time range from \( t_0 \) to \( t_1 \). For example, a single protein existing over a finite time interval may be expressed as</p>
+<p>$$\begin{eqnarray}
+ &amp;&amp;\delta \left( \mathbf{r}, t \right), \, t_0 &lt; t &lt; t_1 \\
+ &amp;&amp;0, \, \text{otherwise}
+\end{eqnarray}$$</p>
+<h3>Biologists can only measure slices of protein distributions</h3>
+<p>Look again at the figure above. Remember that there are in fact five dimensions. Can any one experimental technique measure the whole hypevolume?</p>
+<p>No. Instead, biologists can measure slices from the volume and try to piece together a complete picture of \( N \) from individual measurements.</p>
+<p>For example, fluorescence microscopy can measure proteins in space and time. Sometimes it can measure in 3 spatial dimensions, but it is easier to measure in 2. Unfortunately, it can only measure a small of number of protein species relative to all the proteins that are in the cell. These would correspond to the different fluorescence channels of the measurement. Thus, fluorescence microscopy provides a slice of the volume that looks like the following:</p>
+<figure><img src="../../images/protein-distributions-microscopy-slice.png"><figcaption>Fluorescence microscopy measures a small slice of the spatiotemporal protein distribution that represents a cell.</figcaption></figure><p>Other types of measurements, such as those in single cell proteomics, might measure a large number of proteins but cannot resolve them in space and time. They would slice the volume like this:</p>
+<figure><img src="../../images/protein-distributions-proteomics-slice.png"></figure><p>So after their measurements, biologists are always going to be left with less than the total amount of information contained within a single cell because they can only measure slices of \( N \).</p>
+<h2>Organelles are mutually exclusive slices of protein distributions in space</h2>
+<p>Consider a mitochondrion. It is a membrane-bound organelle. Everything inside the mitochondrion is considered part of the organelle, and everything outside it is not. An organelle is therefore a mutually-exclusive slice through the volume dimensions of \( N \).</p>
+<p>The slices are mutually-exclusive because two mitochondria cannot occupy the same volume at the same time and have a distinct identity.</p>
+<p>For non-membrane bound organelles, keep reading.</p>
+<h3>Organelles contain many types proteins</h3>
+<p>If we use the definition of an organelle as a mutually-exclusive slice through the volume dimensions of \( N \), then we can look sideways along the \( s \) dimension to find all the proteins that belong to the organelle. If the distribution for protein \( s_i \) is non-zero inside an organelle's volume at a given time, then it belongs to the organelle. The set of all proteins within the volume slice at a given time constitute the organelle.</p>
+<h3>Knowing \( N \) doesn't by itself tell us what is and is not an organelle</h3>
+<p>Membrane-bound organelles are easy to identify because of their structure. Other sets of proteins within a given volume may or may not form an organelle. In these situations, we might look at their function instead to decide whether the volume is or is not occupied by an organelle.</p>
+<p>For example, organelles like the centrosome have a diffuse, pericentriolar material that surround them. In this case, the border defining what is and isn't inside the centrosome is likely to be somewhat arbitrary.</p>
+<h2>Cause and Effect is the probability of one protein distribution given another</h2>
+<p>At this time, I am much less certain about how function and causal relationships fit within this model. It is nevertheless important because biologists are deeply interested in the function of proteins and other complexes. To a rough approximation, I would say that cause and effect describes how the spatiotemporal distributions of a subset of protein species can serve as a predictor of another distribution at a later time. In other words, we can assign a probability to a certain distribution given another one.</p>
+<p>I would guess that not every possible set proteins is linked by causal relationships. This would mean that the limitations that come from being able to sample slices of the protein distribution hypervolume are not so significant. You would then want choose your measurements so that you slice the volume to include only the species that are causally linked for the phenomenon that you are studying.</p>
+<p>As a consequence of this, the causal links between distributions are likely more important than knowing \( N \). I doubt that we can have a satisfactory understanding of the cell if we could exhaustively measure \( N \) for even a single cell.</p>
+<h3>Interactions between proteins require spatial colocalization</h3>
+<p>Protein-protein interactions occur on length-scales on the order of the size of individual proteins. For two different proteins to "interact" we require that they be colocated less than this distance. Colcalization means that two proteins are located less than the distance required for an interaction to occur.</p>
+<p>Furthermore, colocalization is necessary but not sufficient for an interaction. A real interaction involves the chemistry between the two different species.</p>
+<h2>Summary</h2>
+<p>In summary, my main three heuristics for meta-biophysics of the cell are:</p>
+<ol>
+<li>Biologists want to know distributions of proteins across space and time</li>
+<li>Organelles are mutually exclusive slices of protein distributions in space</li>
+<li>Cause and Effect is the probability of one or more protein distributions given another</li>
+</ol>
+<p>I find that nearly all the problems that the cell biologists that I work with can be reformulated into this language. I emphasize again that the "real" science is being done by the biologists, and I in no way mean to diminish the complexity of their work. These heuristics are merely a tool that I use to understand what they are doing when I myself am unfamiliar with their jargon and mental models.</p>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/biophysics/" rel="tag">biophysics</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../coordinate-systems-for-modeling-microscope-objectives/" rel="prev" title="Coordinate Systems for Modeling Microscope Objectives">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+    
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kyle-m-douglass",
+            disqus_url="https://kylemdouglass.com/posts/meta-biophysics-of-the-cell/",
+        disqus_title="Meta-Biophysics of the Cell",
+        disqus_identifier="cache/posts/meta-biophysics-of-the-cell.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article><script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2025         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
