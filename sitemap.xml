@@ -19,11 +19,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-01-14T16:09:00Z</lastmod>
+  <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2025-01-14T16:09:00Z</lastmod>
+  <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -60,6 +60,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/computer-vision/</loc>
   <lastmod>2024-08-27T12:53:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/electronics/</loc>
+  <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/fits/</loc>
@@ -111,11 +115,15 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-01-14T16:09:00Z</lastmod>
+  <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
   <lastmod>2024-03-11T08:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</loc>
+  <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</loc>

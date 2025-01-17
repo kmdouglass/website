@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/meta-biophysics-of-the-cell/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/an-analog-led-dimmer-circuit/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,86 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/meta-biophysics-of-the-cell/" class="u-url">Meta-Biophysics of the Cell</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/an-analog-led-dimmer-circuit/" class="u-url">An Analog LED Dimmer Circuit</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/an-analog-led-dimmer-circuit/" rel="bookmark">
+            <time class="published dt-published" datetime="2025-01-17T09:08:27+01:00" itemprop="datePublished" title="2025-01-17 09:08">2025-01-17 09:08</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/an-analog-led-dimmer-circuit/#disqus_thread" data-disqus-identifier="cache/posts/an-analog-led-dimmer-circuit.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>I recently needed to build a circuit to control the brightness of a 4 W LED with a knob. I know basic electronics, and I thought this would be easy. I spoke to a few people whom I know and are knowledgable in electronics. I also asked people on Reddit. A lot of people said it would be easy.</p>
+<p>As it turns it, it wasn't easy.</p>
+<h2>The Requirements</h2>
+<p>My requirments are simple:</p>
+<ul>
+<li>The brightness should be manually adjustable with a knob from OFF to nearly full ON.</li>
+<li>The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 ms to 1 s).</li>
+<li>The range of brightnesses should be variable across the dynamic range of the camera, which in my case is 35,000:1, or about 90 dB.</li>
+</ul>
+<p>I don't care about efficiency. I don't care about whether I can use a Raspberry Pi to control it. I don't care whether it can be turned on or off with different logic levels. I just want a knob that I can turn to make the LED brighter or dimmer.</p>
+<p>In spite of the insistence of several people that I communicated with on the internet, I decided that the second requirement would preclude using pulse width modulation (PWM) to dim the LED. Even when I could convince others that PWM almost always causes aliasing at high frame rates, they tried to find obscure work arounds so I could still use PWM. I really do appreciate all the feedback I got. But I also learned that PWM is the hammer of the electronics world that makes everything look like a nail<sup id="fnref:1"><a class="footnote-ref" href="posts/an-analog-led-dimmer-circuit/#fn:1">1</a></sup>.</p>
+<h2>The Circuit</h2>
+<p>I reached out to a friend of mine who's a wizard at analog electronics<sup id="fnref:2"><a class="footnote-ref" href="posts/an-analog-led-dimmer-circuit/#fn:2">2</a></sup>. He suggested to use a MOSFET and to vary the gate-source voltage to control the current through the LED.</p>
+<p>After a lot of thinking and reading, I arrived at <a href="https://tinyurl.com/2cnw45fy">the following circuit</a>:</p>
+<figure><img src="images/led-dimmer-circuit-v0.png"></figure><p>The LED is an Osram Oslon star LED (LST1-01F05-4070-01) with a maximum current of 1.3 A and a maximum forward voltage of 3.2 V. The MOSFET is an IRF510, whose gate-source threshold voltage is about 3 V.</p>
+<p>Here's a brief explanation of what each component does:</p>
+<ol>
+<li>
+<strong>Voltage source</strong> : This is just a 12 V wall wart.</li>
+<li>
+<strong>200 nF capacitor</strong> : This smooths out any fluctuations from the wall wart.</li>
+<li>
+<strong>50 kOhm potentiometer</strong> : The "knob." Turning it will vary the gate-source voltage of the MOSFET, which controls how much current flows through the LED.</li>
+<li>
+<strong>50 kOhm resistor</strong> : This along with the potentiometer forms a voltage divider to keep the minimum voltage at the MOSFET gate close to where the LED turns on. Without it, you need to rotate the potentiometer almost half of its full range for the LED to turn on.</li>
+<li>
+<strong>300 nF capacitor</strong> : A debounce capacitor that smooths out the mechanical irregularities of the pot when it turns.</li>
+<li>
+<strong>IRF510 MOSFET</strong> : Basically a valve that I can vary continuously to control the LED current by setting the voltage at the gate.</li>
+<li>
+<strong>LED</strong> : So pretty.</li>
+<li>
+<strong>10 Ohm resistor</strong> : This limits the current through the resistor. I calculated its value by dividing the maximum supply voltage minus the maximum forward voltage drop across the LED by the maximum current, then rounded up for safety.</li>
+</ol>
+<p>$$ R = \frac{V}{I} = \frac{\left( 12 \, V - 3.2 \, V \right) }{1.3 \, A} = 6.8 \Omega $$</p>
+<p>The resistor also has to handle a large power dissipation at the maximum current:</p>
+<p>$$ P = I^2 R = \left(1.3 \, A \right)^2 \left( 10 \Omega \right) = 16.9 W $$</p>
+<p>I decided instead to keep the current to less than 1 Amp so that I could use a 10 Watt resistor that I had.</p>
+<p>Power dissipation is also why we don't just use a potentiometer to control the LED current: my pots were only rated up to about 50 mW, whereas I expected that the MOSFET would have handle loads on the order of Watts due to the high current.</p>
+<h2>What I Learned</h2>
+<h3>I really need to study MOSFETS</h3>
+<p>I still don't really know how to solve circuits with MOSFETs. I arrived at the above circuit largely by trial-and-error on a prototype and by performing naive calculations on the voltage divider that turned out to not be entirely correct. I also expected that the LED would turn on once I passed the MOSFET's gate-source voltage threshold, but this turned out to be off by about 2 or 3 V.</p>
+<h3>MOSFETs suffer from second order effects</h3>
+<p>There is currently a hysteresis in the gate-ground voltage at when the LED turns on and when it turns off by about half a Volt. According to a helpful person on Reddit, this is likely due to a change in both the LEDs forward voltage and the MOSFET's threshold voltage with temperature once the current starts flowing. A possible fix is to swap the order of the LED and the MOSFET so that only the MOSFET will contribute to the hysteresis.</p>
+<h3>You can always complicate things to make them better</h3>
+<p>The same person on Reddit above also suggested making the circuit robust to temperature variations by adding an opamp to control the MOSFET gate voltage. It would compensate for temperature changes by comparing the potentiometer value to the 10 Ohm resistor in a closed feedback loop.</p>
+<h3>Electronics is an art</h3>
+<p>Yes, electronics is a science, but I would argue that having to mentally juggle second order effects and the fact that experts seem to make an initial design "by feel" are signatures of an art.</p>
+<p>It also struck me how nearly every step of the process forced me to take a detour to address something I hadn't at first considered, such as current limits in the wires and large variations in the MOSFET specs.</p>
+<p>The next time I need to do something like this, I will expect the problem to take longer to solve than I first anticipate.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>To my non-native English speaking readers: I mean that people try to use PWM to solve problems where it's not appropriate. <a class="footnote-backref" href="posts/an-analog-led-dimmer-circuit/#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p>And if you play electric guitar, be sure to check out his handmade effects pedals: <a href="https://www.volumeandpower.com/">https://www.volumeandpower.com/</a>. <a class="footnote-backref" href="posts/an-analog-led-dimmer-circuit/#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/meta-biophysics-of-the-cell/" class="u-url">Meta-Biophysics of the Cell</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -886,97 +965,6 @@ k_S &amp;=&amp; 2 k_{max} \\
 <li>We can formulate hypothesis tests to determine how often the simulation produces values that are farther than a given distance from what theory predicts</li>
 <li>The hypothesis tests can be translated into test cases: accepting the null hypothesis means the test passes, whereas rejecting the null hypothesis means the test fails</li>
 <li>Non-deterministic testing is useful when it is quick to implement and you expect to change the code often</li>
-</ul>
-</div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/french-vocabulary-for-machinists/" class="u-url">French Vocabulary for Machinists</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/french-vocabulary-for-machinists/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-03-28T09:35:27+01:00" itemprop="datePublished" title="2024-03-28 09:35">2024-03-28 09:35</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/french-vocabulary-for-machinists/#disqus_thread" data-disqus-identifier="cache/posts/french-vocabulary-for-machinists.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p>I work in a French-speaking country and frequently need to communicate with our machinists, many of whom do not speak English.</p>
-<p>I started with vocabulary for machinists, but I have expanded it to other domains as well.</p>
-<p>Here is a list of English-French vocabulary words that I have found useful. I will update it as I learn more words.</p>
-<p><em>Last update: 2024-12-12</em></p>
-<h2>Materials and processing</h2>
-<ul>
-<li>
-<strong>aluminum</strong>, <em>n</em> : aluminium (m)</li>
-<li>
-<strong>anodized</strong>, <em>adj</em> : anodisé</li>
-<li>
-<strong>stainless steel</strong>, <em>n</em> : 1. acier inoxydable, 2. inox (the cool way to say it)</li>
-</ul>
-<h2>Measurements</h2>
-<ul>
-<li>
-<strong>dimensions</strong>, <em>npl</em> : les dimensions (fpl) </li>
-</ul>
-<h2>Screws, bolts, fasteners, etc.</h2>
-<ul>
-<li>
-<strong>latch</strong>, <em>n</em> : un loquet (possibly Swiss-French)<ul>
-<li>
-<strong>push latch</strong>, <em>n</em> : un loquet poussoir</li>
-</ul>
-</li>
-<li>
-<strong>screw</strong>, <em>n</em> : une vis<ul>
-<li>
-<strong>cap (or head) screw</strong>, <em>n</em> : une vis à tête</li>
-<li>
-<strong>countersunk cap screw</strong>, <em>n</em> : vis à tête fraisée</li>
-</ul>
-</li>
-<li>
-<strong>spring</strong>, <em>n</em> : un ressort</li>
-<li>
-<strong>threading</strong>, <em>n</em> : un filetage<ul>
-<li>
-<strong>exterior threads</strong> : 1. filetage extérieur, 2. filetages mâles </li>
-<li>
-<strong>interior threads</strong> : 1. filetage intérieur, 2. filetages femelles  </li>
-</ul>
-</li>
-</ul>
-<h2>Tools</h2>
-<ul>
-<li>
-<strong>die</strong>, <em>n</em> : une filière</li>
-<li>
-<strong>lathe</strong>, <em>n</em> : un tour</li>
-<li>
-<strong>mill</strong>, <strong>milling machine</strong>, <em>n</em> : une fraiseuse</li>
-<li>
-<strong>tap</strong>, <em>n</em> : un taraud</li>
-</ul>
-<h2>Electronics</h2>
-<h3>Basic Concepts</h3>
-<ul>
-<li>
-<strong>current</strong>, <em>n</em> : le courant</li>
-<li>
-<strong>power</strong>, <em>n</em> : la puissance</li>
-<li>
-<strong>voltage</strong>, <em>n</em> : la tension</li>
-</ul>
-<h3>Connectors</h3>
-<ul>
-<li>
-<strong>connector</strong>, <em>n</em> : la cosse</li>
-<li>
-<strong>pin (for a PCB)</strong>, <em>n</em> : la barrette</li>
 </ul>
 </div>
     </article>
