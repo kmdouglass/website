@@ -19,7 +19,7 @@ As it turns it, it wasn't easy.
 My requirments are simple:
 
 - The brightness should be manually adjustable with a knob from OFF to nearly full ON.
-- The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 ms to 1 s).
+- The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 Hz to 1 kHz, or exposure times of 1 ms to 1 s).
 - The range of brightnesses should be variable across the dynamic range of the camera, which in my case is 35,000:1, or about 90 dB.
 
 I don't care about efficiency. I don't care about whether I can use a Raspberry Pi to control it. I don't care whether it can be turned on or off with different logic levels. I just want a knob that I can turn to make the LED brighter or dimmer.

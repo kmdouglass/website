@@ -3,13 +3,13 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 17 Jan 2025 09:23:22 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>An Analog LED Dimmer Circuit</title><link>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I recently needed to build a circuit to control the brightness of a 4 W LED with a knob. I know basic electronics, and I thought this would be easy. I spoke to a few people whom I know and are knowledgable in electronics. I also asked people on Reddit. A lot of people said it would be easy.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 21 Jan 2025 14:30:37 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>An Analog LED Dimmer Circuit</title><link>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I recently needed to build a circuit to control the brightness of a 4 W LED with a knob. I know basic electronics, and I thought this would be easy. I spoke to a few people whom I know and are knowledgable in electronics. I also asked people on Reddit. A lot of people said it would be easy.&lt;/p&gt;
 &lt;p&gt;As it turns it, it wasn't easy.&lt;/p&gt;
 &lt;h2&gt;The Requirements&lt;/h2&gt;
 &lt;p&gt;My requirments are simple:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;The brightness should be manually adjustable with a knob from OFF to nearly full ON.&lt;/li&gt;
-&lt;li&gt;The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 ms to 1 s).&lt;/li&gt;
+&lt;li&gt;The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 Hz to 1 kHz, or exposure times of 1 ms to 1 s).&lt;/li&gt;
 &lt;li&gt;The range of brightnesses should be variable across the dynamic range of the camera, which in my case is 35,000:1, or about 90 dB.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;I don't care about efficiency. I don't care about whether I can use a Raspberry Pi to control it. I don't care whether it can be turned on or off with different logic levels. I just want a knob that I can turn to make the LED brighter or dimmer.&lt;/p&gt;
