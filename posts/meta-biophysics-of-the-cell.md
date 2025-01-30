@@ -45,7 +45,7 @@ But wait. There are more than ten thousand types of proteins within the cell. So
 
 $$ N \left( \mathbf{r}, t ; s\right) $$
 
-Below I show a simplified schematic of the volume that this model occupies. It is simplified because I show only one spatial dimension (otherwise it would be a five dimensional hypervolume). I saw a figure like this once in a paper about a decade ago, but sadly I cannot find it to credit it.
+Below I show a simplified schematic of the volume that this model occupies. It is simplified because I show only one spatial dimension (otherwise it would be a five dimensional hypervolume). I saw a figure like this once in a paper about a decade ago, but sadly I cannot find it to credit it. (*Update 2025-01-30: The paper referred to is [Megason and Fraser, "Imaging in Systems Biology," Cell 130(5), 784-795 (2007)](https://doi.org/10.1016/j.cell.2007.08.031)*)
 
 <figure>
   <img src="/images/protein-distributions.png">
