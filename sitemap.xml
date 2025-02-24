@@ -19,11 +19,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-02-24T08:31:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -56,6 +56,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/cat_optics/</loc>
   <lastmod>2024-03-08T14:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/cat_programming/</loc>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/computer-vision/</loc>
@@ -102,6 +106,10 @@
   <lastmod>2024-03-12T08:13:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/rust/</loc>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/simulation/</loc>
   <lastmod>2024-05-17T09:20:00Z</lastmod>
  </url>
@@ -115,7 +123,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-02-24T08:31:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
@@ -128,6 +136,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</loc>
   <lastmod>2024-11-21T09:55:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</loc>
+  <lastmod>2025-02-24T08:31:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/engineering-fits/</loc>

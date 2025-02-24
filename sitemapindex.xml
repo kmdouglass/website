@@ -11,7 +11,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/biophysics.xml</loc>
-  <lastmod>2025-01-14T16:09:00Z</lastmod>
+  <lastmod>2025-01-30T15:23:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cad.xml</loc>
@@ -38,12 +38,16 @@
   <lastmod>2024-11-22T14:47:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/cat_programming.xml</loc>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/computer-vision.xml</loc>
   <lastmod>2024-08-27T13:04:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/electronics.xml</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-01-21T14:30:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/fits.xml</loc>
@@ -71,7 +75,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/optics.xml</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-01-21T14:30:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/raspberry-pi.xml</loc>
@@ -79,7 +83,11 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/ray-tracing.xml</loc>
-  <lastmod>2024-03-12T08:15:00Z</lastmod>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kylemdouglass.com/categories/rust.xml</loc>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/simulation.xml</loc>
@@ -95,10 +103,10 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/rss.xml</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/sitemap.xml</loc>
-  <lastmod>2025-01-17T08:38:00Z</lastmod>
+  <lastmod>2025-02-24T10:10:00Z</lastmod>
  </sitemap>
 </sitemapindex>

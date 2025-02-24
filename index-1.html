@@ -66,7 +66,183 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/french-vocabulary-for-machinists/" class="u-url">French Vocabulary for Machinists</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/testing-simulation-code/" class="u-url">Automated Testing of Simulation Code via Hypothesis Testing</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/testing-simulation-code/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-05-21T09:54:40+02:00" itemprop="datePublished" title="2024-05-21 09:54">2024-05-21 09:54</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/testing-simulation-code/#disqus_thread" data-disqus-identifier="cache/posts/testing-simulation-code.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <h2>Missing a Theory of Testing for Scientific Code</h2>
+<p>If you search the Internet for resources on the theory of testing code, you will find information about the different types of tests and how to write them. You will also find that it is generally accepted among programmers that good code is tested and bad code is not. The problem for scientists and engineers, however, is that the theory concerning the testing of computer code was developed primarily by programmers that work on systems that model business processes. There is little theory on how, for example, to test the outcome of physics simulations. To further exacerbate the problem, scientific programmers feel obliged to write tests without the guidance of such a theory because of the imperative to test their code. This leads to convoluted tests that are difficult to understand and maintain.</p>
+<h3>Scientific Code is Different</h3>
+<p>Code that models business processes is based on explicit rules that are developed from a set of requirements. An example of a rule that a business system might follow is "If a customer has ordered an item and has not paid, then send her an invoice."</p>
+<p>To test the above rule, we write out all the possible cases and write a test for each one. For example:</p>
+<ol>
+<li>A customer orders an item without paying. Expected result: an invoice is sent.</li>
+<li>A customer orders an item and pays at the time of checkout: Expected result: no invoice is sent.</li>
+</ol>
+<p>I have found that a good way to identify test cases in business logic is to look for if/else statements in a rule. Each branch of the statement should be a different test.</p>
+<p>Now let's consider a physics simulation. I am an optical engineer, so I will use an example from optics. One thing I have often done in my work is to simulate the image formation process of a lens system, including the noise imparted by the camera. A simple model of a CMOS camera pixel is one that takes an input signal in photons, adds shot noise, converts it to photoelectrons, adds dark noise, and then converts the electron signal into analog-to-digital units. Schematically:</p>
+<div class="code"><pre class="code literal-block"><span class="n">photons</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">electrons</span><span class="w"> </span><span class="o">--&gt;</span><span class="w"> </span><span class="n">ADUs</span>
+</pre></div>
+
+<p>A simplified Python code snippet that models this process, including noise, is below. An instance of the camera class has a method called <code>snap</code> that takes input array of photons and converts it to ADUs.</p>
+<div class="code"><pre class="code literal-block"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Camera</span><span class="p">:</span>
+    <span class="n">baseline</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># ADU</span>
+    <span class="n">bit_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
+    <span class="n">dark_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.83</span>  <span class="c1"># e-</span>
+    <span class="n">gain</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.12</span>  <span class="c1"># ADU / e-</span>
+    <span class="n">quantum_efficiency</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.76</span>
+    <span class="n">well_capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32406</span>  <span class="c1"># e-</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+        <span class="c1"># Simulate shot noise and convert to electrons</span>
+        <span class="n">photoelectrons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quantum_efficiency</span> <span class="o">*</span> <span class="n">signal</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Add dark noise</span>
+        <span class="n">electrons</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dark_noise</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">photoelectrons</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">photoelectrons</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Clip to the well capacity to model electron saturation</span>
+        <span class="n">electrons</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">electrons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">well_capacity</span><span class="p">)</span>
+
+        <span class="c1"># Convert to ADU</span>
+        <span class="n">adu</span> <span class="o">=</span> <span class="n">electrons</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseline</span>
+
+        <span class="c1"># Clip to the bit depth to model ADU saturation</span>
+        <span class="n">adu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">adu</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">bit_depth</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">adu</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+</pre></div>
+
+<p>How can we test this code? In this case, there are no if/else statements to help us identify test cases. Some possible solutions are:</p>
+<ol>
+<li>
+<p>An expert can review it. But what if we don't have an expert? Or, if you are an expert, how do we know that we haven't made a mistake? I have worked professionally as both an optical and a software engineer and I can tell you that I make coding mistakes many times a day. And what if the simulation is thousands of lines of code? This solution, though useful, cannot be sufficient for testing.</p>
+</li>
+<li>
+<p>Compute what the results ought to be for a given set of inputs. Rules like "If the baseline is 100, and the bit depth is 12, etc., then the output is 542 ADU" are not that useful here because the output is random.</p>
+</li>
+<li>
+<p>Evaluate the code and manually check that it produces the desired results. This is similar to expert review. The problem with this approach is that you would need to recheck the code every time a change is made. One of the advantages of testing business logic is that the tests can be automated. It would be advantageous to preserve automation in testing scientific code.</p>
+</li>
+<li>
+<p>We could always fix the value of the seed for the random number generator to at least make the test deterministic, but then we would not know whether the variation in the simulation output is what we would expect from run-to-run. I'm also unsure whether the same seed produces the same results across different hardware architectures. Since the simulation is non-deterministic at its core, it would be nice to include this attribute within the test case.</p>
+</li>
+</ol>
+<h2>Automated Testing of Simulation Results via Hypothesis Testing</h2>
+<p>The solution that I have found to the above-listed problems is derived from ideas that I learned in a class on quality control that I took in college. In short, we run the simulation a number of times and compute one or more statistics from the results. The statistics are compared to their theoretical values in a hypothesis test, and, if the result is outside of a given tolerance, the test fails. If the probability of failure is made small enough, then a failure of the test <strong>practically</strong> indicates an error in the simulation code rather than a random failure due to the stochastic output.</p>
+<h3>Theoretical Values for Test Statistics</h3>
+<p>In the example of a CMOS camera, both the theoretical mean and the variance of a pixel are known. The <a href="https://www.emva.org/standards-technology/emva-1288/">EMVA 1288 Linear Model</a> states that</p>
+<p>$$ \mu_y = K \left( \eta \mu_p + \mu_d \right) + B $$</p>
+<p>where \( \mu_y \) is the mean ADU count, \( K \) is the gain, \( \eta \) is the quantum efficiency, \( \mu_p \) is the mean photon count, \( \mu_d \) is the mean dark noise, and \( B \) is the baseline value, i.e. the average ADU count under no illumination. Likewise, the variance of the pixel describes the noise:</p>
+<p>$$ \sigma_y = \sqrt{K^2 \sigma_d^2 + \sigma_q^2 + K \left( \mu_y - B \right)} $$</p>
+<p>where \( \sigma_y \) is the standard deviation of the ADU counts, \( \sigma_d^2 \) is the dark noise variance, and \( \sigma_q^2 = 1 / 12 \, \text{ADU} \) is the quantization noise, i.e. the noise from converting an analog voltage into discrete ADU values.</p>
+<h3>Hypothesis Testing</h3>
+<p>We can formulate a hypothesis test for each test statistic. The test for each is:</p>
+<ol>
+<li>
+<strong>Null hypothesis :</strong> the simulation statistics and the theoretical values are the same</li>
+<li>
+<strong>Alternative hypothesis :</strong> the simulation statistics and the theoretical values are different</li>
+</ol>
+<p>Let's first focus on the mean pixel values. To perform this hypothesis test, I ran the simulation code a number of times. For convenience, I chose an input signal of 1000 photons. Here's the resulting histogram:</p>
+<p><img src="images/camera-mean-adus.png"></p>
+<p>The mean of this distribution is 190.721 ADU and the standard deviation is 3.437 ADU. The theoretical values are 191.2 ADU and 3.420 ADU, respectively. Importantly, if I re-run the simulation, then I get a different histogram because the simulation's output is random.</p>
+<p>The above histogram is called the <strong>sampling distribution of the mean</strong>, and its width is proportional to the <strong>standard error of the mean</strong>. (<em>Edit 2024/05/30</em> Actually, I think I am wrong here. This is not the sampling distribution of the mean. To get it we would need to repeat the above experiment a number of times and compute the mean each time, much like I do in the following section. The set of all means from doing so would be its sampling distribution. Fortunately, the estimate of the confidence intervals in what follows should still hold because the sampling distribution of the mean tends to a normal distribution for large \(N \), and this allows for the expression in the equation that follows.)</p>
+<h4>Hypothesis Testing of the Mean Pixel Value</h4>
+<p>To perform the hypthosesis test on the mean, I build a confidence interval around the simulated value using the following formula:</p>
+<p>$$ \mu_y \pm X \frac{s}{\sqrt{N}} $$</p>
+<p>Here \( s \) is my estimated standard deviation (3.437 ADU in the example above), and \( N = 10,000 \) is the number of simulated values. Their ratio \( \frac{s}{\sqrt{N}} \) is an estimate of the <strong>standard error of the mean</strong>. \( X \) is a proportionality factor that is essentially a tolerance on how close the simulated value must be to the theoretical one to be considered "equal". A larger tolerance means that it is less likely that the hypothesis test will fail, but I am less certain that the value of the simulation is exactly equal to the theoretical value.</p>
+<p>If this looks familiar, it should. In introductory statistics classes, this approach is called <a href="https://en.wikipedia.org/wiki/Student%27s_t-test">Student's one sample t-test</a>. In the t-test, the value for \( X \) is denoted as \( t \) and depends on the desired confidence level and on the number of data points in the sample. (Strictly speaking, it's the number of data points minus 1.)</p>
+<p>As far as I can tell there's no rule for selecting a value of \( X \); rather, it's a free parameter. I often choose 3. Why? Well, if the sampling distribution is approximately normally distributed, and the number of sample points is large, then the theoretical mean should lie within 3 standard errors of the simulated one approximately 99.7% of the time <strong>if the algorithm is correct.</strong> Alternatively, this means that a correct simulation will produce a result that is more than three standard errors from the theoretical mean about every 1 out of 370 test runs.</p>
+<h4>Hypothesis Testing of the Noise</h4>
+<p>Recall that standard deviation of pixel values is a measure of the noise. The approach to testing it remains the same as before. We write the confidence interval as</p>
+<p>$$ \sigma_y \pm X \left( s.e. \right) $$</p>
+<p>where we have \( s.e. \) as the standard error of the standard deviation. If the simulated standard deviation is outside this interval, then we reject the null hypothesis and fail the test.</p>
+<p>Now, how do we calculate the standard error of the standard deviation? Unlike with the mean value, we have only one value for the standard deviation of the pixel values. Furthermore, there doesn't seem to be a simple formula for the standard error of the variance or standard error of the standard deviation. (I looked around the Math and Statistics Stack Exchanges, but what I did find produced standard errors that were way too large.)</p>
+<p>Faced with this problem, I have two options:</p>
+<ol>
+<li>run the simulation a number of times to get a distribution of standard deviations</li>
+<li>draw pixel values from the existing simulation data <strong>with replacement</strong> to estimate the sampling distribution. This approach is known as <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)">bootstrapping</a>.</li>
+</ol>
+<p>In this situation, both are valid approaches because the simulation runs quite quickly. However, if the simulation is slow, bootstrapping might be desirable because resampling the simulated data is relatively fast.</p>
+<p>I provide below a function that makes a bootstrap estimate of the standard error of pixel values to give you an idea of how this works. It draws <code>n</code> samples from the simulated pixel values with replacement and places the results in the rows of an array. Then, the standard devation of each row is computed. Finally, since the standard error is the standard deviation of the sampling distribution, the standard deviation of resampled standard deviations is computed and returned.</p>
+<div class="code"><pre class="code literal-block"><span class="k">def</span> <span class="nf">se_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">std_sampling_distribution</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">std_sampling_distribution</span><span class="p">)</span>
+</pre></div>
+
+<p>Of course, the value of <code>n</code> in the function above is arbitrary. From what I can tell, setting <code>n</code> to be the size of the data is somewhat standard practice.</p>
+<h4>Automated Hypothesis Testing</h4>
+<p>At this point, we can calculate the probability that the mean and standard deviation of the simulated pixel values will lie farther than some distance from their theoretical values. This means that we know roughly how often a test will fail due to pure luck.</p>
+<p>To put these into an automated test function, we need only translate the two hypotheses into an assertion. The null hypothesis should correspond to the argument of the assertion being true; the alternative hypothesis corresponds to a false argument.</p>
+<div class="code"><pre class="code literal-block"><span class="n">TOL</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="k">def</span> <span class="nf">test_cmos_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">):</span>
+    <span class="n">num_pixels</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span>
+    <span class="n">mean_photons</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">photons</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_photons</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_pixels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">expected_mean</span> <span class="o">=</span> <span class="mf">191.2</span>
+    <span class="n">expected_std</span> <span class="o">=</span> <span class="mf">3.42</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">snap</span><span class="p">(</span><span class="n">photons</span><span class="p">)</span>
+
+    <span class="n">tol_mean</span> <span class="o">=</span> <span class="n">TOL</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num_pixels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_pixels</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">tol_std</span> <span class="o">=</span> <span class="n">TOL</span> <span class="o">*</span> <span class="n">se_std</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">expected_mean</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tol_mean</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">expected_std</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="n">tol_std</span><span class="p">)</span>
+</pre></div>
+
+<p>With a <code>TOL</code> value of 3 and with the sampling distributions being more-or-less normally distributed, each assertion should fail about 1 / 370 times because the area in the tails of the distribution beyond three standard errors is 1 / 370. We can put this test into our test suite and continuous integration (CI) system and run it automatically using whatever tools we wish, e.g. GitHub Actions and pytest.</p>
+<h2>Discussion</h2>
+<h3>Non-deterministic Tests</h3>
+<p>It is an often-stated rule of thumb that automated tests should never fail randomly because it makes failures difficult to diagnose and makes you likely to ignore the tests. Here however it is in the very nature of this test that it will fail randomly from time to time. What are we to do?</p>
+<p>An easy solution would be to isolate these sorts of tests and run them separately from the deterministic ones so that we know exactly where the error occurred. Then, if there is a failure of the non-deterministic tests, the CI could just run them again. If <code>TOL</code> is set so that a test failure is very rare, then any failure of these tests twice would practically indicate a failure of the algorithm to produce the theoretical results.</p>
+<h3>Testing Absolute Tolerances</h3>
+<p>It could be argued that what I presented here is a lot of work just to make an assertion that a simulation result is close to a known value. In other words, it's just a fancy way to test for absolute tolerances, and possibly is more complex than it needs to be. I can't say that I entirely disagree with this.</p>
+<p>As an alternative, consider the following: if we run the simulation a few times we can get a sense of the variation in its output, and we can use these values to roughly set a tolerance that states by how much the simulated and theoretical results should differ. This is arguably faster than constructing the confidence intervals like we did above.</p>
+<p>The value in the hypothesis testing approach is that you can know the probability of failure to a high degree of accuracy. Whether or not this is important probably depends on what you want to do, but it does provide you with a deeper understanding of the behavior of the simulation that might help debug difficult problems.</p>
+<h3>Testing for Other Types of Errors</h3>
+<p>There are certainly other problems in testing simulation code that are not covered here. The above approach won't tell you directly if you have entered an equation incorrectly. It also requires theoretical values for the summary statistics of the simulation's output. If you have a theory for these already, you might argue that a simulation would be superfluous.</p>
+<p>If it's easy to implement automated tests for your simulation that are based on hypothesis testing, and if you expect the code to change often, then having a few of these sorts of tests will at least provide you a degree of confidence that everything is working as you expect as you make changes. And that is one of the goals of having automated tests: fearless refactoring.</p>
+<h3>Testing the Frequency of Failures</h3>
+<p>I stated often that with hypothesis testing we know how often the code should fail, but we never actually tested that. We could have run the simulation a large number of times and verified that the number of failures was approximately equal to the theoretical number of failures.</p>
+<p>To my mind, it seems that this is just the exact same problem that was addressed above, but instead of testing summary statistics on the output values we test the number of failures. And since the number of failures will vary randomly, we would need a sampling distribution for this. So really this approach requires more CPU clock cycles to do the same thing because we need to run the simulation a large number of times.</p>
+<h2>Summary</h2>
+<ul>
+<li>Automated testing of simulation code is different than testing business logic due to its stochastic nature and inability to be reduced to "rules"</li>
+<li>We can formulate hypothesis tests to determine how often the simulation produces values that are farther than a given distance from what theory predicts</li>
+<li>The hypothesis tests can be translated into test cases: accepting the null hypothesis means the test passes, whereas rejecting the null hypothesis means the test fails</li>
+<li>Non-deterministic testing is useful when it is quick to implement and you expect to change the code often</li>
+</ul>
+</div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/french-vocabulary-for-machinists/" class="u-url">French Vocabulary for Machinists</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
