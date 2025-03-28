@@ -15,7 +15,7 @@ I started with vocabulary for machinists, but I have expanded it to other domain
 
 Here is a list of English-French vocabulary words that I have found useful. I will update it as I learn more words.
 
-*Last update: 2024-12-12*
+*Last update: 2025-03-28*
 
 # Materials and processing
 
@@ -37,7 +37,8 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 - **spring**, *n* : un ressort
 - **threading**, *n* : un filetage
     - **exterior threads** : 1. filetage extérieur, 2. filetages mâles 
-    - **interior threads** : 1. filetage intérieur, 2. filetages femelles  
+    - **interior threads** : 1. filetage intérieur, 2. filetages femelles
+- **washer**, *n* : une rondelle
 
 # Tools
 

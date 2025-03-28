@@ -19,11 +19,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-02-24T08:31:00Z</lastmod>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2025-02-24T10:10:00Z</lastmod>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -66,6 +66,10 @@
   <lastmod>2024-08-27T12:53:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/diffraction/</loc>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/electronics/</loc>
   <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
@@ -74,8 +78,16 @@
   <lastmod>2024-03-26T13:35:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/fraunhofer/</loc>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/french/</loc>
   <lastmod>2024-03-28T08:48:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/fresnel/</loc>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/github/</loc>
@@ -123,11 +135,15 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-02-24T08:31:00Z</lastmod>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
   <lastmod>2024-03-11T08:36:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/</loc>
+  <lastmod>2025-03-28T08:19:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</loc>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I summarize the knowledge that I find essential to understanding the Fresnel and Fraunhofer diffraction integrals.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals | Kyle M. Douglass</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
+<link rel="prev" href="../data-type-alignment-for-ray-tracing-in-rust/" title="Data Type Alignment for Ray Tracing in Rust" type="text/html">
+<meta property="og:site_name" content="Kyle M. Douglass">
+<meta property="og:title" content="A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals">
+<meta property="og:url" content="https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/">
+<meta property="og:description" content="I summarize the knowledge that I find essential to understanding the Fresnel and Fraunhofer diffraction integrals.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-03-28T09:06:03+01:00">
+<meta property="article:tag" content="diffraction">
+<meta property="article:tag" content="Fraunhofer">
+<meta property="article:tag" content="Fresnel">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../../">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+                </li>
+<li class="nav-item">
+<a href="https://kmdouglass.github.io/" class="nav-link">Previous</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2025-03-28T09:06:03+01:00" itemprop="datePublished" title="2025-03-28 09:06">2025-03-28 09:06</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>Fourier Optics is complicated, and though I have internalized its concepts over the years, I often still need to review the specifics of its mathematical models. Unfortunately, my go-to resource for this, Goodman's Fourier Optics<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>, tends to disperse information across chapters and homework problems. This makes quick review difficult.</p>
+<p>Here I condense what I think are the essentials of Fresnel and Fraunhofer diffraction into one blog post.</p>
+<h2>Starting Point: the Huygens-Fresnel Principle</h2>
+<p>Ignore Chapter 3 of Goodman; it's largely irrelevant for practical work. The Huygens-Fresnel principle itself is a good intuitive model to start with.</p>
+<h3>The Model</h3>
+<p>An opaque screen with a clear aperture \( \Sigma \)  is located in the \( z = 0 \) plane with transverse coordinates \( \left( \xi , \eta \right ) \). It is illuminated by a complex-valued scalar field \( U \left( \xi, \eta \right) \). Let \( \vec{r_0} = \left( \xi, \eta, 0 \right) \) be a point in the plane of the aperture and \( \vec{r_1} = \left( x, y, z \right) \) be a point in the observation plane. The Huygens-Fresnel Principle provides the following formula for the diffracted field \( U \left( x, y \right) \) in the plane \( z \):</p>
+<p>$$ U \left( x, y; z \right) = \frac{z}{j \lambda} \iint_{\Sigma} U \left( \xi , \eta \right) \frac{\exp \left( j k r_{01} \right)}{r_{01}^2} \, d\xi d\eta $$</p>
+<p>with the distance \( r_{01}^2 = \left( x - \xi \right)^2 + \left( y - \eta \right)^2 + z^2 \).</p>
+<ul>
+<li>We assumed an obliquity factor \( cos \, \theta = z / r_{01}\). The choice of obliquity factor depends on the boundary conditions discussed in Chapter 3, but again this isn't terribly important for practical work.</li>
+<li>The integral is a sum over secondary spherical wavelets emitted by each point in the aperture and weighted by the incident field and the obliquity factor.</li>
+<li>The factor \( 1 / j \) means that each secondary wavelet from a point \( \left( \xi, \eta \right) \) is 90 degrees out-of-phase with the incident field at that point.</li>
+</ul>
+<h4>Approximations used in the Huygens-Fresnel Principle</h4>
+<ol>
+<li>The electromagnetic field can be approximated as a complex-valued scalar field.</li>
+<li>\( r_{01} \gg \lambda \), or the observation screen is many multiples of the wavelength away from the aperture.</li>
+</ol>
+<h2>The Fresnel Diffraction Integral</h2>
+<h3>The Fresnel Approximation</h3>
+<p>Rewrite \( r_{01} \) as:</p>
+<p>$$ r_{01} = z \sqrt{ 1 + \frac{\left( x - \xi \right)^2 + \left( y - \eta \right)^2}{z^2} } $$</p>
+<p>Apply the binomial approximation:</p>
+<p>$$ r_{01} \approx z + \frac{\left( x - \xi \right)^2 + \left( y - \eta \right)^2}{2z} $$</p>
+<p>In the Huygens-Fresnel diffraction integral, replace:</p>
+<ol>
+<li>\(r_{01}^2 \) in the denominator with \( z^2 \)</li>
+<li>\(r_{01}\) in the argument of the exponential with \( z + \frac{\left( x - \xi \right)^2 + \left( y - \eta \right)^2}{2z} \)</li>
+</ol>
+<h4>The Diffraction Integral: Form 1</h4>
+<p>Perform the substitutions for \( r_{01} \) into the Huygens-Fresnel formula that were mentioned above to get the first form of the Fresnel diffraction integral:</p>
+<p>$$ U \left( x, y; z \right) = \frac{ e^{jkz} }{j \lambda z} \iint_{-\infty}^{\infty} U \left( \xi , \eta \right) \exp \left\{ \frac{jk}{2z} \left[ \left( x - \xi \right)^2 + \left( y - \eta \right)^2 \right] \right\}  \,d\xi \,d\eta $$</p>
+<ul>
+<li>It is space invariant, i.e. it depends only on the differences in coordinates \( \left( x - \xi \right) \) and \( \left( y - \eta \right) \).</li>
+<li>It represents a convolution of the input field with the kernel \( h \left( x, y \right) = \frac{e^{j k z}}{j \lambda z} \exp \left[ \frac{j k}{2 z} \left( x^2 + y^2 \right) \right] \).</li>
+</ul>
+<h4>The Diffraction Integral: Form 2</h4>
+<p>Expand the squared quantities inside the parantheses of Form 1 to get the second from of the integral:</p>
+<p>$$ U \left( x, y; z \right) = \frac{ e^{jkz} }{j \lambda z} e^{\frac{j k}{2 z} \left( x^2 + y^2 \right)} \iint_{-\infty}^{\infty} \left[ U \left( \xi , \eta \right) e^{\frac{j k}{2 z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda z} \left( x \xi + y \eta \right) }  \,d\xi \,d\eta $$</p>
+<ul>
+<li>It is proportional to the Fourier transform of the product of the incident field and a parabolic phase curvature \( e^{\frac{j k}{2 z} \left( \xi^2 + \eta^2 \right)} \).</li>
+</ul>
+<h2>Phasor Conventions</h2>
+<p>Section 4.2.1 of Goodman is an interesting practical aside about how to identify whether a spherical or parabolic wavefront is converging or diverging based on the sign of its phasor. It is useful for solving the important homework problem 4.16 which concerns the diffraction pattern from an aperture that is illuminated by a converging spherical wave.</p>
+<p>Unfortunately, Figure 4.2 does not align well with its description in the text about negative z-values, and it's not clear how the interpretations change for point sources not at \( z = 0 \). I address this below.</p>
+<ul>
+<li>Let the point of convergence (or center of divergence) of a spherical wave sit on the z-axis at \( z = Z \).</li>
+<li>The phasor describing the time-dependent part of the field in Goodman's notation is \( e^{-j 2 \pi f t} \).</li>
+<li>If we move away from the center of the wave such that \( z - Z \) is positive and we encounter wavefronts emitted earlier in time, then \( t \) is decreasing and the argument to the phasor is increasing. The wave is therefore diverging if the argument is positive.</li>
+<li>If we move away from the center of the wave  such that \( z - Z \) is negative and we encounter wavefronts emitted earlier in time, then \( t \) is decreasing and the argument to the phasor is increasing. However, a negative \( z - Z \) makes the phasor negative again so that it is in fact decreasing. The wave is therefore diverging if the argument is negative.</li>
+<li>Likewise for converging waves.</li>
+</ul>
+<p>To summarize:</p>
+<table border="1">
+<thead><tr>
+<th>Phasor</th>
+      <th> \( \left( z - Z \right) \) positive </th>
+      <th> \( \left( z - Z \right) \) negative </th>
+    </tr></thead>
+<tbody>
+<tr>
+<td>\( e^{ j k r} \)</td>
+      <td>diverging</td>
+      <td>converging</td>
+    </tr>
+<tr>
+<td>\( e^{ -j k r} \)</td>
+      <td>converging</td>
+      <td>diverging</td>
+    </tr>
+</tbody>
+</table>
+<h2>The Fraunhofer Diffraction Integral</h2>
+<h3>The Fraunhofer Approximation</h3>
+<p>Assume we are so far from the screen that the quadratic phasor inside the diffraction integral is effectively flat. This means: </p>
+<p>$$ z \gg \frac{k \left( \xi^2 + \eta^2 \right)_{\text{max}}}{2} $$</p>
+<h3>The Diffraction Integral</h3>
+<p>Applying the approximation above allows us to drop the quadratic phasor inside the Fresnel diffraction integral because it is effectively 1:</p>
+<p>$$ U \left( x, y; z \right) = \frac{ e^{jkz} }{j \lambda z} e^{\frac{j k}{2 z} \left( x^2 + y^2 \right)} \iint_{-\infty}^{\infty} U \left( \xi , \eta \right) e^{-j \frac{2 \pi }{\lambda z} \left( x \xi + y \eta \right) }  \,d\xi \,d\eta $$</p>
+<ul>
+<li>Apart from the phase term that depends on \( z \), this expression represents a Fourier transform of the incident field.</li>
+<li>It appears to break spatial invariance because we no longer depend on differences of coordinates, e.g. \( x - \xi \). However, we can still use the Fresnel transfer function (the Fourier transform of the Fresnel convolution kernel) as the transfer function for Fraunhofer diffraction because if the Fraunhofer approximation is valid, then so is the Fresnel approximation.</li>
+</ul>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers (2005). ISBN 978-0974707723. <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/diffraction/" rel="tag">diffraction</a></li>
+            <li><a class="tag p-category" href="../../categories/fraunhofer/" rel="tag">Fraunhofer</a></li>
+            <li><a class="tag p-category" href="../../categories/fresnel/" rel="tag">Fresnel</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../data-type-alignment-for-ray-tracing-in-rust/" rel="prev" title="Data Type Alignment for Ray Tracing in Rust">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+    
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kyle-m-douglass",
+            disqus_url="https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/",
+        disqus_title="A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals",
+        disqus_identifier="cache/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article><script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2025         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
