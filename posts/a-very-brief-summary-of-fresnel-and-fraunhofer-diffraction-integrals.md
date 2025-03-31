@@ -126,7 +126,7 @@ $$ U \left( x, y; z \right) = \frac{ e^{jkz} }{j \lambda z} e^{\frac{j k}{2 z} \
 
 Problem 4.16 is important because it is a basis for the development of the frequency analysis of image-forming systems in later chapters of Goodman.
 
-The purpose of 4.16 is to show that the diffraction pattern of an aperture by a spherical converging wave in the Fresnel regime is the Fraunhofer diffraction pattern of the aperture.
+The purpose of 4.16 is to show that the diffraction pattern of an aperture that is illuminated by a spherical converging wave in the Fresnel regime is the Fraunhofer diffraction pattern of the aperture.
 
 ## Part a: Quadratic phase approximation to the incident wave
 
