@@ -166,6 +166,34 @@ bg-dark
 <li>Apart from the phase term that depends on \( z \), this expression represents a Fourier transform of the incident field.</li>
 <li>It appears to break spatial invariance because we no longer depend on differences of coordinates, e.g. \( x - \xi \). However, we can still use the Fresnel transfer function (the Fourier transform of the Fresnel convolution kernel) as the transfer function for Fraunhofer diffraction because if the Fraunhofer approximation is valid, then so is the Fresnel approximation.</li>
 </ul>
+<h2>Solution to Homework Problem 4.16</h2>
+<p>Problem 4.16 is important because it is a basis for the development of the frequency analysis of image-forming systems in later chapters of Goodman.</p>
+<p>The purpose of 4.16 is to show that the diffraction pattern of an aperture by a spherical converging wave in the Fresnel regime is the Fraunhofer diffraction pattern of the aperture.</p>
+<h3>Part a: Quadratic phase approximation to the incident wave</h3>
+<p>Let \( z = 0 \) be the plane of the aperture and \( z = Z \) be the observation plane. Additionally, let \( \left( \xi, \eta \right) \) represent the coordinates in the plane of the aperture, and \( \left( x, y \right) \) the coordinates in the observation plane. The spherical wave that illuminates the aperture is convering to a point \( \vec{r}_P = Y \hat{ \jmath} + Z \hat{k} \) in the observation plane.</p>
+<p>To find a quadratic phase approximation for the incident wave, start with its representation as a time-harmonic spherical wave of amplitude \( A \):</p>
+<p>$$ U \left( x, y, z \right) = A \frac{e^{j k |\vec{r} - \vec{r}_P|}}{|\vec{r} - \vec{r}_P|} $$</p>
+<p>Note that \( \vec{r} - \vec{r}_P = x \hat{\imath} + \left( y - Y \right) \hat{\jmath} + \left( z - Z \right) \hat{k} \). Its magnitude is</p>
+<p>$$\begin{eqnarray}
+| \vec{r} - \vec{r}_P | &amp;=&amp; \sqrt{x^2 + \left( y - Y \right)^2 + \left( z - Z \right)^2} \\
+&amp;=&amp; \left( z - Z \right) \sqrt{1 + \frac{x^2 + \left( y - Y \right)^2}{\left( z - Z \right)^2} } \\
+&amp;\approx&amp; \left( z - Z \right) + \frac{ x^2 + \left( y - Y \right)^2 }{2 \left( z - Z \right)}
+\end{eqnarray}$$</p>
+<p>At first glance, there's a problem here because allowing \( \left( z - Z \right) \) to be negative will result in a negative value for the magnitude of the vector \( \left( \hat{r} - \hat{r}_P \right) \). However, if we use the above table for selecting \( e^{j k r} \) as the phasor for a converging wave when \( \left( z - Z \right) \) is negative, then we will have the correct sign of the argument to the phasor. We do however need to take the absolute value of the \( z - Z \) term in the denominator of the expression of the spherical wave.</p>
+<p>$$ U \left( x, y, z \right) \approx A \frac{e^{j k \left(z - Z \right)} e^{j k \left[ x^2 + \left( y - Y \right)^2 \right] / 2 \left(z - Z \right) }}{\left|z - Z \right|} $$</p>
+<p>In the \( z = 0 \) plane, this becomes:</p>
+<p>$$ U \left( x, y; z = 0 \right) \approx A \left(x, y \right) \frac{e^{-j k Z} e^{-j k \left[ x^2 + \left( y - Y \right)^2 \right] / 2 Z }}{Z} $$</p>
+<p>I moved the finite extent of the aperture into a new function for the amplitude \( A \) above. This function is zero outside the aperture and a constant \( A \) inside it.</p>
+<h3>Part b: Diffraction pattern at the point \( P \)</h3>
+<p>Use the second form of the Fresnel diffraction integral to compute the diffraction pattern at \( P \):</p>
+<p>$$\begin{eqnarray}
+U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e^{\frac{j k Y^2}{2 Z}} \iint_{-\infty}^{\infty} \left[ U \left( \xi , \eta ; z = 0 \right) e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;\approx&amp; \frac{ e^{jkZ} e^{-jkZ} }{j \lambda Z^2} e^{\frac{j k Y^2}{2 Z}} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) \left[ e^{-\frac{j k}{2Z} \left[ \xi^2 + \left( \eta - Y \right)^2 \right]} e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;\approx&amp; \frac{1}{j \lambda Z^2} e^{\frac{j k Y^2}{2 Z} } \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) \left[ e^{-\frac{j k}{2Z} \left( \xi^2 + \eta^2 - 2 \eta Y + Y^2 \right)} e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;\approx&amp; \frac{1}{j \lambda Z^2} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) e^{\frac{j k \eta Y}{Z}} e^{-j \frac{2 \pi}{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;\approx&amp; \frac{1}{j \lambda Z^2} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) e^{-j \frac{2 \pi }{\lambda Z} \left(\eta - Y \right) }  \,d\xi \,d\eta
+\end{eqnarray}$$</p>
+<p>The final expression above is proportional to the Fraunhofer diffraction pattern of the aperture. The reason that the Fraunhofer diffraction pattern appears as the result is that the converging spherical wavefronts exactly cancel the diverging quadratic phase term inside the Fresnel diffraction formula, leaving a simple Fourier transform of the aperture as a result.</p>
 <div class="footnote">
 <hr>
 <ol>

@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 28 Mar 2025 16:36:11 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals</title><link>https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Fourier Optics is complicated, and though I have internalized its concepts over the years, I often still need to review the specifics of its mathematical models. Unfortunately, my go-to resource for this, Goodman's Fourier Optics&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;, tends to disperse information across chapters and homework problems. This makes quick review difficult.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 31 Mar 2025 12:34:33 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals</title><link>https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;Fourier Optics is complicated, and though I have internalized its concepts over the years, I often still need to review the specifics of its mathematical models. Unfortunately, my go-to resource for this, Goodman's Fourier Optics&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;, tends to disperse information across chapters and homework problems. This makes quick review difficult.&lt;/p&gt;
 &lt;p&gt;Here I condense what I think are the essentials of Fresnel and Fraunhofer diffraction into one blog post.&lt;/p&gt;
 &lt;h2&gt;Starting Point: the Huygens-Fresnel Principle&lt;/h2&gt;
 &lt;p&gt;Ignore Chapter 3 of Goodman; it's largely irrelevant for practical work. The Huygens-Fresnel principle itself is a good intuitive model to start with.&lt;/p&gt;
@@ -89,6 +89,34 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;li&gt;Apart from the phase term that depends on \( z \), this expression represents a Fourier transform of the incident field.&lt;/li&gt;
 &lt;li&gt;It appears to break spatial invariance because we no longer depend on differences of coordinates, e.g. \( x - \xi \). However, we can still use the Fresnel transfer function (the Fourier transform of the Fresnel convolution kernel) as the transfer function for Fraunhofer diffraction because if the Fraunhofer approximation is valid, then so is the Fresnel approximation.&lt;/li&gt;
 &lt;/ul&gt;
+&lt;h2&gt;Solution to Homework Problem 4.16&lt;/h2&gt;
+&lt;p&gt;Problem 4.16 is important because it is a basis for the development of the frequency analysis of image-forming systems in later chapters of Goodman.&lt;/p&gt;
+&lt;p&gt;The purpose of 4.16 is to show that the diffraction pattern of an aperture by a spherical converging wave in the Fresnel regime is the Fraunhofer diffraction pattern of the aperture.&lt;/p&gt;
+&lt;h3&gt;Part a: Quadratic phase approximation to the incident wave&lt;/h3&gt;
+&lt;p&gt;Let \( z = 0 \) be the plane of the aperture and \( z = Z \) be the observation plane. Additionally, let \( \left( \xi, \eta \right) \) represent the coordinates in the plane of the aperture, and \( \left( x, y \right) \) the coordinates in the observation plane. The spherical wave that illuminates the aperture is convering to a point \( \vec{r}_P = Y \hat{ \jmath} + Z \hat{k} \) in the observation plane.&lt;/p&gt;
+&lt;p&gt;To find a quadratic phase approximation for the incident wave, start with its representation as a time-harmonic spherical wave of amplitude \( A \):&lt;/p&gt;
+&lt;p&gt;$$ U \left( x, y, z \right) = A \frac{e^{j k |\vec{r} - \vec{r}_P|}}{|\vec{r} - \vec{r}_P|} $$&lt;/p&gt;
+&lt;p&gt;Note that \( \vec{r} - \vec{r}_P = x \hat{\imath} + \left( y - Y \right) \hat{\jmath} + \left( z - Z \right) \hat{k} \). Its magnitude is&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+| \vec{r} - \vec{r}_P | &amp;amp;=&amp;amp; \sqrt{x^2 + \left( y - Y \right)^2 + \left( z - Z \right)^2} \\
+&amp;amp;=&amp;amp; \left( z - Z \right) \sqrt{1 + \frac{x^2 + \left( y - Y \right)^2}{\left( z - Z \right)^2} } \\
+&amp;amp;\approx&amp;amp; \left( z - Z \right) + \frac{ x^2 + \left( y - Y \right)^2 }{2 \left( z - Z \right)}
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;At first glance, there's a problem here because allowing \( \left( z - Z \right) \) to be negative will result in a negative value for the magnitude of the vector \( \left( \hat{r} - \hat{r}_P \right) \). However, if we use the above table for selecting \( e^{j k r} \) as the phasor for a converging wave when \( \left( z - Z \right) \) is negative, then we will have the correct sign of the argument to the phasor. We do however need to take the absolute value of the \( z - Z \) term in the denominator of the expression of the spherical wave.&lt;/p&gt;
+&lt;p&gt;$$ U \left( x, y, z \right) \approx A \frac{e^{j k \left(z - Z \right)} e^{j k \left[ x^2 + \left( y - Y \right)^2 \right] / 2 \left(z - Z \right) }}{\left|z - Z \right|} $$&lt;/p&gt;
+&lt;p&gt;In the \( z = 0 \) plane, this becomes:&lt;/p&gt;
+&lt;p&gt;$$ U \left( x, y; z = 0 \right) \approx A \left(x, y \right) \frac{e^{-j k Z} e^{-j k \left[ x^2 + \left( y - Y \right)^2 \right] / 2 Z }}{Z} $$&lt;/p&gt;
+&lt;p&gt;I moved the finite extent of the aperture into a new function for the amplitude \( A \) above. This function is zero outside the aperture and a constant \( A \) inside it.&lt;/p&gt;
+&lt;h3&gt;Part b: Diffraction pattern at the point \( P \)&lt;/h3&gt;
+&lt;p&gt;Use the second form of the Fresnel diffraction integral to compute the diffraction pattern at \( P \):&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+U \left( x = 0, y = Y, z = Z \right) &amp;amp;=&amp;amp; \frac{ e^{jkZ} }{j \lambda Z} e^{\frac{j k Y^2}{2 Z}} \iint_{-\infty}^{\infty} \left[ U \left( \xi , \eta ; z = 0 \right) e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;amp;\approx&amp;amp; \frac{ e^{jkZ} e^{-jkZ} }{j \lambda Z^2} e^{\frac{j k Y^2}{2 Z}} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) \left[ e^{-\frac{j k}{2Z} \left[ \xi^2 + \left( \eta - Y \right)^2 \right]} e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;amp;\approx&amp;amp; \frac{1}{j \lambda Z^2} e^{\frac{j k Y^2}{2 Z} } \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) \left[ e^{-\frac{j k}{2Z} \left( \xi^2 + \eta^2 - 2 \eta Y + Y^2 \right)} e^{\frac{j k}{2 Z} \left( \xi^2 + \eta^2 \right)} \right] e^{-j \frac{2 \pi }{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;amp;\approx&amp;amp; \frac{1}{j \lambda Z^2} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) e^{\frac{j k \eta Y}{Z}} e^{-j \frac{2 \pi}{\lambda Z} y \eta }  \,d\xi \,d\eta \\
+&amp;amp;\approx&amp;amp; \frac{1}{j \lambda Z^2} \iint_{-\infty}^{\infty} A \left(\xi, \eta \right) e^{-j \frac{2 \pi }{\lambda Z} \left(\eta - Y \right) }  \,d\xi \,d\eta
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;The final expression above is proportional to the Fraunhofer diffraction pattern of the aperture. The reason that the Fraunhofer diffraction pattern appears as the result is that the converging spherical wavefronts exactly cancel the diverging quadratic phase term inside the Fresnel diffraction formula, leaving a simple Fourier transform of the aperture as a result.&lt;/p&gt;
 &lt;div class="footnote"&gt;
 &lt;hr&gt;
 &lt;ol&gt;
