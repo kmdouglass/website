@@ -146,6 +146,8 @@ $$\begin{eqnarray}
 
 At first glance, there's a problem here because allowing \\( \left( z - Z \right) \\) to be negative will result in a negative value for the magnitude of the vector \\( \left( \hat{r} - \hat{r}_P \right) \\). However, if we use the above table for selecting \\( e^{j k r} \\) as the phasor for a converging wave when \\( \left( z - Z \right) \\) is negative, then we will have the correct sign of the argument to the phasor. We do however need to take the absolute value of the \\( z - Z \\) term in the denominator of the expression of the spherical wave.
 
+Replacing the distance in the phasor's argument with the two lowest order terms in the binomial expansion and the lowest order term in the denominator:
+
 $$ U \left( x, y, z \right) \approx A \frac{e^{j k \left(z - Z \right)} e^{j k \left[ x^2 + \left( y - Y \right)^2 \right] / 2 \left(z - Z \right) }}{\left|z - Z \right|} $$
 
 In the \\( z = 0 \\) plane, this becomes:
