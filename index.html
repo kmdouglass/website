@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,105 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/" class="u-url">A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/" class="u-url">A Very Brief Summary of The Analytic Signal in Fourier Optics</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/" rel="bookmark">
+            <time class="published dt-published" datetime="2025-04-01T15:53:21+02:00" itemprop="datePublished" title="2025-04-01 15:53">2025-04-01 15:53</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#disqus_thread" data-disqus-identifier="cache/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <h2>The Analytic Signal Representation of a Monochromatic Wave</h2>
+<h3>Monochromatic Scalar Waves</h3>
+<p>A monochromatic, scalar waveform is described by the expression:</p>
+<p>$$ u \left( \mathbf{r}, t\right) = A ( \mathbf{r} ) \cos \left[2 \pi f_0 t + \phi \left( \mathbf{r} \right) \right] $$</p>
+<ul>
+<li>The signal is real-valued</li>
+<li>The signal has a known phase for all \( t \)</li>
+</ul>
+<h3>The Analytic Signal</h3>
+<p>An analytic signal is a generalization of a phasor. It is used to represent a real-valued signal as a complex exponential or a sum of complex exponentials. When Goodman<sup id="fnref:1"><a class="footnote-ref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:1">1</a></sup> refers to a phasor, he often means the analytic signal. This is made clear in Chapter 6 where he describes the construction of the phasor for a narrowband signal as follows:</p>
+<ol>
+<li>compute its Fourier transform</li>
+<li>set the positive frequency components to zero</li>
+<li>double the amplitudes of the negative frequency components</li>
+<li>inverse Fourier transform the resulting one-sided spectrum</li>
+</ol>
+<p>Strictly speaking, the analytic signal is obtained by setting the negative frequencies to zero and doubling by application of the Hilbert transform. However, many engineering fields have adopted the convention of setting the positive frequencies to zero instead. The results will be the same, except that the direction of power flow will be reversed (if I recall correctly).</p>
+<p>The Fourier transform of \( u \left( \mathbf{r}, t\right) \) is:</p>
+<p>$$ \mathcal{F} \left\{ u \left( \mathbf{r}, t\right) \right\} = \frac{A ( \mathbf{r} ) }{2} \left[ e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) + e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) \right] $$</p>
+<p>Drop the positive frequency term \( e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) \) and double the result. This produces:</p>
+<p>$$ A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) $$</p>
+<p>Let \( U ( \mathbf{r} ) := A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \). The inverse Fourier transform of this signal is:</p>
+<p>$$ \mathcal{F}^{-1} \left\{ U ( \mathbf{r} ) \delta \left( f + f_0 \right) \right\} = U ( \mathbf{r} ) e^{-j 2 \pi f_0 t } $$</p>
+<p>We can recover the original field by taking the real part of this expression, which is equivalent to applying Euler's identity and dropping the imaginary part:</p>
+<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U ( \mathbf{r} ) e^{-j 2 \pi f t} \right] $$</p>
+<h2>Polychromatic Scalar Waves</h2>
+<p>To model a polychromatic wave, we integrate over the analytic signals of each spectral component and take the real part of the result:</p>
+<p>$$ u \left( \mathbf{r}, t\right) = \Re \left[ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df \right] $$</p>
+<h3>The Narrowband Assumption</h3>
+<p>We get a useful representation to the expression above if we assume that the bandwidth of the signal is much smaller than its center frequency \( \Delta f \ll f_0 \):</p>
+<p>$$ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df = U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} $$</p>
+<p>To better understand the meaning of this assumption, make the substitution \( \nu = f - f_0 \) into the expression on the left hand side:</p>
+<p>$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df &amp;=&amp; \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \left( \nu + f_0 \right) t} \,d\nu \\
+&amp;=&amp; e^{-j 2 \pi f_0 t} \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu
+\end{eqnarray}$$</p>
+<p>Under the narrowband assumption, the integration in the expression above is constrained to small values around \( \nu = 0 \) that are much less than the phasor term that is oscillating at frequency \( f_0 \). If we define the following function:</p>
+<p>$$ U \left( \mathbf{r}, t \right) := \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu $$ </p>
+<p>then it will vary slowly with respect to the carrier frequency \( f_0 \).</p>
+<p>As a result, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) as an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation fails.</p>
+<h3>The Slowly Varying Envelope Assumption</h3>
+<p>It is instructive to reverse our reasoning and see why a slowly-varying envelope implies a narrowband signal. Compute the Fourier transforms of the narrowband waveform, along with the Fourier transform of the derivative of \( U \left( \mathbf{r}, t \right) \).</p>
+<p>The Fourier transform of the analytic signal:</p>
+<p>$$ \int_{-\infty}^{\infty} \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] e^{-j 2 \pi f t} \,dt = \tilde{U} \left( \mathbf{r}, f + f_0 \right) $$</p>
+<p>The Fourier transform of the derivative of \( U \):</p>
+<p>$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt &amp;=&amp; j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right)
+\end{eqnarray}$$</p>
+<p>Now, apply the <a href="https://en.wikipedia.org/wiki/Slowly_varying_envelope_approximation">slowly varying envelope approximation (SVEA)</a> by asserting that the rate of change of \( U \) with respect to time is much less than the value of \( U \) multiplied by the center frequency, or \( \left| \frac{d}{dt} U \left( \mathbf{r}, t\right) \right| \ll \left| 2 \pi f_0 U \left( \mathbf{r, t} \right) \right| \)</p>
+<p>$$\begin{eqnarray}
+\left| j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right) \right| &amp;=&amp; \left| \int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt \right| \\
+&amp;\ll&amp; \left| \int_{-\infty}^{\infty} 2 \pi f_0 U \left( \mathbf{r}, t \right) e^{-j 2 \pi f t} \,dt \right| \\
+&amp;\ll&amp; 2 \pi f_0 \left| \tilde{U} \left( \mathbf{r}, f \right) \right|
+\end{eqnarray}$$</p>
+<p>This expression means that the appreciable frequency components of \( U \left( \mathbf{r} , t \right) \) are much less than the frequency \( f_0 \)<sup id="fnref:2"><a class="footnote-ref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:2">2</a></sup>. And when we consider the spectrum of \( U \left( \mathbf{r} , t \right) \) centered around \( f_0 \), we find that the bandwidth \( \Delta f \) is small with respect to \( f_0 \).</p>
+<h3>Assumptions, not Approximations!</h3>
+<p>The narrowband and slowly varying envelope assumptions are usually referred to as approximations. This is misleading! The resulting expression for the field is not an approximation at all; instead, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation is not correct.</p>
+<h3>Narrowband Polychromatic Waves</h3>
+<p>In summary, narrowband polychromatic waves with a center frequency \( f_0 \) are modeled as the product of a fast rotating phasor and slowly varying envelope:</p>
+<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] $$</p>
+<p>The amplitude and the phase of the envelope are the amplitude and phase of the real optical wave.</p>
+<h2>Coherence</h2>
+<p>While the expression for the analytic signal \( U \left( \mathbf{r}, t \right) \) as an integral over frequency components appears deterministic, the phase relationships between the spectral components are often unknown and vary randomly in time. As a result, the envelope of the optical wave will vary unpredictably and must be analyzed in terms of its statistical properties.</p>
+<h3>Monochromatic Light is Coherent</h3>
+<p>Since monochromatic light has only one spectral component by definition, it is completely coherent.</p>
+<ul>
+<li>I mean monochromatic in the ideal sense, not like how we sometimes describe lasers.</li>
+<li>Monochromatic waves, like plane waves, cannot exist in real life. The uncertainy principle requires that a monochromatic wave exist for an infinite duration.</li>
+</ul>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers (2005). ISBN 978-0974707723. <a class="footnote-backref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply">https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply</a> <a class="footnote-backref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/" class="u-url">A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -223,15 +321,15 @@ U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e
     </header><div class="e-content entry-content">
     <p>I would like to clean up my 3D ray trace routines for my <a href="https://www.github.com/kmdouglass/cherry">Rust-based optical design library</a>. The proof of concept (PoC) is finished and I now I need to make the code easier to modify to better support the features that I want to add on the frontend. I suspect that I might be able to make some performance gains as well during refactoring. Towards this end, I want to take a look at my ray data type from the perspective of making it CPU cache friendly.</p>
 <p>One of the current obstacles to adding more features to the GUI (for example color selection for different ray bundles) is how I handle individual rays. For the PoC it was fastest to add two additional fields to each ray to track where they come from and whether they are terminated:</p>
-<div class="code"><pre class="code literal-block"><span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<div class="code"><pre class="code literal-block"><span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
-<span class="w">    </span><span class="n">field_id</span>: <span class="kt">usize</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
+<span class="w">    </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -240,23 +338,23 @@ U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e
 <h2>A deeper look into the Ray struct</h2>
 <h3>Size of a ray</h3>
 <p>Let's first look to see how much space the Ray struct occupies.</p>
-<div class="code"><pre class="code literal-block"><span class="k">use</span><span class="w"> </span><span class="n">std</span>::<span class="n">mem</span><span class="p">;</span>
+<div class="code"><pre class="code literal-block"><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">;</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
-<span class="w">    </span><span class="n">field_id</span>: <span class="kt">usize</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
+<span class="w">    </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span>::<span class="n">size_of</span>::<span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -313,19 +411,19 @@ U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e
 </ol>
 </blockquote>
 <p>So for my <code>Ray</code> data type, its alignment is 8 because the maximum alignment of its fields is 8 bytes. (<code>pos</code> and <code>dir</code> are composed of 8-byte floating point numbers). The addresses of its fields are:</p>
-<div class="code"><pre class="code literal-block"><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<div class="code"><pre class="code literal-block"><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">terminated</span>: <span class="nc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="n">field_id</span>: <span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="nc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.pos: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">pos</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.dir: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">dir</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.terminated: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">terminated</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.field_id: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">field_id</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.pos: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">pos</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.dir: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">dir</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.terminated: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">terminated</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.field_id: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">field_id</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -342,25 +440,25 @@ U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e
 <h2>What makes a good data type?</h2>
 <p>As I mentioned, I already know that <code>field_id</code> shouldn't belong to the ray for reasons related to data access by the programmer. So the reason for removing it from the <code>Ray</code> struct is not related to performance. But what about the <code>terminated</code> bool? Well, in this case, it's resulting in 7 extra bytes of padding for each ray!</p>
 <div class="code"><pre class="code literal-block"><span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">terminated</span>: <span class="nc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="nc">false</span><span class="p">,</span>
 <span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span>::<span class="n">size_of</span>::<span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -863,14 +961,14 @@ k_S &amp;=&amp; 2 k_{max} \\
 <p>where V_max is the voltage supplied to the chip's Vcc pin (3.3V in my case). The output step size is \( \Delta V = V_{max} / 4096 \) or about 0.8 mV.</p>
 <h2>Control via Python</h2>
 <p>This is modified from <a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all">Sparkfun's tutorial</a> and uses the smbus Python bindings. Be aware that the tutorial example has a bug in how it prepares the list of bytes to send to the DAC.</p>
-<div class="code"><pre class="code literal-block"><span class="kn">import</span> <span class="nn">smbus</span>
+<div class="code"><pre class="code literal-block"><span class="kn">import</span><span class="w"> </span><span class="nn">smbus</span>
 
 
 <span class="n">OUTPUT_MAX</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4095</span>
 <span class="n">V_MAX</span> <span class="o">=</span> <span class="mf">3.3</span>
 
 
-<span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">output</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x60</span><span class="p">,</span> <span class="n">command_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x40</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="n">output</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x60</span><span class="p">,</span> <span class="n">command_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x40</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">output</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"Output voltage must be expressed as fraction of the maximum in the range [0.0, 1.0]"</span>
 
     <span class="n">bus</span> <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
@@ -958,43 +1056,6 @@ k_S &amp;=&amp; 2 k_{max} \\
 </ol>
 <p>Click OK and restart the Pi if it's already connected. Once it restarts, it should now have internet access through the laptop.</p>
 <p>Next I wanted to connect with SSH to the Pi from my laptop and I needed to know the Pi's IP address. Luckily, ICS uses the <code>mshome.net</code> domain name for the network, and the Raspberry Pi by default has the hostname <code>raspberrypi</code>. So getting the IP is as easy running the <code>ping raspberrypi.mshome.net</code> command in Powershell.</p>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-mono16-format-and-flir-cameras/" class="u-url">The Mono16 Format and Flir Cameras</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/the-mono16-format-and-flir-cameras/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-08-27T14:15:36+02:00" itemprop="datePublished" title="2024-08-27 14:15">2024-08-27 14:15</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/the-mono16-format-and-flir-cameras/#disqus_thread" data-disqus-identifier="cache/posts/the-mono16-format-and-flir-cameras.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p>For a long time I had found the Mono16 image format of Flir's cameras a bit strange. In the lab I have several Flir cameras with 12-bit ADC's, but the images they output in Mono16 would span a range from 0 to around 65535. How does the camera map a 12-bit number to a 16-bit number?</p>
-<p>If you search for the Mono16 format you will find that it's a padded format. This means that, in the 12-bit ADC example, 4 bits in each pixel are always 0, and the remaining 12 bits represent the pixel's value. But this should mean that we should get pixel values only between 0 and 2^12 - 1, or 4095. So how is it that we can saturate one of these cameras with values near 65535?</p>
-<p>Today it occurred to me that Flir's Mono16 format might not use all the values in the range [0, 65535]. This is indeed the case, as I show below with an image stack that I acquired from one of these cameras:</p>
-<div class="code"><pre class="code literal-block"><span class="o">&gt;&gt;&gt;</span> <span class="n">sorted_unique_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sorted_unique_pixels</span><span class="p">))</span>
-<span class="n">array</span><span class="p">([</span> <span class="mi">16</span><span class="p">,</span>  <span class="mi">32</span><span class="p">,</span>  <span class="mi">48</span><span class="p">,</span>  <span class="mi">64</span><span class="p">,</span>  <span class="mi">96</span><span class="p">,</span> <span class="mi">144</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint16</span><span class="p">)</span>
-</pre></div>
-
-<p>This prints all the possible, unique differences between the sorted and flattened pixel values in my particular image stack. Notice how they are all multiples of 16?</p>
-<p>Let's look also at the sorted array of unique values itself:</p>
-<div class="code"><pre class="code literal-block"><span class="o">&gt;&gt;&gt;</span> <span class="n">sorted_unique_pixels</span>
-<span class="n">array</span><span class="p">([</span> <span class="mi">5808</span><span class="p">,</span>  <span class="mi">5824</span><span class="p">,</span>  <span class="mi">5856</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">57312</span><span class="p">,</span> <span class="mi">57328</span><span class="p">,</span> <span class="mi">57472</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint16</span><span class="p">)</span>
-</pre></div>
-
-<p>There are more than a million pixels in this array, yet they all take values that are integer multiples of 16.</p>
-<p>It looks like Flir's Mono16 format rescales the camera's output onto the interval [0, 65535] by introducing "gaps" between the numbers equal to 2^16 - 2^N where N is the bit-depth of the camera's ADC.</p>
-<p>But wait just a moment. Above I said that 4 bits in the Mono16 are zero, but I assumed that these were the most significant bits. If the least significant bits are the zero padding, then the allowed pixel values would be, for example, 
-<code>0000 0000 = 0</code>, <code>0001 0000 = 16</code>, <code>0010 0000 = 32</code>, <code>0011 0000 = 48</code>, etc. (Here I ignored the first 8 bits for clarity.)</p>
-<p>So it appears that Flir is indeed padding the 12-bit ADC data with 0's in its Mono16 format. But, somewhat counter-intuitively, <em>it is the four least significant bits that are the zero padding.</em> I say this is counter-intuitive because I have another camera that pads the most significant bits, so that the maximum pixel value is really 2^N - 1, with N being the ADC's bit-depth.</p>
     </div>
     </article>
 </div>

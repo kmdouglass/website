@@ -218,14 +218,14 @@ bg-dark
 <p>where V_max is the voltage supplied to the chip's Vcc pin (3.3V in my case). The output step size is \( \Delta V = V_{max} / 4096 \) or about 0.8 mV.</p>
 <h2>Control via Python</h2>
 <p>This is modified from <a href="https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all">Sparkfun's tutorial</a> and uses the smbus Python bindings. Be aware that the tutorial example has a bug in how it prepares the list of bytes to send to the DAC.</p>
-<div class="code"><pre class="code literal-block"><span class="kn">import</span> <span class="nn">smbus</span>
+<div class="code"><pre class="code literal-block"><span class="kn">import</span><span class="w"> </span><span class="nn">smbus</span>
 
 
 <span class="n">OUTPUT_MAX</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4095</span>
 <span class="n">V_MAX</span> <span class="o">=</span> <span class="mf">3.3</span>
 
 
-<span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">output</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x60</span><span class="p">,</span> <span class="n">command_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x40</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">send</span><span class="p">(</span><span class="n">output</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">channel</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">device_address</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x60</span><span class="p">,</span> <span class="n">command_byte</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mh">0x40</span><span class="p">):</span>
     <span class="k">assert</span> <span class="n">output</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"Output voltage must be expressed as fraction of the maximum in the range [0.0, 1.0]"</span>
 
     <span class="n">bus</span> <span class="o">=</span> <span class="n">smbus</span><span class="o">.</span><span class="n">SMBus</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>

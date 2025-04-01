@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I summarize the analytic signal representations for monochromatic and narrowband polychromatic scalar optical waves.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Very Brief Summary of The Analytic Signal in Fourier Optics | Kyle M. Douglass</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
+<link rel="prev" href="../a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/" title="A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals" type="text/html">
+<meta property="og:site_name" content="Kyle M. Douglass">
+<meta property="og:title" content="A Very Brief Summary of The Analytic Signal in Fourier Optics">
+<meta property="og:url" content="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/">
+<meta property="og:description" content="I summarize the analytic signal representations for monochromatic and narrowband polychromatic scalar optical waves.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-04-01T15:53:21+02:00">
+<meta property="article:tag" content="analytic signal">
+<meta property="article:tag" content="coherence">
+<meta property="article:tag" content="fourier optics">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../../">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+                </li>
+<li class="nav-item">
+<a href="https://kmdouglass.github.io/" class="nav-link">Previous</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">A Very Brief Summary of The Analytic Signal in Fourier Optics</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2025-04-01T15:53:21+02:00" itemprop="datePublished" title="2025-04-01 15:53">2025-04-01 15:53</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <h2>The Analytic Signal Representation of a Monochromatic Wave</h2>
+<h3>Monochromatic Scalar Waves</h3>
+<p>A monochromatic, scalar waveform is described by the expression:</p>
+<p>$$ u \left( \mathbf{r}, t\right) = A ( \mathbf{r} ) \cos \left[2 \pi f_0 t + \phi \left( \mathbf{r} \right) \right] $$</p>
+<ul>
+<li>The signal is real-valued</li>
+<li>The signal has a known phase for all \( t \)</li>
+</ul>
+<h3>The Analytic Signal</h3>
+<p>An analytic signal is a generalization of a phasor. It is used to represent a real-valued signal as a complex exponential or a sum of complex exponentials. When Goodman<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup> refers to a phasor, he often means the analytic signal. This is made clear in Chapter 6 where he describes the construction of the phasor for a narrowband signal as follows:</p>
+<ol>
+<li>compute its Fourier transform</li>
+<li>set the positive frequency components to zero</li>
+<li>double the amplitudes of the negative frequency components</li>
+<li>inverse Fourier transform the resulting one-sided spectrum</li>
+</ol>
+<p>Strictly speaking, the analytic signal is obtained by setting the negative frequencies to zero and doubling by application of the Hilbert transform. However, many engineering fields have adopted the convention of setting the positive frequencies to zero instead. The results will be the same, except that the direction of power flow will be reversed (if I recall correctly).</p>
+<p>The Fourier transform of \( u \left( \mathbf{r}, t\right) \) is:</p>
+<p>$$ \mathcal{F} \left\{ u \left( \mathbf{r}, t\right) \right\} = \frac{A ( \mathbf{r} ) }{2} \left[ e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) + e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) \right] $$</p>
+<p>Drop the positive frequency term \( e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) \) and double the result. This produces:</p>
+<p>$$ A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) $$</p>
+<p>Let \( U ( \mathbf{r} ) := A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \). The inverse Fourier transform of this signal is:</p>
+<p>$$ \mathcal{F}^{-1} \left\{ U ( \mathbf{r} ) \delta \left( f + f_0 \right) \right\} = U ( \mathbf{r} ) e^{-j 2 \pi f_0 t } $$</p>
+<p>We can recover the original field by taking the real part of this expression, which is equivalent to applying Euler's identity and dropping the imaginary part:</p>
+<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U ( \mathbf{r} ) e^{-j 2 \pi f t} \right] $$</p>
+<h2>Polychromatic Scalar Waves</h2>
+<p>To model a polychromatic wave, we integrate over the analytic signals of each spectral component and take the real part of the result:</p>
+<p>$$ u \left( \mathbf{r}, t\right) = \Re \left[ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df \right] $$</p>
+<h3>The Narrowband Assumption</h3>
+<p>We get a useful representation to the expression above if we assume that the bandwidth of the signal is much smaller than its center frequency \( \Delta f \ll f_0 \):</p>
+<p>$$ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df = U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} $$</p>
+<p>To better understand the meaning of this assumption, make the substitution \( \nu = f - f_0 \) into the expression on the left hand side:</p>
+<p>$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df &amp;=&amp; \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \left( \nu + f_0 \right) t} \,d\nu \\
+&amp;=&amp; e^{-j 2 \pi f_0 t} \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu
+\end{eqnarray}$$</p>
+<p>Under the narrowband assumption, the integration in the expression above is constrained to small values around \( \nu = 0 \) that are much less than the phasor term that is oscillating at frequency \( f_0 \). If we define the following function:</p>
+<p>$$ U \left( \mathbf{r}, t \right) := \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu $$ </p>
+<p>then it will vary slowly with respect to the carrier frequency \( f_0 \).</p>
+<p>As a result, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) as an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation fails.</p>
+<h3>The Slowly Varying Envelope Assumption</h3>
+<p>It is instructive to reverse our reasoning and see why a slowly-varying envelope implies a narrowband signal. Compute the Fourier transforms of the narrowband waveform, along with the Fourier transform of the derivative of \( U \left( \mathbf{r}, t \right) \).</p>
+<p>The Fourier transform of the analytic signal:</p>
+<p>$$ \int_{-\infty}^{\infty} \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] e^{-j 2 \pi f t} \,dt = \tilde{U} \left( \mathbf{r}, f + f_0 \right) $$</p>
+<p>The Fourier transform of the derivative of \( U \):</p>
+<p>$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt &amp;=&amp; j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right)
+\end{eqnarray}$$</p>
+<p>Now, apply the <a href="https://en.wikipedia.org/wiki/Slowly_varying_envelope_approximation">slowly varying envelope approximation (SVEA)</a> by asserting that the rate of change of \( U \) with respect to time is much less than the value of \( U \) multiplied by the center frequency, or \( \left| \frac{d}{dt} U \left( \mathbf{r}, t\right) \right| \ll \left| 2 \pi f_0 U \left( \mathbf{r, t} \right) \right| \)</p>
+<p>$$\begin{eqnarray}
+\left| j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right) \right| &amp;=&amp; \left| \int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt \right| \\
+&amp;\ll&amp; \left| \int_{-\infty}^{\infty} 2 \pi f_0 U \left( \mathbf{r}, t \right) e^{-j 2 \pi f t} \,dt \right| \\
+&amp;\ll&amp; 2 \pi f_0 \left| \tilde{U} \left( \mathbf{r}, f \right) \right|
+\end{eqnarray}$$</p>
+<p>This expression means that the appreciable frequency components of \( U \left( \mathbf{r} , t \right) \) are much less than the frequency \( f_0 \)<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>. And when we consider the spectrum of \( U \left( \mathbf{r} , t \right) \) centered around \( f_0 \), we find that the bandwidth \( \Delta f \) is small with respect to \( f_0 \).</p>
+<h3>Assumptions, not Approximations!</h3>
+<p>The narrowband and slowly varying envelope assumptions are usually referred to as approximations. This is misleading! The resulting expression for the field is not an approximation at all; instead, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation is not correct.</p>
+<h3>Narrowband Polychromatic Waves</h3>
+<p>In summary, narrowband polychromatic waves with a center frequency \( f_0 \) are modeled as the product of a fast rotating phasor and slowly varying envelope:</p>
+<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] $$</p>
+<p>The amplitude and the phase of the envelope are the amplitude and phase of the real optical wave.</p>
+<h2>Coherence</h2>
+<p>While the expression for the analytic signal \( U \left( \mathbf{r}, t \right) \) as an integral over frequency components appears deterministic, the phase relationships between the spectral components are often unknown and vary randomly in time. As a result, the envelope of the optical wave will vary unpredictably and must be analyzed in terms of its statistical properties.</p>
+<h3>Monochromatic Light is Coherent</h3>
+<p>Since monochromatic light has only one spectral component by definition, it is completely coherent.</p>
+<ul>
+<li>I mean monochromatic in the ideal sense, not like how we sometimes describe lasers.</li>
+<li>Monochromatic waves, like plane waves, cannot exist in real life. The uncertainy principle requires that a monochromatic wave exist for an infinite duration.</li>
+</ul>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers (2005). ISBN 978-0974707723. <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply">https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply</a> <a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/analytic-signal/" rel="tag">analytic signal</a></li>
+            <li><a class="tag p-category" href="../../categories/coherence/" rel="tag">coherence</a></li>
+            <li><a class="tag p-category" href="../../categories/fourier-optics/" rel="tag">fourier optics</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/" rel="prev" title="A Very Brief Summary of Fresnel and Fraunhofer Diffraction Integrals">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+    
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="kyle-m-douglass",
+            disqus_url="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/",
+        disqus_title="A Very Brief Summary of The Analytic Signal in Fourier Optics",
+        disqus_identifier="cache/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article><script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2025         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>

@@ -10,6 +10,10 @@
   <lastmod>2024-05-17T09:20:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/analytic-signal.xml</loc>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/biophysics.xml</loc>
   <lastmod>2025-01-30T15:23:00Z</lastmod>
  </sitemap>
@@ -19,11 +23,11 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cameras.xml</loc>
-  <lastmod>2024-08-27T13:04:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_homelab.xml</loc>
-  <lastmod>2024-09-26T14:13:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_literature-review.xml</loc>
@@ -35,11 +39,15 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_optics.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_programming.xml</loc>
-  <lastmod>2025-02-24T10:10:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kylemdouglass.com/categories/coherence.xml</loc>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/computer-vision.xml</loc>
@@ -47,7 +55,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/diffraction.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-03-31T12:38:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/electronics.xml</loc>
@@ -58,8 +66,12 @@
   <lastmod>2024-05-17T09:20:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/fourier-optics.xml</loc>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/fraunhofer.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-03-31T12:38:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/french.xml</loc>
@@ -67,7 +79,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/fresnel.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-03-31T12:38:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/github.xml</loc>
@@ -75,7 +87,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/i2c.xml</loc>
-  <lastmod>2024-09-26T14:13:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/microscopy.xml</loc>
@@ -91,23 +103,23 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/raspberry-pi.xml</loc>
-  <lastmod>2024-09-26T14:13:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/ray-tracing.xml</loc>
-  <lastmod>2025-02-24T10:10:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/rust.xml</loc>
-  <lastmod>2025-02-24T10:10:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/simulation.xml</loc>
-  <lastmod>2024-05-30T14:21:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/statistics.xml</loc>
-  <lastmod>2024-05-30T14:21:00Z</lastmod>
+  <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/telecentricity.xml</loc>
@@ -115,10 +127,10 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/rss.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/sitemap.xml</loc>
-  <lastmod>2025-03-28T08:19:00Z</lastmod>
+  <lastmod>2025-04-01T13:53:00Z</lastmod>
  </sitemap>
 </sitemapindex>

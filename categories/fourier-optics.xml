@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about fourier optics)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/fourier-optics.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2025 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+&lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
+&lt;img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 01 Apr 2025 13:53:59 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>A Very Brief Summary of The Analytic Signal in Fourier Optics</title><link>https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h2&gt;The Analytic Signal Representation of a Monochromatic Wave&lt;/h2&gt;
+&lt;h3&gt;Monochromatic Scalar Waves&lt;/h3&gt;
+&lt;p&gt;A monochromatic, scalar waveform is described by the expression:&lt;/p&gt;
+&lt;p&gt;$$ u \left( \mathbf{r}, t\right) = A ( \mathbf{r} ) \cos \left[2 \pi f_0 t + \phi \left( \mathbf{r} \right) \right] $$&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The signal is real-valued&lt;/li&gt;
+&lt;li&gt;The signal has a known phase for all \( t \)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;The Analytic Signal&lt;/h3&gt;
+&lt;p&gt;An analytic signal is a generalization of a phasor. It is used to represent a real-valued signal as a complex exponential or a sum of complex exponentials. When Goodman&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; refers to a phasor, he often means the analytic signal. This is made clear in Chapter 6 where he describes the construction of the phasor for a narrowband signal as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;compute its Fourier transform&lt;/li&gt;
+&lt;li&gt;set the positive frequency components to zero&lt;/li&gt;
+&lt;li&gt;double the amplitudes of the negative frequency components&lt;/li&gt;
+&lt;li&gt;inverse Fourier transform the resulting one-sided spectrum&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Strictly speaking, the analytic signal is obtained by setting the negative frequencies to zero and doubling by application of the Hilbert transform. However, many engineering fields have adopted the convention of setting the positive frequencies to zero instead. The results will be the same, except that the direction of power flow will be reversed (if I recall correctly).&lt;/p&gt;
+&lt;p&gt;The Fourier transform of \( u \left( \mathbf{r}, t\right) \) is:&lt;/p&gt;
+&lt;p&gt;$$ \mathcal{F} \left\{ u \left( \mathbf{r}, t\right) \right\} = \frac{A ( \mathbf{r} ) }{2} \left[ e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) + e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) \right] $$&lt;/p&gt;
+&lt;p&gt;Drop the positive frequency term \( e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) \) and double the result. This produces:&lt;/p&gt;
+&lt;p&gt;$$ A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) $$&lt;/p&gt;
+&lt;p&gt;Let \( U ( \mathbf{r} ) := A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \). The inverse Fourier transform of this signal is:&lt;/p&gt;
+&lt;p&gt;$$ \mathcal{F}^{-1} \left\{ U ( \mathbf{r} ) \delta \left( f + f_0 \right) \right\} = U ( \mathbf{r} ) e^{-j 2 \pi f_0 t } $$&lt;/p&gt;
+&lt;p&gt;We can recover the original field by taking the real part of this expression, which is equivalent to applying Euler's identity and dropping the imaginary part:&lt;/p&gt;
+&lt;p&gt;$$ u \left( \mathbf{r}, t \right) = \Re \left[ U ( \mathbf{r} ) e^{-j 2 \pi f t} \right] $$&lt;/p&gt;
+&lt;h2&gt;Polychromatic Scalar Waves&lt;/h2&gt;
+&lt;p&gt;To model a polychromatic wave, we integrate over the analytic signals of each spectral component and take the real part of the result:&lt;/p&gt;
+&lt;p&gt;$$ u \left( \mathbf{r}, t\right) = \Re \left[ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df \right] $$&lt;/p&gt;
+&lt;h3&gt;The Narrowband Assumption&lt;/h3&gt;
+&lt;p&gt;We get a useful representation to the expression above if we assume that the bandwidth of the signal is much smaller than its center frequency \( \Delta f \ll f_0 \):&lt;/p&gt;
+&lt;p&gt;$$ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df = U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} $$&lt;/p&gt;
+&lt;p&gt;To better understand the meaning of this assumption, make the substitution \( \nu = f - f_0 \) into the expression on the left hand side:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df &amp;amp;=&amp;amp; \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \left( \nu + f_0 \right) t} \,d\nu \\
+&amp;amp;=&amp;amp; e^{-j 2 \pi f_0 t} \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;Under the narrowband assumption, the integration in the expression above is constrained to small values around \( \nu = 0 \) that are much less than the phasor term that is oscillating at frequency \( f_0 \). If we define the following function:&lt;/p&gt;
+&lt;p&gt;$$ U \left( \mathbf{r}, t \right) := \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu $$ &lt;/p&gt;
+&lt;p&gt;then it will vary slowly with respect to the carrier frequency \( f_0 \).&lt;/p&gt;
+&lt;p&gt;As a result, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) as an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation fails.&lt;/p&gt;
+&lt;h3&gt;The Slowly Varying Envelope Assumption&lt;/h3&gt;
+&lt;p&gt;It is instructive to reverse our reasoning and see why a slowly-varying envelope implies a narrowband signal. Compute the Fourier transforms of the narrowband waveform, along with the Fourier transform of the derivative of \( U \left( \mathbf{r}, t \right) \).&lt;/p&gt;
+&lt;p&gt;The Fourier transform of the analytic signal:&lt;/p&gt;
+&lt;p&gt;$$ \int_{-\infty}^{\infty} \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] e^{-j 2 \pi f t} \,dt = \tilde{U} \left( \mathbf{r}, f + f_0 \right) $$&lt;/p&gt;
+&lt;p&gt;The Fourier transform of the derivative of \( U \):&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+\int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt &amp;amp;=&amp;amp; j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;Now, apply the &lt;a href="https://en.wikipedia.org/wiki/Slowly_varying_envelope_approximation"&gt;slowly varying envelope approximation (SVEA)&lt;/a&gt; by asserting that the rate of change of \( U \) with respect to time is much less than the value of \( U \) multiplied by the center frequency, or \( \left| \frac{d}{dt} U \left( \mathbf{r}, t\right) \right| \ll \left| 2 \pi f_0 U \left( \mathbf{r, t} \right) \right| \)&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+\left| j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right) \right| &amp;amp;=&amp;amp; \left| \int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt \right| \\
+&amp;amp;\ll&amp;amp; \left| \int_{-\infty}^{\infty} 2 \pi f_0 U \left( \mathbf{r}, t \right) e^{-j 2 \pi f t} \,dt \right| \\
+&amp;amp;\ll&amp;amp; 2 \pi f_0 \left| \tilde{U} \left( \mathbf{r}, f \right) \right|
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;This expression means that the appreciable frequency components of \( U \left( \mathbf{r} , t \right) \) are much less than the frequency \( f_0 \)&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt;. And when we consider the spectrum of \( U \left( \mathbf{r} , t \right) \) centered around \( f_0 \), we find that the bandwidth \( \Delta f \) is small with respect to \( f_0 \).&lt;/p&gt;
+&lt;h3&gt;Assumptions, not Approximations!&lt;/h3&gt;
+&lt;p&gt;The narrowband and slowly varying envelope assumptions are usually referred to as approximations. This is misleading! The resulting expression for the field is not an approximation at all; instead, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation is not correct.&lt;/p&gt;
+&lt;h3&gt;Narrowband Polychromatic Waves&lt;/h3&gt;
+&lt;p&gt;In summary, narrowband polychromatic waves with a center frequency \( f_0 \) are modeled as the product of a fast rotating phasor and slowly varying envelope:&lt;/p&gt;
+&lt;p&gt;$$ u \left( \mathbf{r}, t \right) = \Re \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] $$&lt;/p&gt;
+&lt;p&gt;The amplitude and the phase of the envelope are the amplitude and phase of the real optical wave.&lt;/p&gt;
+&lt;h2&gt;Coherence&lt;/h2&gt;
+&lt;p&gt;While the expression for the analytic signal \( U \left( \mathbf{r}, t \right) \) as an integral over frequency components appears deterministic, the phase relationships between the spectral components are often unknown and vary randomly in time. As a result, the envelope of the optical wave will vary unpredictably and must be analyzed in terms of its statistical properties.&lt;/p&gt;
+&lt;h3&gt;Monochromatic Light is Coherent&lt;/h3&gt;
+&lt;p&gt;Since monochromatic light has only one spectral component by definition, it is completely coherent.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I mean monochromatic in the ideal sense, not like how we sometimes describe lasers.&lt;/li&gt;
+&lt;li&gt;Monochromatic waves, like plane waves, cannot exist in real life. The uncertainy principle requires that a monochromatic wave exist for an infinite duration.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers (2005). ISBN 978-0974707723. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:1" title="Jump back to footnote 1 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;&lt;a href="https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply"&gt;https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply&lt;/a&gt; &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:2" title="Jump back to footnote 2 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><category>analytic signal</category><category>coherence</category><category>fourier optics</category><guid>https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/</guid><pubDate>Tue, 01 Apr 2025 13:53:21 GMT</pubDate></item></channel></rss>

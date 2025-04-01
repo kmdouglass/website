@@ -66,7 +66,44 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/literature-review-an-optical-technique-for-remote-focusing-in-microscopy/" class="u-url">Literature Review: An Optical Technique for Remote Focusing in Microscopy</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-mono16-format-and-flir-cameras/" class="u-url">The Mono16 Format and Flir Cameras</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/the-mono16-format-and-flir-cameras/" rel="bookmark">
+            <time class="published dt-published" datetime="2024-08-27T14:15:36+02:00" itemprop="datePublished" title="2024-08-27 14:15">2024-08-27 14:15</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/the-mono16-format-and-flir-cameras/#disqus_thread" data-disqus-identifier="cache/posts/the-mono16-format-and-flir-cameras.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>For a long time I had found the Mono16 image format of Flir's cameras a bit strange. In the lab I have several Flir cameras with 12-bit ADC's, but the images they output in Mono16 would span a range from 0 to around 65535. How does the camera map a 12-bit number to a 16-bit number?</p>
+<p>If you search for the Mono16 format you will find that it's a padded format. This means that, in the 12-bit ADC example, 4 bits in each pixel are always 0, and the remaining 12 bits represent the pixel's value. But this should mean that we should get pixel values only between 0 and 2^12 - 1, or 4095. So how is it that we can saturate one of these cameras with values near 65535?</p>
+<p>Today it occurred to me that Flir's Mono16 format might not use all the values in the range [0, 65535]. This is indeed the case, as I show below with an image stack that I acquired from one of these cameras:</p>
+<div class="code"><pre class="code literal-block"><span class="o">&gt;&gt;&gt;</span> <span class="n">sorted_unique_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">images</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sorted_unique_pixels</span><span class="p">))</span>
+<span class="n">array</span><span class="p">([</span> <span class="mi">16</span><span class="p">,</span>  <span class="mi">32</span><span class="p">,</span>  <span class="mi">48</span><span class="p">,</span>  <span class="mi">64</span><span class="p">,</span>  <span class="mi">96</span><span class="p">,</span> <span class="mi">144</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint16</span><span class="p">)</span>
+</pre></div>
+
+<p>This prints all the possible, unique differences between the sorted and flattened pixel values in my particular image stack. Notice how they are all multiples of 16?</p>
+<p>Let's look also at the sorted array of unique values itself:</p>
+<div class="code"><pre class="code literal-block"><span class="o">&gt;&gt;&gt;</span> <span class="n">sorted_unique_pixels</span>
+<span class="n">array</span><span class="p">([</span> <span class="mi">5808</span><span class="p">,</span>  <span class="mi">5824</span><span class="p">,</span>  <span class="mi">5856</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">57312</span><span class="p">,</span> <span class="mi">57328</span><span class="p">,</span> <span class="mi">57472</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">uint16</span><span class="p">)</span>
+</pre></div>
+
+<p>There are more than a million pixels in this array, yet they all take values that are integer multiples of 16.</p>
+<p>It looks like Flir's Mono16 format rescales the camera's output onto the interval [0, 65535] by introducing "gaps" between the numbers equal to 2^16 - 2^N where N is the bit-depth of the camera's ADC.</p>
+<p>But wait just a moment. Above I said that 4 bits in the Mono16 are zero, but I assumed that these were the most significant bits. If the least significant bits are the zero padding, then the allowed pixel values would be, for example, 
+<code>0000 0000 = 0</code>, <code>0001 0000 = 16</code>, <code>0010 0000 = 32</code>, <code>0011 0000 = 48</code>, etc. (Here I ignored the first 8 bits for clarity.)</p>
+<p>So it appears that Flir is indeed padding the 12-bit ADC data with 0's in its Mono16 format. But, somewhat counter-intuitively, <em>it is the four least significant bits that are the zero padding.</em> I say this is counter-intuitive because I have another camera that pads the most significant bits, so that the maximum pixel value is really 2^N - 1, with N being the ADC's bit-depth.</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/literature-review-an-optical-technique-for-remote-focusing-in-microscopy/" class="u-url">Literature Review: An Optical Technique for Remote Focusing in Microscopy</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -202,13 +239,13 @@ bg-dark
 </pre></div>
 
 <p>A simplified Python code snippet that models this process, including noise, is below. An instance of the camera class has a method called <code>snap</code> that takes input array of photons and converts it to ADUs.</p>
-<div class="code"><pre class="code literal-block"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<div class="code"><pre class="code literal-block"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Camera</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">:</span>
     <span class="n">baseline</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># ADU</span>
     <span class="n">bit_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
     <span class="n">dark_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.83</span>  <span class="c1"># e-</span>
@@ -217,7 +254,7 @@ bg-dark
     <span class="n">well_capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32406</span>  <span class="c1"># e-</span>
     <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
         <span class="c1"># Simulate shot noise and convert to electrons</span>
         <span class="n">photoelectrons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">quantum_efficiency</span> <span class="o">*</span> <span class="n">signal</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span>
@@ -294,7 +331,7 @@ bg-dark
 </ol>
 <p>In this situation, both are valid approaches because the simulation runs quite quickly. However, if the simulation is slow, bootstrapping might be desirable because resampling the simulated data is relatively fast.</p>
 <p>I provide below a function that makes a bootstrap estimate of the standard error of pixel values to give you an idea of how this works. It draws <code>n</code> samples from the simulated pixel values with replacement and places the results in the rows of an array. Then, the standard devation of each row is computed. Finally, since the standard error is the standard deviation of the sampling distribution, the standard deviation of resampled standard deviations is computed and returned.</p>
-<div class="code"><pre class="code literal-block"><span class="k">def</span> <span class="nf">se_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="code"><pre class="code literal-block"><span class="k">def</span><span class="w"> </span><span class="nf">se_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">std_sampling_distribution</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -307,7 +344,7 @@ bg-dark
 <p>To put these into an automated test function, we need only translate the two hypotheses into an assertion. The null hypothesis should correspond to the argument of the assertion being true; the alternative hypothesis corresponds to a false argument.</p>
 <div class="code"><pre class="code literal-block"><span class="n">TOL</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="k">def</span> <span class="nf">test_cmos_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_cmos_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">):</span>
     <span class="n">num_pixels</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span>
     <span class="n">mean_photons</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">photons</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_photons</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_pixels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>

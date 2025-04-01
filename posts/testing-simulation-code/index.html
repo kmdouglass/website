@@ -115,13 +115,13 @@ bg-dark
 </pre></div>
 
 <p>A simplified Python code snippet that models this process, including noise, is below. An instance of the camera class has a method called <code>snap</code> that takes input array of photons and converts it to ADUs.</p>
-<div class="code"><pre class="code literal-block"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<div class="code"><pre class="code literal-block"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Camera</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Camera</span><span class="p">:</span>
     <span class="n">baseline</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># ADU</span>
     <span class="n">bit_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
     <span class="n">dark_noise</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">6.83</span>  <span class="c1"># e-</span>
@@ -130,7 +130,7 @@ bg-dark
     <span class="n">well_capacity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32406</span>  <span class="c1"># e-</span>
     <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
         <span class="c1"># Simulate shot noise and convert to electrons</span>
         <span class="n">photoelectrons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">quantum_efficiency</span> <span class="o">*</span> <span class="n">signal</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">signal</span><span class="o">.</span><span class="n">shape</span>
@@ -207,7 +207,7 @@ bg-dark
 </ol>
 <p>In this situation, both are valid approaches because the simulation runs quite quickly. However, if the simulation is slow, bootstrapping might be desirable because resampling the simulated data is relatively fast.</p>
 <p>I provide below a function that makes a bootstrap estimate of the standard error of pixel values to give you an idea of how this works. It draws <code>n</code> samples from the simulated pixel values with replacement and places the results in the rows of an array. Then, the standard devation of each row is computed. Finally, since the standard error is the standard deviation of the sampling distribution, the standard deviation of resampled standard deviations is computed and returned.</p>
-<div class="code"><pre class="code literal-block"><span class="k">def</span> <span class="nf">se_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="code"><pre class="code literal-block"><span class="k">def</span><span class="w"> </span><span class="nf">se_std</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">std_sampling_distribution</span> <span class="o">=</span> <span class="n">samples</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -220,7 +220,7 @@ bg-dark
 <p>To put these into an automated test function, we need only translate the two hypotheses into an assertion. The null hypothesis should correspond to the argument of the assertion being true; the alternative hypothesis corresponds to a false argument.</p>
 <div class="code"><pre class="code literal-block"><span class="n">TOL</span> <span class="o">=</span> <span class="mi">3</span>
 
-<span class="k">def</span> <span class="nf">test_cmos_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_cmos_camera</span><span class="p">(</span><span class="n">camera</span><span class="p">):</span>
     <span class="n">num_pixels</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span>
     <span class="n">mean_photons</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">photons</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_photons</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_pixels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>

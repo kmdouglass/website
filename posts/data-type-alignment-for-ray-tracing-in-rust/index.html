@@ -101,15 +101,15 @@ bg-dark
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <p>I would like to clean up my 3D ray trace routines for my <a href="https://www.github.com/kmdouglass/cherry">Rust-based optical design library</a>. The proof of concept (PoC) is finished and I now I need to make the code easier to modify to better support the features that I want to add on the frontend. I suspect that I might be able to make some performance gains as well during refactoring. Towards this end, I want to take a look at my ray data type from the perspective of making it CPU cache friendly.</p>
 <p>One of the current obstacles to adding more features to the GUI (for example color selection for different ray bundles) is how I handle individual rays. For the PoC it was fastest to add two additional fields to each ray to track where they come from and whether they are terminated:</p>
-<div class="code"><pre class="code literal-block"><span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<div class="code"><pre class="code literal-block"><span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
-<span class="w">    </span><span class="n">field_id</span>: <span class="kt">usize</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
+<span class="w">    </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -118,23 +118,23 @@ bg-dark
 <h2>A deeper look into the Ray struct</h2>
 <h3>Size of a ray</h3>
 <p>Let's first look to see how much space the Ray struct occupies.</p>
-<div class="code"><pre class="code literal-block"><span class="k">use</span><span class="w"> </span><span class="n">std</span>::<span class="n">mem</span><span class="p">;</span>
+<div class="code"><pre class="code literal-block"><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">mem</span><span class="p">;</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
-<span class="w">    </span><span class="n">field_id</span>: <span class="kt">usize</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
+<span class="w">    </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span>::<span class="n">size_of</span>::<span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
 
@@ -191,19 +191,19 @@ bg-dark
 </ol>
 </blockquote>
 <p>So for my <code>Ray</code> data type, its alignment is 8 because the maximum alignment of its fields is 8 bytes. (<code>pos</code> and <code>dir</code> are composed of 8-byte floating point numbers). The addresses of its fields are:</p>
-<div class="code"><pre class="code literal-block"><span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<div class="code"><pre class="code literal-block"><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">terminated</span>: <span class="nc">false</span><span class="p">,</span>
-<span class="w">        </span><span class="n">field_id</span>: <span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="nc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="n">field_id</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.pos: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">pos</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.dir: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">dir</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.terminated: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">terminated</span><span class="p">));</span>
-<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.field_id: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span>::<span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">field_id</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.pos: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">pos</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.dir: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">dir</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.terminated: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">terminated</span><span class="p">));</span>
+<span class="w">        </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Address of ray.field_id: {:p}"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">::</span><span class="n">addr_of</span><span class="o">!</span><span class="p">(</span><span class="n">ray</span><span class="p">.</span><span class="n">field_id</span><span class="p">));</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -220,25 +220,25 @@ bg-dark
 <h2>What makes a good data type?</h2>
 <p>As I mentioned, I already know that <code>field_id</code> shouldn't belong to the ray for reasons related to data access by the programmer. So the reason for removing it from the <code>Ray</code> struct is not related to performance. But what about the <code>terminated</code> bool? Well, in this case, it's resulting in 7 extra bytes of padding for each ray!</p>
 <div class="code"><pre class="code literal-block"><span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">e</span>: <span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="kt">f64</span><span class="p">;</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
 <span class="p">}</span>
 
 <span class="cp">#[derive(Debug)]</span>
-<span class="k">struct</span> <span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="p">,</span>
-<span class="w">    </span><span class="n">terminated</span>: <span class="kt">bool</span><span class="p">,</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">Ray</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="kt">bool</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">fn</span> <span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Ray</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">pos</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">dir</span>: <span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span>: <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
-<span class="w">        </span><span class="n">terminated</span>: <span class="nc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="n">pos</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">dir</span><span class="p">:</span><span class="w"> </span><span class="nc">Vec3</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">e</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="n">terminated</span><span class="p">:</span><span class="w"> </span><span class="nc">false</span><span class="p">,</span>
 <span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span>::<span class="n">size_of</span>::<span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">"Size of ray: {:?}"</span><span class="p">,</span><span class="w"> </span><span class="n">mem</span><span class="p">::</span><span class="n">size_of</span><span class="p">::</span><span class="o">&lt;</span><span class="n">Ray</span><span class="o">&gt;</span><span class="p">());</span>
 <span class="p">}</span>
 </pre></div>
 
