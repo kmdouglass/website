@@ -177,6 +177,6 @@ I conclude that there is no reason to remove `terminated` for performance reason
 
 # Does all of this matter?
 
-My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 3.8 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.
+My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 380 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.
 
 I do think, however, that it's important to understand these concepts. If I do need to tune the performance in the future, then I know where to look.
