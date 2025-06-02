@@ -65,7 +65,43 @@ The global reference frame \\( \mathbf{G} \\) remains fixed. Sometimes it's call
 
 By convention, I put its origin at the first non-object surface; this would be at the first mirror in the system of two mirrors I described above[^3]. I also establish the convention that the optical axis between the object and the first surface is parallel to the global z-axis.
 
-The global frame is important because the following **active** rotation matrices are defined relative to its axes:
+The global frame is important because the orthonormal vectors defining the local and cursor frames (to be explained later) are expressed relative to it.
+
+## Local Reference Frames
+
+Each surface \\( i \\) has a local reference frame \\( \mathbf{L}_i \\) whose origin lies at the vertex of the surface. Its coordinate axes are denoted \\( x_i^{\prime} \\), \\( y_i^{\prime} \\), and \\( z_i^{\prime} \\). For flat surfaces, I set the \\( z_i^{\prime} \\) axis perpendicular to the surface.
+
+![The local reference frames of the two mirrors.](/images/sequential-layout-local-reference-frames.png)
+
+Notice that the \\( x^{\prime} \\) axes flip directions when going from mirror 1 to mirror 2. This is done to preserve the right-handedness of the reference frames. More about this will be explained in the next section.
+
+# Sequential System Models
+
+Ray tracing programs for optical design are often divided into two categories: sequential and nonsequential. In sequential ray tracers, rays are traced from one surface to another in the sequence for which they are defined. This means that a ray could pass right through a surface if it is not the next surface in the model sequence.
+
+Nonsequential ray tracers do not take account of the order in which surfaces are defined. Rays are fired into the world and the intersect whatever the closest object is on their path. Illumination optics often use nonsequential ray tracing, as do rendering engines for cinema.
+
+My ray tracer is a sequential ray tracer because sequential ray tracing is easier to implement and can be applied to nearly all the use cases that I encounter in the lab.
+
+## 3D Layouts of Sequential Surfaces
+
+One possibility to layout sequential surfaces in 3D is to specify the coordinates and orientations of each surface relative to the global frame. This is how one adds surfaces in 3D in the open source Python library [Optiland](https://github.com/HarrisonKramer/optiland), for example. In practice, I found that I need to have a piece of paper by my side to work out the positions of each surface independently. This option provides maximum flexibility in surface placement.
+
+The other possibility that I considered is to leverage the fact that the surfaces are an ordered sequence, and position them in 3D space along the optical axis. The axis can reflect from reflecting surfaces using the law of reflection. Furthermore, any tilt or decenter could be specified relative to this axis. I ultimately chose this solution because I felt that it better matches my mental model of sequential optical systems.
+
+## The Cursor
+
+I created the idea of the cursor to position sequential surfaces in 3D space. A cursor has a 3D position, \\( \mathbf{r} \left( s \right) \\) that is parameterized over the track length \\( s \\). \\( s \\) is negative for the object surface, \\( s = 0 \\) at the first non-object surface, and achieves its greatest value at the final image plane.
+
+In addition, the cursor has a reference frame attached to it that I denote \\( \mathbf{C} \left( s \right) \\). The axes of the cursor frame are \\( r \\), \\( u \\)  and \\( f \\), which stand for right, up, and forward, respectively. This nearly matches the [FRU](https://dev.epicgames.com/documentation/en-us/uefn/forwardrightup-coordinate-system-in-unreal-editor-for-fortnite) coordinate system in game engines such as Unreal, except I take the forward direction to represent the optical axis because I would say that this convention is universal in optical design.
+
+![The cursor frames at three different positions along the optical axis.](/images/sequential-layout-cursor-frames.png)
+
+Above I show the cursor frame at three different positions along the optical axis \\( s_1 < 0 < s_2 < s_3 \\). Refracting surfaces will not change the orientation of the cursor frame, but reflecting surfaces will. Reorientation of the 
+
+Finally, when \\( s \\) is exactly equal to a reflecting surface position, I take the orientation of the cursor frame to be the one **before** reflection. An infinitesimal distance later, the frame reorients by reflecting about the surface normal at the vertex of the surface in its local frame.
+
+# Rotations between Frames
 
 $$\begin{eqnarray}
 R_x \left( \theta \right) = \left(
@@ -97,11 +133,7 @@ R_z \left( \theta \right) = \left(
 \right)
 \end{eqnarray}$$
 
-These rotations are active in the sense that their application to a single vector would result in the vector rotating within the global frame, i.e. the frame would remain fixed.
 
-## Local Reference Frames
-
-Each surface \\( i \\) has a local reference frame \\( \mathbf{L}_i \\) whose origin lies at the vertex of the surface. Its coordinate axes are denoted \\( x_i^{\prime} \\), \\( y_i^{\prime} \\), and \\( z_i^{\prime} \\). For flat surfaces, I set the \\( z_i^{\prime} \\) axis perpendicular to the surface.
 
 [^1]: G. H. Spencer and M. V. R. K. Murty, "General Ray-Tracing Procedure," J. Opt. Soc. Am. 52, 672-678 (1962). [https://doi.org/10.1364/JOSA.52.000672](https://doi.org/10.1364/JOSA.52.000672).
 [^2]: Ray/surface intersections with spherical surfaces can be found analytically using the quadratic equation with only minor caveats considering stability issues due to floating point arithmetic. This would likely be faster than using Newton-Raphson. However, a general system contains both spherical and non-spherical surfaces, and I was concerned that checking each surface type would result in a performance hit due to branch prediction failures by the processor. I could probably have found a way around this by deciding ahead of time which algorithm to use to determine the intersection for each surface before entering the main ray tracing loop, but during initial development I decided to just use Newton-Raphson for everything because doing so resulted in very simple code. (Thanks to Andy York for telling me about the numerical instabilities when using the quadratic equation. See Chapter 7 here: [https://www.realtimerendering.com/raytracinggems/rtg/index.html](https://www.realtimerendering.com/raytracinggems/rtg/index.html).)
