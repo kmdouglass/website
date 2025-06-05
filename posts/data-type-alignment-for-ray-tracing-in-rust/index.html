@@ -250,7 +250,7 @@ bg-dark
 <p>Now what if I reduced the precision but kept <code>terminated</code>? Then I get 6 * 4 + 8 = 32 bytes per Ray and I still have 2 rays per cache line.</p>
 <p>I conclude that there is no reason to remove <code>terminated</code> for performance reasons. Reducing my floating point precision would produce a more noticeable effect on the cache locality of the <code>Ray</code> data type.</p>
 <h2>Does all of this matter?</h2>
-<p>My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 3.8 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.</p>
+<p>My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 380 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.</p>
 <p>I do think, however, that it's important to understand these concepts. If I do need to tune the performance in the future, then I know where to look.</p>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">

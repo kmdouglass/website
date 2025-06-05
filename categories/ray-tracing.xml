@@ -3,7 +3,367 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 01 Apr 2025 06:41:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Data Type Alignment for Ray Tracing in Rust</title><link>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I would like to clean up my 3D ray trace routines for my &lt;a href="https://www.github.com/kmdouglass/cherry"&gt;Rust-based optical design library&lt;/a&gt;. The proof of concept (PoC) is finished and I now I need to make the code easier to modify to better support the features that I want to add on the frontend. I suspect that I might be able to make some performance gains as well during refactoring. Towards this end, I want to take a look at my ray data type from the perspective of making it CPU cache friendly.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 05 Jun 2025 09:27:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
+&lt;p&gt;In this post I walk through the mathematics for modeling a pair of flat mirrors that are oriented at different angles. Strictly speaking, the layout can be represented more easily in 2D, but I will treat the problem as if it were the more general 3D case. Emphasis will be placed on specifying rotations in an intuitive manner, which will mean rotations about the optical axis, rather than about a fixed axis in a global reference frame.&lt;/p&gt;
+&lt;h2&gt;The Problem&lt;/h2&gt;
+&lt;p&gt;The problem that I will consider is depicted as follows:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="A system of two flat mirrors whose optical axis forms the figure Z." src="https://kylemdouglass.com/images/sequential-layout-problem-statement.png"&gt;&lt;/p&gt;
+&lt;p&gt;The system consists of two flat mirrors whose optical axis forms a "figure Z." The normal of the first mirror is at 30 degrees to the axis, and likewise for the second. The optical axis emerges from the second mirror parallel to the first.&lt;/p&gt;
+&lt;p&gt;The questions are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;How do I construct the system without requiring the user to specify the absolute coordinates of the mirror surfaces?&lt;/li&gt;
+&lt;li&gt;How do I represent the local coordinate reference frames for each mirror surface?&lt;/li&gt;
+&lt;li&gt;How do I handle transformations between frames?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Ray Tracing Review&lt;/h3&gt;
+&lt;p&gt;As a quick review, the ray tracing algorithm that I implemented was described by Spencer and Murty&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;. It is loosely follows this pseudo-code:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;each&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;surface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;system&lt;/span&gt;:
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;each&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;in&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;bundle&lt;/span&gt;:
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;transform&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;coordinates&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;by&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;rotating&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;reference&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;frame&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;into&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;local&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;surface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;frame&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;find&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="nv"&gt;surface&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;intersection&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;point&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;propagate&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;intersection&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;point&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;perform&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;bounds&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;checking&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;against&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;surface&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;redirect&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;according&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;laws&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;refraction&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;or&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;reflection&lt;/span&gt;
+&lt;span class="w"&gt;        &lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;.&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;transform&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;ray&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;coordinates&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;by&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;rotating&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;reference&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;frame&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;back&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;into&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;the&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;global&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;frame&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Rotations are performed using 3x3 rotation matrices. Ray/surface intersections are found numerically using the Newton-Raphson method, even for spherical surfaces&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt;. I computed the expressions for the surface sag and normal vectors for conics and flat surfaces by hand and hard-coded them as functions of the intersection point in the local surface reference frame to avoid having to compute them on-the-fly.&lt;/p&gt;
+&lt;p&gt;Looking at the ray trace algorithm, I see three things that are relevant to this discussion:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;There are both global and local reference frames&lt;/li&gt;
+&lt;li&gt;Surfaces are iterated over sequentially&lt;/li&gt;
+&lt;li&gt;There are rotations, one at the beginning of each loop iteration and one at the end&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let's explore each one individually, starting with the global and local reference frames.&lt;/p&gt;
+&lt;h2&gt;Reference Frames&lt;/h2&gt;
+&lt;p&gt;I will use only right-handed reference frames where positive rotations are in the counterclockwise direction.&lt;/p&gt;
+&lt;h3&gt;The Global Reference Frame&lt;/h3&gt;
+&lt;p&gt;The global reference frame \( \mathbf{G} \) remains fixed. Sometimes it's called the world frame. I denote the coordinate axes of the global frame using \( x \), \( y \), and \( z \).&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The global reference frame." src="https://kylemdouglass.com/images/sequential-layout-global-reference-frame.png"&gt;&lt;/p&gt;
+&lt;p&gt;By convention, I put its origin at the first non-object surface; this would be at the first mirror in the system of two mirrors I described above&lt;sup id="fnref:3"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:3"&gt;3&lt;/a&gt;&lt;/sup&gt;. I also establish the convention that the optical axis between the object and the first surface is parallel to the global z-axis.&lt;/p&gt;
+&lt;p&gt;The global frame is important because the orthonormal vectors defining the local and cursor frames (to be explained later) are expressed relative to it.&lt;/p&gt;
+&lt;h3&gt;Local Reference Frames&lt;/h3&gt;
+&lt;p&gt;Each surface \( i \) has a local reference frame \( \mathbf{L}_i \) whose origin lies at the vertex of the surface. Its coordinate axes are denoted \( x_i^{\prime} \), \( y_i^{\prime} \), and \( z_i^{\prime} \). For flat surfaces, I set the \( z_i^{\prime} \) axis perpendicular to the surface.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The local reference frames of the two mirrors." src="https://kylemdouglass.com/images/sequential-layout-local-reference-frames.png"&gt;&lt;/p&gt;
+&lt;p&gt;Notice that the \( x^{\prime} \) axes flip directions when going from mirror 1 to mirror 2. This is done to preserve the right-handedness of the reference frames. More about this will be explained in the next section.&lt;/p&gt;
+&lt;h2&gt;Sequential System Models&lt;/h2&gt;
+&lt;p&gt;Ray tracing programs for optical design are often divided into two categories: sequential and nonsequential. In sequential ray tracers, rays are traced from one surface to another in the sequence for which they are defined. This means that a ray could pass right through a surface if it is not the next surface in the model sequence.&lt;/p&gt;
+&lt;p&gt;Nonsequential ray tracers do not take account of the order in which surfaces are defined. Rays are fired into the world and the intersect whatever the closest object is on their path. Illumination optics often use nonsequential ray tracing, as do rendering engines for cinema.&lt;/p&gt;
+&lt;p&gt;My ray tracer is a sequential ray tracer because sequential ray tracing is easier to implement and can be applied to nearly all the use cases that I encounter in the lab.&lt;/p&gt;
+&lt;h3&gt;3D Layouts of Sequential Surfaces&lt;/h3&gt;
+&lt;p&gt;One possibility to layout sequential surfaces in 3D is to specify the coordinates and orientations of each surface relative to the global frame. This is how one adds surfaces in 3D in the open source Python library &lt;a href="https://github.com/HarrisonKramer/optiland"&gt;Optiland&lt;/a&gt;, for example. In practice, I found that I need to have a piece of paper by my side to work out the positions of each surface independently. This option provides maximum flexibility in surface placement.&lt;/p&gt;
+&lt;p&gt;The other possibility that I considered is to leverage the fact that the surfaces are an ordered sequence, and position them in 3D space along the optical axis. The axis can reflect from reflecting surfaces using the law of reflection. Furthermore, any tilt or decenter could be specified relative to this axis. I ultimately chose this solution because I felt that it better matches my mental model of sequential optical systems. It also seems to follow more closely what I do in the lab when I build a system, i.e. add components along an axis that bends through 3D space.&lt;/p&gt;
+&lt;h3&gt;The Cursor&lt;/h3&gt;
+&lt;p&gt;I created the idea of the cursor to position sequential surfaces in 3D space. A cursor has a 3D position, \( \vec{ t } \left( s \right) \) that is parameterized over the track length \( s \). \( s \) is negative for the object surface, \( s = 0 \) at the first non-object surface, and achieves its greatest value at the final image plane.&lt;/p&gt;
+&lt;p&gt;In addition, the cursor has a reference frame attached to it that I denote \( \mathbf{C} \left( s \right) \). The axes of the cursor frame are \( r \), \( u \)  and \( f \), which stand for right, up, and forward, respectively. This nearly matches the &lt;a href="https://dev.epicgames.com/documentation/en-us/uefn/forwardrightup-coordinate-system-in-unreal-editor-for-fortnite"&gt;FRU&lt;/a&gt; coordinate system in game engines such as Unreal, except I take the forward direction to represent the optical axis because I would say that this convention is universal in optical design.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="The cursor frames at three different positions along the optical axis." src="https://kylemdouglass.com/images/sequential-layout-cursor-frames.png"&gt;&lt;/p&gt;
+&lt;p&gt;Above I show the cursor frame at three different positions along the optical axis \( s_1 &amp;lt; 0 &amp;lt; s_2 &amp;lt; s_3 \). Refracting surfaces will not change the orientation of the cursor frame, but reflecting surfaces will.&lt;/p&gt;
+&lt;p&gt;Finally, when \( s \) is exactly equal to a reflecting surface position, I take the orientation of the cursor frame to be the one &lt;strong&gt;before&lt;/strong&gt; reflection. An infinitesimal distance later, the frame reorients by reflecting about the surface normal at the vertex of the surface in its local frame.&lt;/p&gt;
+&lt;h4&gt;Convention for Maintaining Right Handedness upon Reflection&lt;/h4&gt;
+&lt;p&gt;There is an ambiguity that arises in the cursor frame upon reflection that is best illustrated in the example below:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Ambiguity in the cursor frame upon reflection." src="https://kylemdouglass.com/images/sequential-layout-ambiguity.png"&gt;&lt;/p&gt;
+&lt;p&gt;In panel a, the cursor is incident upon a mirror with its frame's forward direction antiparallel to the mirror's normal vector. There are two equally valid choices when defining the cursor frame after reflection. In panel b, the cursor frame is rotated about the up direction, whereas in panel c it is rotated about the right direction. This means that there is no fundamentally correct way to position the cursor frame after reflection. We must choose a convention and stick with it.&lt;/p&gt;
+&lt;p&gt;Reflections of the cursor frame are handled in two steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Reflect the frame&lt;/li&gt;
+&lt;li&gt;Adjust the results to maintain right handedness and address the ambiguity illustrated above&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The vector law of reflection is used to compute the new \( \hat{ r } \), \( \hat{ u } \), and \( \hat{ f } \) unit vectors for any general angle of incidence of the cursor frame upon a reflecting surface:&lt;/p&gt;
+&lt;p&gt;$$\begin{equation}
+\hat{ f }^{\prime} = \hat{ f } - 2 \left( \hat{ f } \cdot \hat{ n } \right) \hat{ n }
+\end{equation}$$&lt;/p&gt;
+&lt;p&gt;where \( \hat{ n } \) is the surface's unit normal vector. The same applies for the right and up unit vectors.&lt;/p&gt;
+&lt;p&gt;After reflection, I perform a check for right handedness. By convention, I maintain the direction of the up unit vector because many optical systems are laid out in 2D and their elements are rotated about this direction. This convention means that the right unit vector must be flipped:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;cross&lt;/span&gt;&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;right&lt;/span&gt;,&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;up&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;·&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nv"&gt;forward&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;:
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="nv"&gt;right&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;right&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The cross product between the right and up directions must point in the forward direction if the system is right handed. "Pointing in the forward direction" means that the dot product of the result with the forward unit vector must be greater than zero. The conditonal in the pseudocode above checks whether this is not indeed the case and flips the right unit vector if necessary.&lt;/p&gt;
+&lt;h2&gt;Transformations between Reference Frames&lt;/h2&gt;
+&lt;p&gt;There are two different transformations required by the ray trace algorithm:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;From the global frame to a surface local frame&lt;/li&gt;
+&lt;li&gt;From a surface local frame to the global frame&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Because the system is laid out relative to the cursor frame, I need to chain together two rotations, one from the global to the cursor frame, and one from the cursor to the local frame.&lt;/p&gt;
+&lt;h3&gt;Example&lt;/h3&gt;
+&lt;p&gt;Let's say that the second mirror has a diameter of 25.4 mm, and that the mirrors are separated by \( \| \vec{ t } \left( s_2 \right) \| = 100 \, mm \). I want to find the transformation from the global frame coordinates at a point on the bottom edge of the mirror to the local frame coordinates, which is \( y_2^{\prime} = -12.7 \, mm \). The image below illustrates the geometry that will be used for this example.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Example geometry for transforming from the global frame to the local frame via the cursor frame." src="https://kylemdouglass.com/images/sequential-layout-example-geometry.png"&gt;&lt;/p&gt;
+&lt;p&gt;From relatively straightforward trigonmetry&lt;sup id="fnref:4"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:4"&gt;4&lt;/a&gt;&lt;/sup&gt; we get the global frame coordinates of both \( {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \) and the point we are trying to find, \( {}^{\mathbf{G}}\vec{ p } \). (Vectors preceded by superscripts with reference frame names indicate the coordinate system they are being referred to.)&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+ {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) = \left(
+  \begin{array}{c}
+    0 \\
+    50 \sqrt{ 3 } \\
+    -50
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+ {}^{\mathbf{G}}\vec{ p } = \left(
+  \begin{array}{c}
+    0 \\
+    43.65 \sqrt{ 3 } \\
+    -56.35
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;h4&gt;Step 1: Translate from the Global Origin to the Cursor Frame&lt;/h4&gt;
+&lt;p&gt;The first step in computing \( {}^{\mathbf{ C }} \vec{ p } \) is to translate from the origin of the global frame to the position of cursor.&lt;/p&gt;
+&lt;p&gt;$$ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right)  =  (0, -6.35 \sqrt{3}, -6.35)^{ \mathrm{ T }}$$&lt;/p&gt;
+&lt;h4&gt;Step 2: Rotate into the Cursor Frame&lt;/h4&gt;
+&lt;p&gt;A rotation from the global frame into the cursor frame can be achieved by taking the \( \hat{ r } \), \( \hat{ u } \), and \( \hat{ f } \) unit vectors that define the cursor frame in the global coordinate system and making them the columns of a \( 3 \times 3 \) rotation matrix. At the second mirror, this matrix is:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_{GC} \left( \theta = 30^{ \circ } \right) = \left(
+  \begin{array}{ccc}
+    -1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; 1 / 2 &amp;amp; \sqrt{ 3 } / 2 \\
+    0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; -1 / 2
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;If this is not clear, consider that the columns of a rotation matrix represent the basis vectors of the coordinate system after rotation, but expressed in the original (global) frame's coordinate system. Also, from the diagram above, \( \hat{ u } \left( s_2 \right) = ( 0, 1 / 2, \sqrt{ 3 } / 2)^{ \mathrm{ T }} \) and \( \hat{ f } \left( s_2 \right) = ( 0, \sqrt{ 3 } / 2, - 1 / 2)^{ \mathrm{ T }}\), which are the second and third columns of the matrix.&lt;/p&gt;
+&lt;p&gt;The rotation into the cursor frame is the product between the rotation matrix and the difference \( {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \):&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+{}^{\mathbf{ C }} \vec{ p } = R_{GC} \left[ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \right] = \left(
+  \begin{array}{ccc}
+    -1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; 1 / 2 &amp;amp; \sqrt{ 3 } / 2 \\
+    0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; -1 / 2
+  \end{array}
+\right) \left(
+  \begin{array}{c}
+    0 \\
+    -6.35 \sqrt{ 3 } \\
+    -6.35
+  \end{array}
+\right) = \left(
+  \begin{array}{c}
+    0 \\
+    -6.35 \sqrt{ 3 } \\
+    -6.35
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;At first, I thought I had made a mistake when I did this calculation because the vector is unchanged after rotation. However, as illustrated below, you can see that the relative lengths of the projections of \( {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \) onto the \( u \) and \( f \) axes make sense.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="A simplified schematic showing the projection of difference vector onto the -u and -f axes." src="https://kylemdouglass.com/images/sequential-layout-example-global-to-cursor.png"&gt;&lt;/p&gt;
+&lt;p&gt;As it turns out, I inadvertently chose an eigenvector of the rotation matrix as an example; any general point will in fact change its coordinates when moving from the global to the cursor frame. For example, if we try to rotate a vector that is antiparallel to the global z-axis, i.e. \( {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) = ( 0, 0, -1 )^{ \mathrm{ T } }\), then it will become&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_{GC} \left[ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \right] = \left(
+  \begin{array}{ccc}
+    -1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; 1 / 2 &amp;amp; \sqrt{ 3 } / 2 \\
+    0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; -1 / 2
+  \end{array}
+\right) \left(
+  \begin{array}{c}
+    0 \\
+    0 \\
+    -1
+  \end{array}
+\right) = \left(
+  \begin{array}{c}
+    0 \\
+    -0.8660 \\
+    -0.5
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;in the cursor frame.&lt;/p&gt;
+&lt;h4&gt;Step 3: Rotate into the Surface Local Frame&lt;/h4&gt;
+&lt;p&gt;For the final step, I need to compose a rotation matrix from a sequence of three rotations. To do this well, I need to be very clear about what types of rotations I am performing and their sequence.&lt;/p&gt;
+&lt;h5&gt;Active vs. Passive Rotations&lt;/h5&gt;
+&lt;p&gt;The difference between active and passive rotations are illustrated below for a 45 degree rotation about the right axis.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Active vs. passive rotations" src="https://kylemdouglass.com/images/sequential-layout-active-vs-passive.png"&gt;&lt;/p&gt;
+&lt;p&gt;Active rotations specify the rotation of a point relative to a fixed reference frame; passive rotations specify the rotation of a reference frame, keeping the point fixed. And pay attention here: the right axis points into the screen, so a positive rotation would be clockwise when viewed from the perspective drawn above. &lt;/p&gt;
+&lt;p&gt;What are the corresponding rotation matrices? Here, I found that the internet is absolutely littered with wrong answers, including on sites like Wikipedia. I even get different answers from LLMs depending on when I ask. Therefore, I am including them here as a gift to my future self.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;active&lt;/strong&gt; rotation matrices about the x (right), y (up), and z (forward) axes are:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_x \left( \theta \right) = \left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; \cos \theta &amp;amp; - \sin \theta \\
+    0 &amp;amp; \sin \theta &amp;amp; \cos \theta
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_y \left( \psi \right) = \left(
+  \begin{array}{ccc}
+    \cos \psi &amp;amp; 0 &amp;amp; \sin \psi \\
+    0 &amp;amp; 1 &amp;amp; 0 \\
+    - \sin \psi &amp;amp; 0 &amp;amp; \cos \psi
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_z \left( \phi \right) = \left(
+  \begin{array}{ccc}
+    \cos \phi &amp;amp; - \sin \phi &amp;amp; 0 \\
+    \sin \phi &amp;amp; \cos \phi &amp;amp; 0 \\
+    0 &amp;amp; 0 &amp;amp; 1
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;passive&lt;/strong&gt; rotation matrices about the x (right), y (up), and z (forward) axes are:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_x \left( \theta \right) = \left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; \cos \theta &amp;amp; \sin \theta \\
+    0 &amp;amp; - \sin \theta &amp;amp; \cos \theta
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_y \left( \psi \right) = \left(
+  \begin{array}{ccc}
+    \cos \psi &amp;amp; 0 &amp;amp; - \sin \psi \\
+    0 &amp;amp; 1 &amp;amp; 0 \\
+    \sin \psi &amp;amp; 0 &amp;amp; \cos \psi
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_z \left( \phi \right) = \left(
+  \begin{array}{ccc}
+    \cos \phi &amp;amp; \sin \phi &amp;amp; 0 \\
+    - \sin \phi &amp;amp; \cos \phi &amp;amp; 0 \\
+    0 &amp;amp; 0 &amp;amp; 1
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;Notice that all that changes between these two types of rotations is the location of a negative sign on the \( \sin \) terms.&lt;/p&gt;
+&lt;p&gt;I found that a useful way to remember whether a matrix represents an active or passive rotation is as follows. Take for example the +45 degree rotation of the vector \( ( 0, 0, 1 )^{ \mathrm{ T } } \) about the right direction illustrated above. You can see that an active rotation should result in a negative \( u \) and a positive \( f \) component. This means&lt;sup id="fnref:6"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:6"&gt;6&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+\left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; 1 / \sqrt{ 2 } &amp;amp; - 1 / \sqrt{ 2 } \\
+    0 &amp;amp; 1 / \sqrt{ 2 } &amp;amp; 1 / \sqrt{ 2 }
+  \end{array}
+\right) \left(
+  \begin{array}{c}
+    0 \\
+    0 \\
+    1
+  \end{array}
+\right) = \left(
+  \begin{array}{c}
+    0 \\
+    - 1 / \sqrt{ 2 } \\
+    1 / \sqrt{ 2 }
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;The passive rotation should result in positive values for both the \( u^{ \prime } \) and \( f^{ \prime } \) components:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+\left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; 1 / \sqrt{ 2 } &amp;amp; 1 / \sqrt{ 2 } \\
+    0 &amp;amp; - 1 / \sqrt{ 2 } &amp;amp; 1 / \sqrt{ 2 }
+  \end{array}
+\right) \left(
+  \begin{array}{c}
+    0 \\
+    0 \\
+    1
+  \end{array}
+\right) = \left(
+  \begin{array}{c}
+    0 \\
+    1 / \sqrt{ 2 } \\
+    1 / \sqrt{ 2 }
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;I can do a similar check for the other directions to verify the other matrices.&lt;/p&gt;
+&lt;h5&gt;Extrinsic vs. Intrinsic Rotations&lt;/h5&gt;
+&lt;p&gt;I found these easier to understand than active and passive rotations. Extrinsic rotations are rotations that are always about a fixed global reference frame. On the other hand, intrinsic rotations are about the intermediate frames that result from a single rotation. So if I rotate about the \( f \) axis, then the \( r \) and \( u \) axes will be rotated, resulting in an intermediate \( r^{ \prime }u^{ \prime }f^{ \prime } \) frame. The next rotation will be about one of these intermediate axes.&lt;/p&gt;
+&lt;p&gt;The confusing thing about these two types of rotations is the order in which the rotation matrices are applied to a vector. An &lt;strong&gt;extrinsic&lt;/strong&gt; rotation of a vector \( \vec{ v } \) about \( r \), then \( u \), then \( f \) is written as:&lt;/p&gt;
+&lt;p&gt;$$ R_f R_u R_r \vec{ v} $$&lt;/p&gt;
+&lt;p&gt;which follows the usual commutativity rules of matrix multiplication. An &lt;strong&gt;intrinsic&lt;/strong&gt; rotation of a vector \( \vec{ v } \) about \( r \), then \( u^{ \prime } \), then \( f^{ \prime \prime } \), on the other hand is written as:&lt;/p&gt;
+&lt;p&gt;$$ R_r R_u R_f \vec{ v} $$&lt;/p&gt;
+&lt;p&gt;So even though the rotation about the right direction is performed first, we multiply the vector first by the rotation matrix about the \( f \) direction in the second intermediate frame.&lt;/p&gt;
+&lt;p&gt;All of this might seem confusing and lead one to wonder why they would want to use intrinsic rotations, but actually they are much more intuitive than extrinsic rotations and make a lot of sense when laying out an optical system. For example, if I have a two-axis mirror mount and I rotate the mirror about the vertical axis, a horizontal rotation that follows will be about the axis in the newly rotated frame, not the global laboratory frame. In any case, a sequence of three extrinsic rotations and three intrinsic rotations through the same angles will produce the same result so long as the order of the rotation matrices is correct.&lt;/p&gt;
+&lt;h5&gt;Euler Angles and Rotation Sequences&lt;/h5&gt;
+&lt;p&gt;The most important thing I learned about Euler angles is that they are completely meaningless unless you also specify a rotation sequence. Additionally, the internet is full of resources about the distinction between proper and improper Euler angles. The gist of what I learned here is that proper Euler angles are really a distraction to scientists and engineers because they rely on rotation sequences in which one of the axes is used twice. More useful are what aerospace engineers sometimes refer to as the Tait-Bryan angles, which are the rotation angles associated with sequences like \( z-y^{ \prime }-x^{ \prime \prime } \) or \( x-y-z \).&lt;/p&gt;
+&lt;p&gt;Now, there is one point here that is worth making and that is relevant to optical system layout: &lt;strong&gt;rotations about \( f \), the forward direction, into the local frame are best performed last in the sequence.&lt;/strong&gt; To understand why, consider a cylindrical lens with an axis parallel to the local \( z' \) direction. If we perform an intrinsic rotation about the cursor's \( f \) direction first and then try to adjust its tip or tilt, we will be doing so about axes that are rotated such that its tip and tilt become coupled with respect to the global frame. When aligning such systems, no one expects that rotation of a cylindrical lens about its axis will change the way that the tip and tilt adjustors on a lens mount work.&lt;/p&gt;
+&lt;p&gt;For all these reasons, I choose an intrinsic sequence \(r - u^{ \prime } - f^{{ \prime \prime} } \) of passive rotations with Euler angles \( \theta \), \( \psi \), and \( \phi \), respectively. The corresponding rotation matrix is:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
+  \begin{array}{ccc}
+    \cos \psi \cos \theta &amp;amp; \sin \psi \cos \theta &amp;amp; - \sin \theta \\
+    \sin \phi \sin \theta \cos \psi - \sin \psi \cos \theta &amp;amp; \sin \phi \sin \psi \sin \theta + \cos \phi \cos \psi &amp;amp; \sin \psi \cos \theta \\
+    \sin \phi \sin \psi + \sin \theta \cos \phi \cos \psi &amp;amp; - \sin \phi \cos \psi + \sin \psi \sin \theta \cos \phi &amp;amp; \cos \phi \cos \theta 
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;And finally, the transformation of the point on the mirror from the global to the surface local frame is:&lt;/p&gt;
+&lt;p&gt;$$ {}^{ \mathbf{ L }}\vec{p} = R_{ CL }R_{ GC } \left[ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \right] $$&lt;/p&gt;
+&lt;h5&gt;The Solution to the Example&lt;/h5&gt;
+&lt;p&gt;Does this give the correct result in the above example? Well, the mirror is rotated +30 degrees about the right direction, so the cursor-to-local rotation matrix is:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+R_{CL} \left( \theta \right) = \left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; 1 / 2 \\
+    0 &amp;amp; - 1 / 2 &amp;amp; \sqrt{ 3 } / 2
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;From earlier, the vector representing the point in the cursor frame is \( ( 0, -6.35 \sqrt{ 3 }, -6.35 )^{ \mathrm{ T } } \). Their product gives the final answer:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+{}^{ \mathbf{ L } }\vec{ p } = \left(
+  \begin{array}{ccc}
+    1 &amp;amp; 0 &amp;amp; 0 \\
+    0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; 1 / 2 \\
+    0 &amp;amp; - 1 / 2 &amp;amp; \sqrt{ 3 } / 2
+  \end{array}
+\right) \left(
+  \begin{array}{c}
+    0 \\
+    -6.35 \sqrt{ 3 } \\
+    -6.35
+  \end{array}
+\right) = \left(
+\begin{array}{c}
+    0 \\
+    -12.7 \\
+    0
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;This is exactly as expected, as we wanted to get a point on the bottom of the 25.4 mm diameter mirror in its local frame.&lt;/p&gt;
+&lt;h4&gt;Step 4: Rotate back from the Surface Local to the Global Frame&lt;/h4&gt;
+&lt;p&gt;I need to go back to the global frame at the end of each iteration for a ray trace. Fortunately, it's easy to undo a rotation because the inverse of a rotation matrix is just its transpose. I also need to swap the order of the matrices when taking the inverse, and add back the offset from the origin of the global system. This means:&lt;/p&gt;
+&lt;p&gt;$${}^{\mathbf{ G } }\vec{ p } = R_{GC}^{ \mathrm{ T} } R_{CL}^{ \mathrm{ T} } {}^{\mathbf{ L } }\vec{ p } + {}^{\mathbf{ G }} \vec{ t } (s_2) $$&lt;/p&gt;
+&lt;p&gt;I plugged in the numbers in Python and verified that I get the original point back.&lt;/p&gt;
+&lt;p&gt;This should be all I need to know to implement 3D sequential optical system layouts in my ray tracer.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;G. H. Spencer and M. V. R. K. Murty, "General Ray-Tracing Procedure," J. Opt. Soc. Am. 52, 672-678 (1962). &lt;a href="https://doi.org/10.1364/JOSA.52.000672"&gt;https://doi.org/10.1364/JOSA.52.000672&lt;/a&gt;. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:1" title="Jump back to footnote 1 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Ray/surface intersections with spherical surfaces can be found analytically using the quadratic equation with only minor caveats considering stability issues due to floating point arithmetic. This would likely be faster than using Newton-Raphson. However, a general system contains both spherical and non-spherical surfaces, and I was concerned that checking each surface type would result in a performance hit due to branch prediction failures by the processor. I could probably have found a way around this by deciding ahead of time which algorithm to use to determine the intersection for each surface before entering the main ray tracing loop, but during initial development I decided to just use Newton-Raphson for everything because doing so resulted in very simple code. (Thanks to Andy York for telling me about the numerical instabilities when using the quadratic equation. See Chapter 7 here: &lt;a href="https://www.realtimerendering.com/raytracinggems/rtg/index.html"&gt;https://www.realtimerendering.com/raytracinggems/rtg/index.html&lt;/a&gt;.) &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:2" title="Jump back to footnote 2 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:3"&gt;
+&lt;p&gt;The object plane is the flat surface perpendicular to the optical axis in which the object lies. It is always at surface index 0 in my convention. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:3" title="Jump back to footnote 3 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:4"&gt;
+&lt;p&gt;Since the only angles involved are \( 30^{ \circ} \) and \( 60^{ \circ } \), I used a 30-60-90 triangle of lengths 1, \( \sqrt{ 3 } \), and 2, respectively to compute the cosines and sines. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:4" title="Jump back to footnote 4 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:5"&gt;
+&lt;p&gt;Passive rotations result in a rotation of the coordinate axes, keeping a point fixed; active rotations rotate a point about a set of axes. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:5" title="Jump back to footnote 5 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:6"&gt;
+&lt;p&gt;The cosine and sine of 45 degrees are both \( 1 / \sqrt{ 2 } \). &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:6" title="Jump back to footnote 6 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><category>optics</category><category>ray tracing</category><guid>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</guid><pubDate>Thu, 05 Jun 2025 09:26:25 GMT</pubDate></item><item><title>Data Type Alignment for Ray Tracing in Rust</title><link>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I would like to clean up my 3D ray trace routines for my &lt;a href="https://www.github.com/kmdouglass/cherry"&gt;Rust-based optical design library&lt;/a&gt;. The proof of concept (PoC) is finished and I now I need to make the code easier to modify to better support the features that I want to add on the frontend. I suspect that I might be able to make some performance gains as well during refactoring. Towards this end, I want to take a look at my ray data type from the perspective of making it CPU cache friendly.&lt;/p&gt;
 &lt;p&gt;One of the current obstacles to adding more features to the GUI (for example color selection for different ray bundles) is how I handle individual rays. For the PoC it was fastest to add two additional fields to each ray to track where they come from and whether they are terminated:&lt;/p&gt;
 &lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="k"&gt;struct&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nc"&gt;Vec3&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="kt"&gt;f64&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
@@ -156,7 +516,7 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;p&gt;Now what if I reduced the precision but kept &lt;code&gt;terminated&lt;/code&gt;? Then I get 6 * 4 + 8 = 32 bytes per Ray and I still have 2 rays per cache line.&lt;/p&gt;
 &lt;p&gt;I conclude that there is no reason to remove &lt;code&gt;terminated&lt;/code&gt; for performance reasons. Reducing my floating point precision would produce a more noticeable effect on the cache locality of the &lt;code&gt;Ray&lt;/code&gt; data type.&lt;/p&gt;
 &lt;h2&gt;Does all of this matter?&lt;/h2&gt;
-&lt;p&gt;My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 3.8 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.&lt;/p&gt;
+&lt;p&gt;My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 380 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.&lt;/p&gt;
 &lt;p&gt;I do think, however, that it's important to understand these concepts. If I do need to tune the performance in the future, then I know where to look.&lt;/p&gt;</description><category>ray tracing</category><category>rust</category><guid>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</guid><pubDate>Mon, 24 Feb 2025 07:40:00 GMT</pubDate></item><item><title>A Simple Object-Space Telecentric System</title><link>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h2&gt;Object-space telecentricity&lt;/h2&gt;
 &lt;p&gt;I have been working on a software package recently for optical systems design. The process of building the package has proceeded like this:&lt;/p&gt;
 &lt;ol&gt;

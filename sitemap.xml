@@ -19,7 +19,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-04-01T06:41:00Z</lastmod>
+  <lastmod>2025-05-30T09:24:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
@@ -147,7 +147,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-04-01T06:41:00Z</lastmod>
+  <lastmod>2025-05-30T09:24:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</loc>
+  <lastmod>2025-06-05T09:03:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
@@ -156,10 +160,6 @@
  <url>
   <loc>https://kylemdouglass.com/posts/a-very-brief-summary-of-fresnel-and-fraunhofer-diffraction-integrals/</loc>
   <lastmod>2025-03-28T08:19:00Z</lastmod>
- </url>
- <url>
-  <loc>https://kylemdouglass.com/posts/a-very-brief-summary-of-partial-coherence/</loc>
-  <lastmod>2025-03-31T14:42:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/</loc>
@@ -212,6 +212,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</loc>
   <lastmod>2024-09-24T14:43:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/rotation-matrices-for-3d-ray-tracing/</loc>
+  <lastmod>2025-05-30T09:24:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/testing-simulation-code/</loc>
