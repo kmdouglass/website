@@ -399,7 +399,7 @@ Now, there is one point here that is worth making and that is relevant to optica
 For all these reasons, I choose an intrinsic sequence \\(r - u^{ \prime } - f^{{ \prime \prime} } \\) of passive rotations with Euler angles \\( \theta \\), \\( \psi \\), and \\( \phi \\), respectively. The corresponding rotation matrix is:
 
 $$\begin{eqnarray}
-R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
+R_{ \mathbf{ CL } } ( \theta, \psi, \phi ) = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
   \begin{array}{ccc}
     \cos \phi \cos \psi & \sin \phi \cos \psi & - \sin \psi \\\\
     - \sin \phi \cos \theta + \sin \psi \sin \theta \cos \phi & \sin \phi \sin \psi \sin \theta + \cos \phi \cos \theta & \sin \theta \cos \psi \\\\
@@ -417,7 +417,7 @@ $$ {}^{ \mathbf{ L }}\vec{p} = R_{ CL }R_{ GC } \left[ {}^{\mathbf{G}}\vec{ p } 
 Does this give the correct result in the above example? Well, the mirror is rotated +30 degrees about the right direction, so the cursor-to-local rotation matrix is:
 
 $$\begin{eqnarray}
-R_{CL} \left( \theta \right) = \left(
+R_{CL} \left( \theta  = 30^{ \circ },  \psi = 0, \phi = 0 \right) = \left(
   \begin{array}{ccc}
     1 & 0 & 0 \\\\
     0 & \sqrt{ 3 } / 2 & 1 / 2 \\\\
