@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Jun 2025 06:25:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Jun 2025 06:29:27 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
 &lt;p&gt;In this post I walk through the mathematics for modeling a pair of flat mirrors that are oriented at different angles. Strictly speaking, the layout can be represented more easily in 2D, but I will treat the problem as if it were the more general 3D case. Emphasis will be placed on specifying rotations in an intuitive manner, which will mean rotations about the optical axis, rather than about a fixed axis in a global reference frame.&lt;/p&gt;
 &lt;h2&gt;The Problem&lt;/h2&gt;
 &lt;p&gt;The problem that I will consider is depicted as follows:&lt;/p&gt;
@@ -292,7 +292,7 @@ R_z \left( \phi \right) = \left(
 &lt;p&gt;Now, there is one point here that is worth making and that is relevant to optical system layout: &lt;strong&gt;rotations about \( f \), the forward direction, into the local frame are best performed last in the sequence.&lt;/strong&gt; To understand why, consider a cylindrical lens with an axis parallel to the local \( z' \) direction. If we perform an intrinsic rotation about the cursor's \( f \) direction first and then try to adjust its tip or tilt, we will be doing so about axes that are rotated such that its tip and tilt become coupled with respect to the global frame. When aligning such systems, no one expects that rotation of a cylindrical lens about its axis will change the way that the tip and tilt adjustors on a lens mount work.&lt;/p&gt;
 &lt;p&gt;For all these reasons, I choose an intrinsic sequence \(r - u^{ \prime } - f^{{ \prime \prime} } \) of passive rotations with Euler angles \( \theta \), \( \psi \), and \( \phi \), respectively. The corresponding rotation matrix is:&lt;/p&gt;
 &lt;p&gt;$$\begin{eqnarray}
-R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
+R_{ \mathbf{ CL } } ( \theta, \psi, \phi ) = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
   \begin{array}{ccc}
     \cos \phi \cos \psi &amp;amp; \sin \phi \cos \psi &amp;amp; - \sin \psi \\
     - \sin \phi \cos \theta + \sin \psi \sin \theta \cos \phi &amp;amp; \sin \phi \sin \psi \sin \theta + \cos \phi \cos \theta &amp;amp; \sin \theta \cos \psi \\
@@ -305,7 +305,7 @@ R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
 &lt;h5&gt;The Solution to the Example&lt;/h5&gt;
 &lt;p&gt;Does this give the correct result in the above example? Well, the mirror is rotated +30 degrees about the right direction, so the cursor-to-local rotation matrix is:&lt;/p&gt;
 &lt;p&gt;$$\begin{eqnarray}
-R_{CL} \left( \theta \right) = \left(
+R_{CL} \left( \theta  = 30^{ \circ },  \psi = 0, \phi = 0 \right) = \left(
   \begin{array}{ccc}
     1 &amp;amp; 0 &amp;amp; 0 \\
     0 &amp;amp; \sqrt{ 3 } / 2 &amp;amp; 1 / 2 \\
