@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 05 Jun 2025 09:27:30 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Jun 2025 06:25:01 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
 &lt;p&gt;In this post I walk through the mathematics for modeling a pair of flat mirrors that are oriented at different angles. Strictly speaking, the layout can be represented more easily in 2D, but I will treat the problem as if it were the more general 3D case. Emphasis will be placed on specifying rotations in an intuitive manner, which will mean rotations about the optical axis, rather than about a fixed axis in a global reference frame.&lt;/p&gt;
 &lt;h2&gt;The Problem&lt;/h2&gt;
 &lt;p&gt;The problem that I will consider is depicted as follows:&lt;/p&gt;
@@ -294,9 +294,9 @@ R_z \left( \phi \right) = \left(
 &lt;p&gt;$$\begin{eqnarray}
 R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
   \begin{array}{ccc}
-    \cos \psi \cos \theta &amp;amp; \sin \psi \cos \theta &amp;amp; - \sin \theta \\
-    \sin \phi \sin \theta \cos \psi - \sin \psi \cos \theta &amp;amp; \sin \phi \sin \psi \sin \theta + \cos \phi \cos \psi &amp;amp; \sin \psi \cos \theta \\
-    \sin \phi \sin \psi + \sin \theta \cos \phi \cos \psi &amp;amp; - \sin \phi \cos \psi + \sin \psi \sin \theta \cos \phi &amp;amp; \cos \phi \cos \theta 
+    \cos \phi \cos \psi &amp;amp; \sin \phi \cos \psi &amp;amp; - \sin \psi \\
+    - \sin \phi \cos \theta + \sin \psi \sin \theta \cos \phi &amp;amp; \sin \phi \sin \psi \sin \theta + \cos \phi \cos \theta &amp;amp; \sin \theta \cos \psi \\
+    \sin \phi \sin \theta + \sin \psi \cos \phi \cos \theta &amp;amp; \sin \phi \sin \psi \cos \theta - \sin \theta \cos \phi &amp;amp; \cos \psi \cos \theta 
   \end{array}
 \right)
 \end{eqnarray}$$&lt;/p&gt;
