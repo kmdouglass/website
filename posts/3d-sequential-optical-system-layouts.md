@@ -401,9 +401,9 @@ For all these reasons, I choose an intrinsic sequence \\(r - u^{ \prime } - f^{{
 $$\begin{eqnarray}
 R_{ \mathbf{ CL } } = R_r ( \theta ) R_u ( \psi ) R_f ( \phi ) = \left(
   \begin{array}{ccc}
-    \cos \psi \cos \theta & \sin \psi \cos \theta & - \sin \theta \\\\
-    \sin \phi \sin \theta \cos \psi - \sin \psi \cos \theta & \sin \phi \sin \psi \sin \theta + \cos \phi \cos \psi & \sin \psi \cos \theta \\\\
-    \sin \phi \sin \psi + \sin \theta \cos \phi \cos \psi & - \sin \phi \cos \psi + \sin \psi \sin \theta \cos \phi & \cos \phi \cos \theta 
+    \cos \phi \cos \psi & \sin \phi \cos \psi & - \sin \psi \\\\
+    - \sin \phi \cos \theta + \sin \psi \sin \theta \cos \phi & \sin \phi \sin \psi \sin \theta + \cos \phi \cos \theta & \sin \theta \cos \psi \\\\
+    \sin \phi \sin \theta + \sin \psi \cos \phi \cos \theta & \sin \phi \sin \psi \cos \theta - \sin \theta \cos \phi & \cos \psi \cos \theta 
   \end{array}
 \right)
 \end{eqnarray}$$
