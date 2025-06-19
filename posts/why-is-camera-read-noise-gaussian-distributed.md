@@ -41,8 +41,6 @@ Let's say that I have a discrete random variable that can assume values of 0 or 
 
 **This does not mean that the sum of discrete random variables can take on continuous values.** Rather, the probability associated with any one output value is approximately given by a Gaussian probability density function sampled at the same value[^5].
 
-I think that I struggled with this because I was erroneously concluding that random variables that are approximately described by Gaussian probability distributions should produce samples that can be drawn from a Gaussian probability density function. 3.14159 is a valid sample from a Gaussian probability density function, but not for a random variable whose domain is the set of positive integers.
-
 [^1]: I wrote a blog post about this a while back: [https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/](https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/)
 [^2]: This is often asserted without justification. See for example Janesick, Photon Transfer, page 34.
 [^3]: [https://doi.org/10.1117/3.725073](https://doi.org/10.1117/3.725073)
