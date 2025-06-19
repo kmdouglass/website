@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/3d-sequential-optical-system-layouts/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/why-is-camera-read-noise-gaussian-distributed/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,64 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/3d-sequential-optical-system-layouts/" class="u-url">3D Sequential Optical System Layouts</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/why-is-camera-read-noise-gaussian-distributed/" class="u-url">Why is Camera Read Noise Gaussian Distributed?</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/why-is-camera-read-noise-gaussian-distributed/" rel="bookmark">
+            <time class="published dt-published" datetime="2025-06-19T10:40:12+02:00" itemprop="datePublished" title="2025-06-19 10:40">2025-06-19 10:40</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/why-is-camera-read-noise-gaussian-distributed/#disqus_thread" data-disqus-identifier="cache/posts/why-is-camera-read-noise-gaussian-distributed.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>As a microscopist I work with very weak light signals, often just tens of photons per camera pixel. As a result, the images I record are noisy<sup id="fnref:1"><a class="footnote-ref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fn:1">1</a></sup>. To a good approximation, the value of a pixel is a sum of two random variables describing two different physical processes:</p>
+<ol>
+<li>photon shot noise, which is described by a Poisson probability mass function, and</li>
+<li>camera read noise, which is described by a Gaussian probability density function.</li>
+</ol>
+<p>Read noise has units of electrons, which must be discrete, positive integers. So why is it modeled as a continuous probability density function<sup id="fnref:2"><a class="footnote-ref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fn:2">2</a></sup>?</p>
+<h2>The Source(s) of Read Noise</h2>
+<p>Janesick<sup id="fnref:3"><a class="footnote-ref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fn:3">3</a></sup> defines read noise as "any noise source that is not a function of signal." This means that there is not necessarily one single source of read noise. It is commonly understood that it comes from somewhere in the camera electronics, but "somewhere" need not imply that it is isolated to one location.</p>
+<p>The signal from a camera pixel is the number of photoelectrons that were generated inside the pixel. I imagine readout of this signal as a linear path consisting of many steps. The signal might change form along this path, such as going from number of electrons to a voltage. At each step, there is a small probability that some small error is added to (or maybe also removed from?) the signal. The final result is a value that differs randomly from the original signal.</p>
+<p>Importantly, I do not think that it matters which physical process each step actually represents; rather there just has to be many of them for this abstraction to be valid.</p>
+<h2>Read Noise is Gaussian because of the Central Limit Theorem</h2>
+<p>The reason for my conclusion that we can ignore the details so long as there are many steps is the following:</p>
+<p>We can model the error introduced by each step as a random variable. Let's assume that each step is independent of the others. The result of camera readout is a sum of a large number of independent random variables. And of course the <a href="https://en.wikipedia.org/wiki/Central_limit_theorem">Central Limit Theorem</a> states that the distribution of the sum of random variables tends towards a normal distribution, i.e. Gaussian, as the number of random variables tends towards infinity. This happens regardless of the distributions of the underlying random variables.</p>
+<p>So read noise can appear to be effectively Gaussian so long as there are many steps along the path of conversion from photoelectrons to pixel values and each step has a chance of introducing an error.</p>
+<h3>Sums of Discrete Random Variables</h3>
+<p>I encountered one conceptual difficulty here: the sum of discrete random variables is still discrete. If I have several variables that produce only integers, their sum is still an integer. I cannot get, say, 3.14159 as a result. Does the Gaussian approximation, which is for continuous random variables, still apply in this case?</p>
+<p>Let's say that I have a discrete random variable that can assume values of 0 or 1, and the probability that the value is 1 is denoted \( p \). This is known as a Bernoulli trial. Now let's say that I have a large number \( n \) of Bernoulli trials. But the sum of \( n \) Bernoulli trials has a distribution that is binomial, and this is well-known to be approximated as a Gaussian when certain conditions are met, including large \( n \)<sup id="fnref:4"><a class="footnote-ref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fn:4">4</a></sup>. So a sum of a large number of discrete random variables can have a probability distribution function that is approximated as a Gaussian. </p>
+<p><strong>This does not mean that the sum of discrete random variables can take on continuous values.</strong> Rather, the probability associated with any one output value is approximately given by a Gaussian probability density function sampled at the same value<sup id="fnref:5"><a class="footnote-ref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fn:5">5</a></sup>.</p>
+<p>I think that I struggled with this because I was erroneously concluding that random variables that are approximately described by Gaussian probability distributions should produce samples that can be drawn from a Gaussian probability density function. 3.14159 is a valid sample from a Gaussian probability density function, but not for a random variable whose domain is the set of positive integers.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>I wrote a blog post about this a while back: <a href="https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/">https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/</a> <a class="footnote-backref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p>This is often asserted without justification. See for example Janesick, Photon Transfer, page 34. <a class="footnote-backref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://doi.org/10.1117/3.725073">https://doi.org/10.1117/3.725073</a> <a class="footnote-backref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fnref:3" title="Jump back to footnote 3 in the text">↩</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://en.wikipedia.org/wiki/Binomial_distribution#Normal_approximation">https://en.wikipedia.org/wiki/Binomial_distribution#Normal_approximation</a> <a class="footnote-backref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fnref:4" title="Jump back to footnote 4 in the text">↩</a></p>
+</li>
+<li id="fn:5">
+<p>Technically, you need to apply what is known as a continuity correction to ensure that the set of possible discrete outcomes sample the Gaussian at the positions that produce the best approximation to the true probabilities. This is like choosing to sample the Gaussian at the midpoints between integers instead of at the discrete integer values themselves because the result is closer to the true value. <a href="https://en.wikipedia.org/wiki/Continuity_correction#Binomial">https://en.wikipedia.org/wiki/Continuity_correction#Binomial</a> <a class="footnote-backref" href="posts/why-is-camera-read-noise-gaussian-distributed/#fnref:5" title="Jump back to footnote 5 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/3d-sequential-optical-system-layouts/" class="u-url">3D Sequential Optical System Layouts</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -1378,34 +1435,6 @@ k_S &amp;=&amp; 2 k_{max} \\
 </pre></div>
 
 <p><strong>Note that hexadecimal values must be uppercase, e.g. 0xC7, not 0xc7!</strong></p>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/persist-internet-connection-sharing-after-reboot/" class="u-url">Persist Internet Connection Sharing after Reboot</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/persist-internet-connection-sharing-after-reboot/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-09-17T09:52:27+02:00" itemprop="datePublished" title="2024-09-17 09:52">2024-09-17 09:52</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/persist-internet-connection-sharing-after-reboot/#disqus_thread" data-disqus-identifier="cache/posts/persist-internet-connection-sharing-after-reboot.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p><a href="posts/internet-connection-sharing-for-raspberry-pi-setups/">In my previous post</a> I wrote about how to use Microsoft's Internet Connection Sharing to share an internet connection on a Windows machine with a Raspberry Pi. Unfortunately, I learned that the ICS service settings do not persist after the Windows machine reboots, and as a result the ICS connection is lost.</p>
-<p>The fix is explained in <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-client/networking/ics-not-work-after-computer-or-service-restart">this Microsoft Learn page</a>.</p>
-<p>To fix the issue, add a key in the Windows registry with the following information:</p>
-<ul>
-<li>Path: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\SharedAccess</li>
-<li>Type: DWORD</li>
-<li>Setting: EnableRebootPersistConnection</li>
-<li>Value: 1</li>
-</ul>
-<p>I then had to reset the shared connection by unchecking and rechecking the boxes in the <code>Sharing</code> tab of the internet connection as explained previously. After a reboot, I confirmed that I could connect to the Pi without manually re-enabling ICS.</p>
     </div>
     </article>
 </div>
