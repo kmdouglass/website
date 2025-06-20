@@ -37,12 +37,20 @@ So read noise can appear to be effectively Gaussian so long as there are many st
 
 I encountered one conceptual difficulty here: the sum of discrete random variables is still discrete. If I have several variables that produce only integers, their sum is still an integer. I cannot get, say, 3.14159 as a result. Does the Gaussian approximation, which is for continuous random variables, still apply in this case?
 
-Let's say that I have a discrete random variable that can assume values of 0 or 1, and the probability that the value is 1 is denoted \\( p \\). This is known as a Bernoulli trial. Now let's say that I have a large number \\( n \\) of Bernoulli trials. But the sum of \\( n \\) Bernoulli trials has a distribution that is binomial, and this is well-known to be approximated as a Gaussian when certain conditions are met, including large \\( n \\)[^4]. So a sum of a large number of discrete random variables can have a probability distribution function that is approximated as a Gaussian. 
+This question is relevant because the signal in a camera is transformed between discrete a continuous representations at least twice: from electrons to voltage and from voltage to analog-to-digital units (ADUs).
 
-**This does not mean that the sum of discrete random variables can take on continuous values.** Rather, the probability associated with any one output value is approximately given by a Gaussian probability density function sampled at the same value[^5].
+Let's say that I have a discrete random variable that can assume values of 0 or 1, and the probability that the value is 1 is denoted \\( p \\). This is known as a Bernoulli trial. Now let's say that I have a large number \\( n \\) of Bernoulli trials. But the sum of \\( n \\) Bernoulli trials has a distribution that is binomial, and this is well-known to be approximated as a Gaussian when certain conditions are met, including large \\( n \\)[^4]. So a sum of a large number of discrete random variables can have a probability distribution function that is approximated as a Gaussian.
+
+**This does not mean that the sum of discrete random variables can take on continuous values.** Rather, the probability associated with any one output value can be estimated by a Gaussian probability density function.
+
+But how exactly can I use a continuous distribution to approximate a discrete one? After all, if the random variable \\( Y \\) is a continuous, Gaussian random variable, then \\(P (Y = a)  = 0 \\) for all values of \\( a \\). To get a non-zero probability from a probability density function, we need to integrate it over some interval of its domain. We can therefore integrate a small interval around each possible value of the discrete random variable, and then associate this integrated area with the probability of the obtaining that value. This is called a [continuity correction](https://en.wikipedia.org/wiki/Continuity_correction).
+
+### Example of a Continuity Correction
+
+As a very simple example, consider a discrete random variable \\( X \\) that is approximated by a Gaussian continuous random variable \\( Y \\). The probability of getting a discrete value 5 is \\( P (X = 5) \\). The Gaussian approximation is \\( P ( 4.5 \lt Y \lt 5.5 ) \\), i.e. we integrate the Gaussian from 4.5 to 5.5 to compute the approximate probability of getting the discrete value 5.
+
 
 [^1]: I wrote a blog post about this a while back: [https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/](https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/)
 [^2]: This is often asserted without justification. See for example Janesick, Photon Transfer, page 34.
 [^3]: [https://doi.org/10.1117/3.725073](https://doi.org/10.1117/3.725073)
 [^4]: [https://en.wikipedia.org/wiki/Binomial_distribution#Normal_approximation](https://en.wikipedia.org/wiki/Binomial_distribution#Normal_approximation)
-[^5]: Technically, you need to apply what is known as a continuity correction to ensure that the set of possible discrete outcomes sample the Gaussian at the positions that produce the best approximation to the true probabilities. This is like choosing to sample the Gaussian at the midpoints between integers instead of at the discrete integer values themselves because the result is closer to the true value. [https://en.wikipedia.org/wiki/Continuity_correction#Binomial](https://en.wikipedia.org/wiki/Continuity_correction#Binomial)
