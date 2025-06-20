@@ -43,7 +43,7 @@ Let's say that I have a discrete random variable that can assume values of 0 or 
 
 **This does not mean that the sum of discrete random variables can take on continuous values.** Rather, the probability associated with any one output value can be estimated by a Gaussian probability density function.
 
-But how exactly can I use a continuous distribution to approximate a discrete one? After all, if the random variable \\( Y \\) is a continuous, Gaussian random variable, then \\(P (Y = a)  = 0 \\) for all values of \\( a \\). To get a non-zero probability from a probability density function, we need to integrate it over some interval of its domain. We can therefore integrate a small interval around each possible value of the discrete random variable, and then associate this integrated area with the probability of the obtaining that value. This is called a [continuity correction](https://en.wikipedia.org/wiki/Continuity_correction).
+But how exactly can I use a continuous distribution to approximate a discrete one? After all, if the random variable \\( Y \\) is a continuous, Gaussian random variable, then \\(P (Y = a)  = 0 \\) for all values of \\( a \\). To get a non-zero probability from a probability density function, we need to integrate it over some interval of its domain. We can therefore integrate the Gaussian in a small interval around each possible value of the discrete random variable, and then associate this integrated area with the probability of the obtaining that discrete value. This is called a [continuity correction](https://en.wikipedia.org/wiki/Continuity_correction).
 
 ### Example of a Continuity Correction
 
