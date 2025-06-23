@@ -10,7 +10,7 @@
 .. has_math: true
 -->
 
-As a microscopist I work with very weak light signals, often just tens of photons per camera pixel. As a result, the images I record are noisy[^1]. To a good approximation, the value of a pixel is a sum of two random variables describing two different physical processes:
+As a microscopist I work with very weak light signals, often just tens of photons per camera pixel. The images I record are noisy as a result[^1]. To a good approximation, the value of a pixel is a sum of two random variables describing two different physical processes:
 
 1. photon shot noise, which is described by a Poisson probability mass function, and
 2. camera read noise, which is described by a Gaussian probability density function.
