@@ -25,7 +25,7 @@ The signal from a camera pixel is the number of photoelectrons that were generat
 
 Importantly, I do not think that it matters which physical process each step actually represents; rather there just has to be many of them for this abstraction to be valid.
 
-"But aren't there only a handful of steps?" you might ask. After all, linear models of photon transfer typically consist of a few processes such as detection, amplification, readout, and analog-to-digital conversion. I am not referring to these when I use the term "step." Rather, I am referring to processes that are much more microscopic, such passage of a signal through a transistor or amplifier chip. At the very least Johnson noise, or random currents induced by thermal motion of the charge carriers, will be present in all of the camera's components.
+"But aren't there only a handful of steps?" you might ask. After all, linear models of photon transfer typically consist of a few processes such as detection, amplification, readout, and analog-to-digital conversion. I am not referring to these when I use the term "step." Rather, I am referring to processes that are much more microscopic, such as passage of a signal through a transistor or amplifier chip. At the very least Johnson noise, or random currents induced by thermal motion of the charge carriers, will be present in all of the camera's components.
 
 # Read Noise is Gaussian because of the Central Limit Theorem
 
