@@ -5,7 +5,7 @@
 .. tags: cameras, microscopy, statistics
 .. category: optics
 .. link: 
-.. description: 
+.. description: I investigate why camera read noise may be modeled as a Gaussian random variable.
 .. type: text
 .. has_math: true
 -->
