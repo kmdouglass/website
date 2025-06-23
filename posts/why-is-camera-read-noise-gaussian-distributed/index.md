@@ -31,7 +31,7 @@ Importantly, I do not think that it matters which physical process each step act
 
 The reason for my conclusion that I can ignore the details so long as there are many steps is the following:
 
-We can model the error introduced by each step as a random variable. Let's assume that each step is independent of the others. The result of camera readout is a sum of a large number of independent random variables. And of course the [Central Limit Theorem](https://en.wikipedia.org/wiki/Central_limit_theorem) states that the distribution of the sum of random variables tends towards a normal distribution, i.e. Gaussian, as the number of random variables tends towards infinity. This happens regardless of the distributions of the underlying random variables.
+I can model the error introduced by each step as a random variable. Let's assume that each step is independent of the others. The result of camera readout is a sum of a large number of independent random variables. And of course the [Central Limit Theorem](https://en.wikipedia.org/wiki/Central_limit_theorem) states that the distribution of the sum of random variables tends towards a normal distribution, i.e. Gaussian, as the number of random variables tends towards infinity. This happens regardless of the distributions of the underlying random variables.
 
 So read noise can appear to be effectively Gaussian so long as there are many steps along the path of conversion from photoelectrons to pixel values and each step has a chance of introducing an error.
 
@@ -45,11 +45,11 @@ Let's say that I have a discrete random variable that can assume values of 0 or 
 
 **This does not mean that the sum of discrete random variables can take on continuous values.** Rather, the probability associated with any one output value can be estimated by a Gaussian probability density function.
 
-But how exactly can I use a continuous distribution to approximate a discrete one? After all, if the random variable \\( Y \\) is a continuous, Gaussian random variable, then \\(P (Y = a)  = 0 \\) for all values of \\( a \\). To get a non-zero probability from a probability density function, I need to integrate it over some interval of its domain. We can therefore integrate the Gaussian in a small interval around each possible value of the discrete random variable, and then associate this integrated area with the probability of the obtaining that discrete value. This is called a [continuity correction](https://en.wikipedia.org/wiki/Continuity_correction).
+But how exactly can I use a continuous distribution to approximate a discrete one? After all, if the random variable \\( Y \\) is a continuous, Gaussian random variable, then \\(P (Y = a)  = 0 \\) for all values of \\( a \\). To get a non-zero probability from a probability density function, I need to integrate it over some interval of its domain. I can therefore integrate the Gaussian in a small interval around each possible value of the discrete random variable, and then associate this integrated area with the probability of the obtaining that discrete value. This is called a [continuity correction](https://en.wikipedia.org/wiki/Continuity_correction).
 
 ### Example of a Continuity Correction
 
-As a very simple example, consider a discrete random variable \\( X \\) that is approximated by a Gaussian continuous random variable \\( Y \\). The probability of getting a discrete value 5 is \\( P (X = 5) \\). The Gaussian approximation is \\( P ( 4.5 \lt Y \lt 5.5 ) \\), i.e. we integrate the Gaussian from 4.5 to 5.5 to compute the approximate probability of getting the discrete value 5.
+As a very simple example, consider a discrete random variable \\( X \\) that is approximated by a Gaussian continuous random variable \\( Y \\). The probability of getting a discrete value 5 is \\( P (X = 5) \\). The Gaussian approximation is \\( P ( 4.5 \lt Y \lt 5.5 ) \\), i.e. I integrate the Gaussian from 4.5 to 5.5 to compute the approximate probability of getting the discrete value 5.
 
 
 [^1]: I wrote a blog post about this a while back: [https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/](https://kmdouglass.github.io/posts/modeling-noise-for-image-simulations/)
