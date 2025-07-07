@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about algebra)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/algebra.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2025 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+&lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
+&lt;img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 07 Jul 2025 08:34:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Completing the Square and the Normal Form of Quadrics</title><link>https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on rendering cross section views of optical systems for my ray tracer. The problem is one of finding the intersection curve between a plane (the cutting plane) and a &lt;a href="https://en.wikipedia.org/wiki/Quadric"&gt;quadric surface&lt;/a&gt; which represents an interface between two media with different refractive indexes. Quadric surfaces are important primitives for modeling optical interfaces because they represent common surface types in optics, such as spheroids and paraboloids. A pair of quadrics, or a quadric and a plane, models a common lens.&lt;/p&gt;
+&lt;p&gt;In 3D, the implicit surface equation for a quadric is&lt;/p&gt;
+&lt;p&gt;$$
+A x^2 + B y^2 + C z^2 + D x y + E y z + F x z + G x + H y + I z + J = 0
+$$&lt;/p&gt;
+&lt;p&gt;Any quadric can be reduced to a so-called &lt;a href="https://en.wikipedia.org/wiki/Quadric#Euclidean_space"&gt;normal form&lt;/a&gt; that identifies its class, i.e. ellipsoid, hyperbolic paraboloid, etc. Except for paraboloids, none of the normal form equations contain linear terms in \( x \), \( y \), or \( z \).&lt;/p&gt;
+&lt;p&gt;A quadric of revolution occurs when two or more of the parameters of the the quadric's normal form are equal, such as \( x^2 / R^2 + y^2 / R^2 + z^2 / R^2 = 1 \), which is the equation for a spheroid with radius parameter \( R \)&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;. Quadrics of revolution are the surface types most-often encountered in optics&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;The surface sag of a quadric surface is a very important quantity for ray tracing. The sag of a quadric is usually given in terms of the &lt;a href="https://en.wikipedia.org/wiki/Conic_constant"&gt;conic constant&lt;/a&gt;, \( K \). One obtains the sag by solving the following quadric equation for \( z \):&lt;/p&gt;
+&lt;p&gt;$$
+x^2 + y^2 - 2 R z + ( K + 1 ) z^2 = 0
+$$&lt;/p&gt;
+&lt;p&gt;Here, \( R \) is the radius of curvature of the surface at its apex, \( x = y = z = 0 \).&lt;/p&gt;
+&lt;p&gt;At this point I asked myself how I could rewrite the above expression in its normal form, and for a while I was unable to do it. After a bit of searching on the internet, I eventually realized that the solution involves &lt;a href="https://en.wikipedia.org/wiki/Completing_the_square"&gt;completing the square&lt;/a&gt;, a topic that was not given much attention during my high school education. After this exercise, I realize now that the purpose of completing the square is to essentially &lt;strong&gt;move any linear terms of a quadratic equation into squared parantheses&lt;/strong&gt;. This allows one to then remove the linear terms entirely by applying a suitable transformation, leaving only quadratic and constant terms.&lt;/p&gt;
+&lt;h2&gt;Converting the Quadric to its Normal Form&lt;/h2&gt;
+&lt;p&gt;The conversion of the above equation proceeds as follows. We first factor out \( ( K + 1 ) \) from the terms involving \( z \).&lt;/p&gt;
+&lt;p&gt;$$
+x^2 + y^2 + ( K + 1 ) \left[ z^2 - \frac{ 2 R z }{ K + 1 }\right] = 0
+$$&lt;/p&gt;
+&lt;p&gt;Next, we "add zero" to the term inside the square brackets by adding \( [ 2 R / 2 ( K + 1 ) ]^2 - [ 2 R / 2 ( K + 1 ) ]^2 = [ R / ( K + 1 ) ]^2 - [ R / ( K + 1 ) ]^2 \):&lt;/p&gt;
+&lt;p&gt;$$
+x^2 + y^2 + ( K + 1 ) \left[ z^2 - \frac{ 2 R z }{ K + 1 } + \left( \frac{ R }{ K + 1 } \right)^2 - \left( \frac{ R }{ K + 1 } \right)^2 \right] = 0
+$$&lt;/p&gt;
+&lt;p&gt;We can understand this a bit more generally by considering the expression \( z^2 - a z \). Here I need to add and subtract \( ( a / 2 )^2 \). The reason is that now we can rewrite the first three terms inside the square brackets as a squared binomial:&lt;/p&gt;
+&lt;p&gt;$$
+x^2 + y^2 + ( K + 1 ) \left[ \left( z - \frac{ R }{ K + 1 } \right)^2 - \left( \frac{ R } { K + 1 } \right)^2 \right] = 0
+$$&lt;/p&gt;
+&lt;p&gt;These last two steps complete the square. To place the equation into its normal form, I apply the Euclidean transformation \( z' = z - \frac{ R }{ K + 1 } \) and carry through the \( K + 1 \).&lt;/p&gt;
+&lt;p&gt;$$
+x^2 + y^2 + ( K + 1 ) z^{ \prime 2 } - R^2 / ( K + 1 ) = 0
+$$&lt;/p&gt;
+&lt;p&gt;The above equation is &lt;em&gt;almost&lt;/em&gt; a normal form expression for a quadric. To finish the job, I would need to substiute in a specific value for the conic constant and divide through so that the constant is either -1, 0, or 1.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;The coefficients of each term need not be equal in general. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/#fnref:1" title="Jump back to footnote 1 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;A cylindrical lens does actually contain a quadric, but rather would consist of at least one toroidal surface. These are less common than lenses with spherical profiles, however. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/#fnref:2" title="Jump back to footnote 2 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><category>algebra</category><category>algebraic geometry</category><category>mathematics</category><category>ray tracing</category><guid>https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/</guid><pubDate>Mon, 07 Jul 2025 06:42:35 GMT</pubDate></item></channel></rss>
