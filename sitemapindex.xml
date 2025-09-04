@@ -15,7 +15,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/algebraic-geometry.xml</loc>
-  <lastmod>2025-07-07T08:34:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/analytic-signal.xml</loc>
@@ -46,10 +46,6 @@
   <lastmod>2025-03-28T08:19:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>https://kylemdouglass.com/categories/cat_mathematics.xml</loc>
-  <lastmod>2025-07-07T08:30:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_optics.xml</loc>
   <lastmod>2025-07-07T08:34:00Z</lastmod>
  </sitemap>
@@ -60,6 +56,10 @@
  <sitemap>
   <loc>https://kylemdouglass.com/categories/coherence.xml</loc>
   <lastmod>2025-04-01T13:53:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>https://kylemdouglass.com/categories/computer-graphics.xml</loc>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/computer-vision.xml</loc>
@@ -103,7 +103,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/mathematics.xml</loc>
-  <lastmod>2025-07-07T08:34:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/microscopy.xml</loc>
@@ -143,10 +143,10 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/rss.xml</loc>
-  <lastmod>2025-07-07T08:34:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/sitemap.xml</loc>
-  <lastmod>2025-07-07T08:34:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </sitemap>
 </sitemapindex>

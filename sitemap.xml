@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://kylemdouglass.com/</loc>
-  <lastmod>2025-01-14T16:09:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/2024/</loc>
@@ -19,11 +19,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-07-07T07:40:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2025-07-07T08:34:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -66,10 +66,6 @@
   <lastmod>2024-05-17T09:20:00Z</lastmod>
  </url>
  <url>
-  <loc>https://kylemdouglass.com/categories/cat_mathematics/</loc>
-  <lastmod>2025-07-07T07:40:00Z</lastmod>
- </url>
- <url>
   <loc>https://kylemdouglass.com/categories/cat_optics/</loc>
   <lastmod>2024-03-08T14:42:00Z</lastmod>
  </url>
@@ -80,6 +76,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/coherence/</loc>
   <lastmod>2025-04-01T13:53:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/computer-graphics/</loc>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/computer-vision/</loc>
@@ -163,7 +163,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-07-07T07:40:00Z</lastmod>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/index-2.html</loc>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</loc>
@@ -236,6 +240,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/testing-simulation-code/</loc>
   <lastmod>2024-05-17T09:20:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/</loc>
+  <lastmod>2025-09-04T07:28:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/the-mono16-format-and-flir-cameras/</loc>

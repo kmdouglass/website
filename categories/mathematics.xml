@@ -3,7 +3,91 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 07 Jul 2025 08:34:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Completing the Square and the Normal Form of Quadrics</title><link>https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on rendering cross section views of optical systems for my ray tracer. The problem is one of finding the intersection curve between a plane (the cutting plane) and a &lt;a href="https://en.wikipedia.org/wiki/Quadric"&gt;quadric surface&lt;/a&gt; which represents an interface between two media with different refractive indexes. Quadric surfaces are important primitives for modeling optical interfaces because they represent common surface types in optics, such as spheroids and paraboloids. A pair of quadrics, or a quadric and a plane, models a common lens.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 04 Sep 2025 08:26:45 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation</title><link>https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;The last few months I have been working on developing parametric representations of conic sections so that any arbitrary conic can be drawn to the computer screen. Besides being a fun intellectual exercise, I expect that the performance of the parametric approach should be quite good relative to any iterative method for drawing implicit representations of arbitrary conic curves because no iteration is required.&lt;/p&gt;
+&lt;p&gt;The parabola in particular has proven to be trickier than I had anticipated, and it has forced me to revisit some of its basic properties.&lt;/p&gt;
+&lt;h2&gt;The Setup&lt;/h2&gt;
+&lt;p&gt;Consider the most general form of a conic curve, which is the implicit equation:&lt;/p&gt;
+&lt;p&gt;$$
+Q ( x, y ) = A x^2 + B x y + C y^2 + D x + E y + F = 0
+$$&lt;/p&gt;
+&lt;p&gt;For a parabola, \( B \) is dependent on the coefficients \( A \) and \( C \) via the equation \( B^2 = 4 A C \), so that the implicit equation for a parabola is&lt;/p&gt;
+&lt;p&gt;$$
+Q ( x, y ) = (a x + c y)^2 + D x + E y + F = 0
+$$&lt;/p&gt;
+&lt;p&gt;where \( a^2 = A \) and \( c^2 = C \).&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://math.stackexchange.com/questions/2042028/axis-of-symmetry-for-a-general-parabola"&gt;It can be shown&lt;/a&gt; that the axis of symmetry of the parabola is the line&lt;/p&gt;
+&lt;p&gt;$$
+a x + c y + \frac{a D + c E}{2 \left( a^2 + c^2 \right)} = 0
+$$&lt;/p&gt;
+&lt;p&gt;The matrix of the quadratic form for the parabola is&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+A_{33} = 
+\left(
+  \begin{array}{cc}
+    A &amp;amp; B / 2 \\
+    B / 2 &amp;amp; C
+  \end{array}
+\right) = \left(
+  \begin{array}{cc}
+    a^2 &amp;amp; ac \\
+    ac &amp;amp; c^2
+  \end{array}
+\right)
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;\( A_{33} \) is singular and has one eigenvalue whose value is 0.&lt;/p&gt;
+&lt;p&gt;In this post I show that the eigenvector of the matrix of the quadratic form of a parabola with the zero eigenvalue is parallel to the axis of symmetry.&lt;/p&gt;
+&lt;h2&gt;Determine the Eigenvalues of \( A_{33} \)&lt;/h2&gt;
+&lt;p&gt;The characteristic polynomial of the matrix \( A_{33} \) is&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) \left( c^2 - \lambda \right) - a^2 c^2 &amp;amp;=&amp;amp; 0 \\
+  a^2 c^2 - \left( a^2 + c^2 \right) \lambda + \lambda^2 - a^2 c^2 &amp;amp;=&amp;amp; 0 \\
+  - \left( a^2 + c^2 \right) \lambda + \lambda^2 &amp;amp;=&amp;amp; 0
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;The solutions to the above equation are \( \lambda = \{ 0, \, a^2 + c^2 \} \).&lt;/p&gt;
+&lt;h2&gt;Find the Eigenvector of the Zero Eigenvalue&lt;/h2&gt;
+&lt;p&gt;The system of equations for finding the eigenvectors is&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) x + acy &amp;amp;=&amp;amp; 0 \\
+  acx + \left( c^2 - \lambda \right) y &amp;amp;=&amp;amp; 0
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;Solving the first equation for \( y \) gives&lt;/p&gt;
+&lt;p&gt;$$
+y = - \left( \frac{a^2 - \lambda}{ac} \right) x
+$$&lt;/p&gt;
+&lt;p&gt;Substitute in \( \lambda = 0 \) to find&lt;/p&gt;
+&lt;p&gt;$$
+y = - \left( \frac{a}{c} \right) x
+$$&lt;/p&gt;
+&lt;p&gt;The eigenvector is thus&lt;/p&gt;
+&lt;p&gt;$$\begin{pmatrix}
+1 \\
+-c / a
+\end{pmatrix}$$&lt;/p&gt;
+&lt;p&gt;Recall from above that the axis of symmetry is&lt;/p&gt;
+&lt;p&gt;$$
+a x + c y + \frac{a D + c E}{2 \left( a^2 + c^2 \right)} = 0
+$$&lt;/p&gt;
+&lt;p&gt;This is a line of slope \( m = -a / c \) and is therefore parallel to the eigenvector with the zero eigenvalue.&lt;/p&gt;
+&lt;h2&gt;The Tangent at the Vertex and the Eigenvector with Non-Zero Eigenvalue&lt;/h2&gt;
+&lt;p&gt;The tangent to the parabola at its vertex is perpendicular to the axis of symmetry and must therefore have a slope of \( c / a \)&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;The eigenvector with eigenvalue \( \lambda = a^2 + c^2 \) of the matrix of the quadratic form is found by substituting this value into the first equation in the system above:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) x + ac y &amp;amp;=&amp;amp; 0 \\
+  -c^2 x + ac y &amp;amp;=&amp;amp; 0 
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;This gives&lt;/p&gt;
+&lt;p&gt;$$
+y = \left( \frac{c}{a} \right) x
+$$&lt;/p&gt;
+&lt;p&gt;which is a line whose slope is the negative reciprocal of the slope of the axis of symmetry. The eigenvector with non-zero eigenvalue is therefore parallel to the tangent at the vertex.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Perpendicular lines have slopes whose products are equal to -1. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/#fnref:1" title="Jump back to footnote 1 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><category>algebraic geometry</category><category>computer graphics</category><category>mathematics</category><guid>https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/</guid><pubDate>Thu, 04 Sep 2025 07:20:31 GMT</pubDate></item><item><title>Completing the Square and the Normal Form of Quadrics</title><link>https://kylemdouglass.com/posts/completing-the-square-and-normal-form-quadrics/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on rendering cross section views of optical systems for my ray tracer. The problem is one of finding the intersection curve between a plane (the cutting plane) and a &lt;a href="https://en.wikipedia.org/wiki/Quadric"&gt;quadric surface&lt;/a&gt; which represents an interface between two media with different refractive indexes. Quadric surfaces are important primitives for modeling optical interfaces because they represent common surface types in optics, such as spheroids and paraboloids. A pair of quadrics, or a quadric and a plane, models a common lens.&lt;/p&gt;
 &lt;p&gt;In 3D, the implicit surface equation for a quadric is&lt;/p&gt;
 &lt;p&gt;$$
 A x^2 + B y^2 + C z^2 + D x y + E y z + F x z + G x + H y + I z + J = 0

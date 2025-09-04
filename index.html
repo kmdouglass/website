@@ -11,8 +11,8 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
-<link rel="next" href="index-1.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/completing-the-square-and-normal-form-quadrics/" type="text/html">
+<link rel="next" href="index-2.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,110 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/completing-the-square-and-normal-form-quadrics/" class="u-url">Completing the Square and the Normal Form of Quadrics</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/" class="u-url">The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/" rel="bookmark">
+            <time class="published dt-published" datetime="2025-09-04T09:20:31+02:00" itemprop="datePublished" title="2025-09-04 09:20">2025-09-04 09:20</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/#disqus_thread" data-disqus-identifier="cache/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>The last few months I have been working on developing parametric representations of conic sections so that any arbitrary conic can be drawn to the computer screen. Besides being a fun intellectual exercise, I expect that the performance of the parametric approach should be quite good relative to any iterative method for drawing implicit representations of arbitrary conic curves because no iteration is required.</p>
+<p>The parabola in particular has proven to be trickier than I had anticipated, and it has forced me to revisit some of its basic properties.</p>
+<h2>The Setup</h2>
+<p>Consider the most general form of a conic curve, which is the implicit equation:</p>
+<p>$$
+Q ( x, y ) = A x^2 + B x y + C y^2 + D x + E y + F = 0
+$$</p>
+<p>For a parabola, \( B \) is dependent on the coefficients \( A \) and \( C \) via the equation \( B^2 = 4 A C \), so that the implicit equation for a parabola is</p>
+<p>$$
+Q ( x, y ) = (a x + c y)^2 + D x + E y + F = 0
+$$</p>
+<p>where \( a^2 = A \) and \( c^2 = C \).</p>
+<p><a href="https://math.stackexchange.com/questions/2042028/axis-of-symmetry-for-a-general-parabola">It can be shown</a> that the axis of symmetry of the parabola is the line</p>
+<p>$$
+a x + c y + \frac{a D + c E}{2 \left( a^2 + c^2 \right)} = 0
+$$</p>
+<p>The matrix of the quadratic form for the parabola is</p>
+<p>$$\begin{eqnarray}
+A_{33} = 
+\left(
+  \begin{array}{cc}
+    A &amp; B / 2 \\
+    B / 2 &amp; C
+  \end{array}
+\right) = \left(
+  \begin{array}{cc}
+    a^2 &amp; ac \\
+    ac &amp; c^2
+  \end{array}
+\right)
+\end{eqnarray}$$</p>
+<p>\( A_{33} \) is singular and has one eigenvalue whose value is 0.</p>
+<p>In this post I show that the eigenvector of the matrix of the quadratic form of a parabola with the zero eigenvalue is parallel to the axis of symmetry.</p>
+<h2>Determine the Eigenvalues of \( A_{33} \)</h2>
+<p>The characteristic polynomial of the matrix \( A_{33} \) is</p>
+<p>$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) \left( c^2 - \lambda \right) - a^2 c^2 &amp;=&amp; 0 \\
+  a^2 c^2 - \left( a^2 + c^2 \right) \lambda + \lambda^2 - a^2 c^2 &amp;=&amp; 0 \\
+  - \left( a^2 + c^2 \right) \lambda + \lambda^2 &amp;=&amp; 0
+\end{eqnarray}$$</p>
+<p>The solutions to the above equation are \( \lambda = \{ 0, \, a^2 + c^2 \} \).</p>
+<h2>Find the Eigenvector of the Zero Eigenvalue</h2>
+<p>The system of equations for finding the eigenvectors is</p>
+<p>$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) x + acy &amp;=&amp; 0 \\
+  acx + \left( c^2 - \lambda \right) y &amp;=&amp; 0
+\end{eqnarray}$$</p>
+<p>Solving the first equation for \( y \) gives</p>
+<p>$$
+y = - \left( \frac{a^2 - \lambda}{ac} \right) x
+$$</p>
+<p>Substitute in \( \lambda = 0 \) to find</p>
+<p>$$
+y = - \left( \frac{a}{c} \right) x
+$$</p>
+<p>The eigenvector is thus</p>
+<p>$$\begin{pmatrix}
+1 \\
+-c / a
+\end{pmatrix}$$</p>
+<p>Recall from above that the axis of symmetry is</p>
+<p>$$
+a x + c y + \frac{a D + c E}{2 \left( a^2 + c^2 \right)} = 0
+$$</p>
+<p>This is a line of slope \( m = -a / c \) and is therefore parallel to the eigenvector with the zero eigenvalue.</p>
+<h2>The Tangent at the Vertex and the Eigenvector with Non-Zero Eigenvalue</h2>
+<p>The tangent to the parabola at its vertex is perpendicular to the axis of symmetry and must therefore have a slope of \( c / a \)<sup id="fnref:1"><a class="footnote-ref" href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/#fn:1">1</a></sup>.</p>
+<p>The eigenvector with eigenvalue \( \lambda = a^2 + c^2 \) of the matrix of the quadratic form is found by substituting this value into the first equation in the system above:</p>
+<p>$$\begin{eqnarray}
+  \left( a^2 - \lambda \right) x + ac y &amp;=&amp; 0 \\
+  -c^2 x + ac y &amp;=&amp; 0 
+\end{eqnarray}$$</p>
+<p>This gives</p>
+<p>$$
+y = \left( \frac{c}{a} \right) x
+$$</p>
+<p>which is a line whose slope is the negative reciprocal of the slope of the axis of symmetry. The eigenvector with non-zero eigenvalue is therefore parallel to the tangent at the vertex.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Perpendicular lines have slopes whose products are equal to -1. <a class="footnote-backref" href="posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/completing-the-square-and-normal-form-quadrics/" class="u-url">Completing the Square and the Normal Form of Quadrics</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -1299,34 +1402,11 @@ k_S &amp;=&amp; 2 k_{max} \\
 </ol>
 </div>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" class="u-url">GitHub CLI Authorization with a Fine-grained Access Token</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/github-cli-authorization-with-a-fine-grained-access-token/" rel="bookmark">
-            <time class="published dt-published" datetime="2024-10-04T14:18:48+02:00" itemprop="datePublished" title="2024-10-04 14:18">2024-10-04 14:18</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/github-cli-authorization-with-a-fine-grained-access-token/#disqus_thread" data-disqus-identifier="cache/posts/github-cli-authorization-with-a-fine-grained-access-token.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p>It is a good idea to use fine-grained access tokens for shared PCs in the lab that require access to private GitHub repos so that you can restrict the scope of their use to specific repositories and not use your own personal SSH keys on the shared machines. I am experimenting with the GitHub command line tool <code>gh</code> to authenticate with GitHub using fine-grained access tokens and make common remote operations on repos easier.</p>
-<p>Today I encountered a subtle problem in the <code>gh</code> authentication process. If you set the protocol to <code>ssh</code> during login, then you will not have access to the repos that you granted permissions to in the fine-grained access token. This can lead to a lot of head scratching because it's not at all clear which permissions map to which git operations. In other words, what you think is a specific permissions error with the token is actually an authentication error.</p>
-<p>To avoid the problem, be sure to specify <code>https</code> and not <code>ssh</code> as the protocol during authentication:</p>
-<div class="code"><pre class="code literal-block"><span class="go"> echo "$ACCESS_TOKEN" | gh auth login -p https --with-token</span>
-</pre></div>
-    </div>
     </article>
 </div>
 
         <ul class="pager postindexpager clearfix">
-<li class="next"><a href="index-1.html" rel="next">Older posts</a></li>
+<li class="next"><a href="index-2.html" rel="next">Older posts</a></li>
         </ul>
 <script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
