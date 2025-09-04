@@ -131,4 +131,4 @@ $$\begin{pmatrix}
 a / c
 \end{pmatrix}$$
 
-[^1]: Perpendicular lines have slopes whose products are equal to -1.
+[^1]: Perpendicular lines have slopes whose product is equal to -1.
