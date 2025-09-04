@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 04 Sep 2025 08:26:45 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation</title><link>https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;The last few months I have been working on developing parametric representations of conic sections so that any arbitrary conic can be drawn to the computer screen. Besides being a fun intellectual exercise, I expect that the performance of the parametric approach should be quite good relative to any iterative method for drawing implicit representations of arbitrary conic curves because no iteration is required.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 04 Sep 2025 08:28:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation</title><link>https://kylemdouglass.com/posts/the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;The last few months I have been working on developing parametric representations of conic sections so that any arbitrary conic can be drawn to the computer screen. Besides being a fun intellectual exercise, I expect that the performance of the parametric approach should be quite good relative to any iterative method for drawing implicit representations of arbitrary conic curves because no iteration is required.&lt;/p&gt;
 &lt;p&gt;The parabola in particular has proven to be trickier than I had anticipated, and it has forced me to revisit some of its basic properties.&lt;/p&gt;
 &lt;h2&gt;The Setup&lt;/h2&gt;
 &lt;p&gt;Consider the most general form of a conic curve, which is the implicit equation:&lt;/p&gt;
@@ -80,6 +80,11 @@ $$&lt;/p&gt;
 y = \left( \frac{c}{a} \right) x
 $$&lt;/p&gt;
 &lt;p&gt;which is a line whose slope is the negative reciprocal of the slope of the axis of symmetry. The eigenvector with non-zero eigenvalue is therefore parallel to the tangent at the vertex.&lt;/p&gt;
+&lt;p&gt;For completeness, the eigenvector with non-zero eigevalue is&lt;/p&gt;
+&lt;p&gt;$$\begin{pmatrix}
+1 \\
+a / c
+\end{pmatrix}$$&lt;/p&gt;
 &lt;div class="footnote"&gt;
 &lt;hr&gt;
 &lt;ol&gt;

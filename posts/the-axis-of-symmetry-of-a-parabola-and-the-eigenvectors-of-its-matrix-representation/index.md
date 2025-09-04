@@ -124,4 +124,11 @@ $$
 
 which is a line whose slope is the negative reciprocal of the slope of the axis of symmetry. The eigenvector with non-zero eigenvalue is therefore parallel to the tangent at the vertex.
 
+For completeness, the eigenvector with non-zero eigevalue is
+
+$$\begin{pmatrix}
+1 \\\\
+a / c
+\end{pmatrix}$$
+
 [^1]: Perpendicular lines have slopes whose products are equal to -1.
