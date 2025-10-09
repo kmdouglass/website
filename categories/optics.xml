@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Jun 2025 06:29:27 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Tue, 07 Oct 2025 11:24:59 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>3D Sequential Optical System Layouts</title><link>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I am working on a new feature in my &lt;a href="https://github.com/kmdouglass/cherry"&gt;ray tracer&lt;/a&gt; that will allow users to lay out sequential optical systems in 3D. This is forcing me to think carefully about 3D rigid body transformations in a level of detail that I have never before considered.&lt;/p&gt;
 &lt;p&gt;In this post I walk through the mathematics for modeling a pair of flat mirrors that are oriented at different angles. Strictly speaking, the layout can be represented more easily in 2D, but I will treat the problem as if it were the more general 3D case. Emphasis will be placed on specifying rotations in an intuitive manner, which will mean rotations about the optical axis, rather than about a fixed axis in a global reference frame.&lt;/p&gt;
 &lt;h2&gt;The Problem&lt;/h2&gt;
 &lt;p&gt;The problem that I will consider is depicted as follows:&lt;/p&gt;
@@ -234,7 +234,7 @@ R_z \left( \phi \right) = \left(
 \right)
 \end{eqnarray}$$&lt;/p&gt;
 &lt;p&gt;Notice that all that changes between these two types of rotations is the location of a negative sign on the \( \sin \) terms.&lt;/p&gt;
-&lt;p&gt;I found that a useful way to remember whether a matrix represents an active or passive rotation is as follows. Take for example the +45 degree rotation of the vector \( ( 0, 0, 1 )^{ \mathrm{ T } } \) about the right direction illustrated above. You can see that an active rotation should result in a negative \( u \) and a positive \( f \) component. This means&lt;sup id="fnref:6"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:6"&gt;6&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;p&gt;I found that a useful way to remember whether a matrix represents an active or passive rotation is as follows. Take for example the +45 degree rotation of the vector \( ( 0, 0, 1 )^{ \mathrm{ T } } \) about the right direction illustrated above. You can see that an active rotation should result in a negative \( u \) and a positive \( f \) component. This means&lt;sup id="fnref:6"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fn:6"&gt;5&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
 &lt;p&gt;$$\begin{eqnarray}
 \left(
   \begin{array}{ccc}
@@ -356,11 +356,11 @@ R_{CL} \left( \theta  = 30^{ \circ },  \psi = 0, \phi = 0 \right) = \left(
 &lt;li id="fn:4"&gt;
 &lt;p&gt;Since the only angles involved are \( 30^{ \circ} \) and \( 60^{ \circ } \), I used a 30-60-90 triangle of lengths 1, \( \sqrt{ 3 } \), and 2, respectively to compute the cosines and sines. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:4" title="Jump back to footnote 4 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn:5"&gt;
-&lt;p&gt;Passive rotations result in a rotation of the coordinate axes, keeping a point fixed; active rotations rotate a point about a set of axes. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:5" title="Jump back to footnote 5 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
 &lt;li id="fn:6"&gt;
-&lt;p&gt;The cosine and sine of 45 degrees are both \( 1 / \sqrt{ 2 } \). &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:6" title="Jump back to footnote 6 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The cosine and sine of 45 degrees are both \( 1 / \sqrt{ 2 } \). &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:6" title="Jump back to footnote 5 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:5"&gt;
+&lt;p&gt;Passive rotations result in a rotation of the coordinate axes, keeping a point fixed; active rotations rotate a point about a set of axes. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/#fnref:5" title="Jump back to footnote 6 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description><category>optics</category><category>ray tracing</category><guid>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</guid><pubDate>Thu, 05 Jun 2025 09:26:25 GMT</pubDate></item><item><title>An Analog LED Dimmer Circuit</title><link>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I recently needed to build a circuit to control the brightness of a 4 W LED with a knob. I know basic electronics, and I thought this would be easy. I spoke to a few people whom I know and are knowledgable in electronics. I also asked people on Reddit. A lot of people said it would be easy.&lt;/p&gt;
