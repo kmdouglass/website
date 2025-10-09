@@ -1,5 +1,5 @@
 <!--
-.. title: Image Formation in brightfield Microscopy: Part 1 - Object Models
+.. title: Image Formation in Brightfield Microscopy: Part 1 - Object Models
 .. slug: image-formation-in-brightfield-microscopy-part-1-object-models
 .. date: 2025-10-09 13:07:01 UTC+02:00
 .. tags: brightfield, microscopy
