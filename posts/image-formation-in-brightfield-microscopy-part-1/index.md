@@ -1,11 +1,11 @@
 <!--
-.. title: Image Formation in brightfield Microscopy: Part 1 - Object Models
-.. slug: image-formation-in-brightfield-microscopy-part-1-object-models
-.. date: 2025-10-09 13:07:01 UTC+02:00
-.. tags: brightfield, microscopy
+.. title: Image Formation in brightfield Microscopy: Part 1
+.. slug: image-formation-in-brightfield-microscopy-part-1
+.. date: 2025-10-07 13:26:01 UTC+02:00
+.. tags: 
 .. category: microscopy
 .. link: 
-.. description: I describe how objects are treated in image formation models for brightfield microscopy.
+.. description: 
 .. type: text
 .. has_math: true
 -->
@@ -51,9 +51,9 @@ We will also need to consider properties such as the coherence of the light sour
 
 ## The Scattering Strength and the Object's Axial Extent
 
-The degree of light scattering by an object is the most important characteristic in determining the modeling approach because there is little hope of high-fidelity imaging in strongly scattering samples. (Think of trying to see a distant object in a thick fog[^1].)
+The degree of light scattering by an object is the most important characteristic in determining the modeling approach because there is little hope in high-fidelity imaging of strongly scattering samples. (Think of trying to see a distant object in a thick fog[^1].)
 
-Roughly speaking, the scattering strength of an object depends on the degree of refractive index variations within the object and the object's extent. All else being equal, a stronger variation of the refractive index within the object leads to stronger scattering. And as the object becomes larger, a larger fraction of the energy carried by the light is scattered light spends more time inside the object.
+Roughly speaking, the scattering strength of an object depends on the degree of refractive index variations within the object and the object's extent. All else being equal, a stronger variation of the refractive index within the object leads to stronger scattering. And as the object becomes larger, a larger fraction of the energy carried by the light is scattered as well because light spends more time inside the object.
 
 One simple heuristic for the scattering strength is the mean free path of a photon, \\( \ell \\) inside the object. This is the average distance a photon travels before being scattered. The ratio of \\( \ell \\) to an object's extent \\( L \\) is therefore an indication of how many times a photon is likely to scatter.
 
@@ -69,7 +69,7 @@ $$ \frac{\ell}{L} \ll 1 $$
 
 I say that this is a heuristic because there are a few problems with this explanation. Namely,
 
-1. As far as I am aware, there isn't a clear relationship between \\( \ell \\) and the gradient of the refractive index.
+1. As far as I am aware, there isn't a clear relationship between \\( ell \\) and the gradient of the refractive index.
 1. The mean free path makes sense only if light is modeled as discrete, point-like objects traveling ballistically through the sample, occasionally scattering off of other point-like objects. This is an obvious over-simplification that doesn't reflect the wave nature of light.
 
 Additionally, if the ratio \\( \ell / L \\) is much less than one, the above picture suggests that light will not interact with the sample at all, but it can still very much diffract.
@@ -86,7 +86,7 @@ $$ \frac{L}{\text{DOF}} $$
 
 The depth of focus is the axial range within which an object appears in focus. When the ratio is significantly less than 1, the object fits entirely within the depth of focus and appears to be effectively two dimensional. When it is about 1 or greater, some sections of the object will appear in focus whereas others will be out-of-focus. The light originating from out-of-focus sections will contribute a nonzero background to the image of the in focus section.
 
-There is no hard cutoff value for this ratio that I am aware of that determines when an object is effectively 2D. Most likely it is more like a continuum where models that assume 2D objects become continuously less accurate as the value of the ratio increases.
+There is no hard cutoff value for this ratio that I am aware of that determines when an object is 2D or 3D. Most likely it is more like a continuum where models that assume 2D objects become continuously less accurate as the value of the ratio increases.
 
 In terms of microscope optics, the depth of focus (also confusingly called the [depth of field](https://www.microscopyu.com/microscopy-basics/depth-of-field-and-depth-of-focus)) depends, among other things, on the numerical aperture (NA) of the objective. A higher NA leads to a smaller depth of focus.
 
@@ -112,7 +112,7 @@ So what are the modeling approaches for the object? I came up with the following
 
 This is the easiest case. We're probably not going to be doing microscopy for such samples, so we don't even try to model it.
 
-There are techniques other than brightfield microscopy for studying multiply scattering samples, but they are outside the scope of this discussion.
+There are other techniques for studying multiply scattering samples, but they are outside the scope of this discussion.
 
 ## Weakly Scattering Objects
 
@@ -126,25 +126,17 @@ $$ t( x, y) \approx e^{ j k_0 \int \left[ n( x, y, z) - n_0 \right] \, dz } $$
 
 where \\( k_0 \\) is the free space wavenumber and \\( n_0 \\) is the refractive index of medium surrounding the object.
 
-This approach effectively projects the small refractive index differences onto a plane transverse to the z-axis. It can be derived from the Helmholtz equation by ignorning transverse gradients of the field's amplitude and approximating the refractive index term, which is quadratic, as a linear function in \\( n \\).
+This approach effectively projects the small refractive index differences along the z-direction onto a plane. It can be derived from the Helmholtz equation by ignorning transverse gradients of the field's amplitude and approximating the refractive index term, which is quadratic, as a linear function in \\( n \\).
 
 ### Objects Larger than the Depth of Focus
 
-One approach to this case is to divide the sample into thin, independent slices. Each slice is modeled as previously described. The final image is obtained by propagating the field from each slice with various degrees of defocus to the image plane, summing the propagated fields, and computing the intensity.
+One approach to this case is to divide the sample into thin, independent slices. Each slice is modeled as previously described. The final image is obtained by propagating the field from each slice with various degrees of defocus to the image plane.
 
-<div style="text-align: center;">
-    <figure>
-        <img width="75%" src="/images/object-model-independent-slices.jpg">
-    </figure>
-</div>
+IMAGE: thin independent slices
 
 Of course, the slices are really only independent if the scattering is extremely weak. If this is not the case, we could use multi-slice modeling. In this approach, the sample is again divided into thin sequential slices. The difference is that the light diffracted from the first plane serves as the input to the second plane, which diffracts and serves as the input to the third plane, and so on.
 
-<div style="text-align: center;">
-    <figure>
-        <img width="75%" src="/images/object-model-multi-slice.jpg">
-    </figure>
-</div>
+IMAGE: multi-slice modeling
 
 ## Moderately Scattering Samples
 
