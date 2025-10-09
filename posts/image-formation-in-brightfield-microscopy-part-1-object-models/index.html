@@ -3,21 +3,24 @@
 " lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="description" content="I describe how objects are treated in image formation models for brightfield microscopy.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Image Formation in brightfield Microscopy: Part 1 | Kyle M. Douglass</title>
+<title>Image Formation in brightfield Microscopy: Part 1 - Object Models | Kyle M. Douglass</title>
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#5670d4">
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
-<link rel="canonical" href="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1/">
+<link rel="canonical" href="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1-object-models/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
 <link rel="prev" href="../the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/" title="The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation" type="text/html">
 <meta property="og:site_name" content="Kyle M. Douglass">
-<meta property="og:title" content="Image Formation in brightfield Microscopy: Part 1">
-<meta property="og:url" content="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1/">
-<meta property="og:description" content="The mathematical model of image formation of a thick, transilluminated object by a microscope is complicated yet incredibly interesting. It draws from diverse areas such as crystallography, light scat">
+<meta property="og:title" content="Image Formation in brightfield Microscopy: Part 1 - Object Models">
+<meta property="og:url" content="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1-object-models/">
+<meta property="og:description" content="I describe how objects are treated in image formation models for brightfield microscopy.">
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="2025-10-07T13:26:01+02:00">
+<meta property="article:published_time" content="2025-10-09T13:07:01+02:00">
+<meta property="article:tag" content="brightfield">
+<meta property="article:tag" content="microscopy">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -72,7 +75,7 @@ bg-dark
         
         
         
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Image Formation in brightfield Microscopy: Part 1</a></h1>
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Image Formation in brightfield Microscopy: Part 1 - Object Models</a></h1>
 
         <div class="metadata">
             <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
@@ -80,11 +83,11 @@ bg-dark
             </span></p>
             <p class="dateline">
             <a href="." rel="bookmark">
-            <time class="published dt-published" datetime="2025-10-07T13:26:01+02:00" itemprop="datePublished" title="2025-10-07 13:26">2025-10-07 13:26</time></a>
+            <time class="published dt-published" datetime="2025-10-09T13:07:01+02:00" itemprop="datePublished" title="2025-10-09 13:07">2025-10-09 13:07</time></a>
             </p>
                 <p class="commentline">
     
-    <a href="#disqus_thread" data-disqus-identifier="cache/posts/image-formation-in-brightfield-microscopy-part-1.html">Comments</a>
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/image-formation-in-brightfield-microscopy-part-1-object-models.html">Comments</a>
 
 
             
@@ -122,8 +125,8 @@ bg-dark
 </ol>
 <p>We will also need to consider properties such as the coherence of the light source, but I will leave this for a later discussion.</p>
 <h3>The Scattering Strength and the Object's Axial Extent</h3>
-<p>The degree of light scattering by an object is the most important characteristic in determining the modeling approach because there is little hope in high-fidelity imaging of strongly scattering samples. (Think of trying to see a distant object in a thick fog<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.)</p>
-<p>Roughly speaking, the scattering strength of an object depends on the degree of refractive index variations within the object and the object's extent. All else being equal, a stronger variation of the refractive index within the object leads to stronger scattering. And as the object becomes larger, a larger fraction of the energy carried by the light is scattered as well because light spends more time inside the object.</p>
+<p>The degree of light scattering by an object is the most important characteristic in determining the modeling approach because there is little hope of high-fidelity imaging in strongly scattering samples. (Think of trying to see a distant object in a thick fog<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>.)</p>
+<p>Roughly speaking, the scattering strength of an object depends on the degree of refractive index variations within the object and the object's extent. All else being equal, a stronger variation of the refractive index within the object leads to stronger scattering. And as the object becomes larger, a larger fraction of the energy carried by the light is scattered light spends more time inside the object.</p>
 <p>One simple heuristic for the scattering strength is the mean free path of a photon, \( \ell \) inside the object. This is the average distance a photon travels before being scattered. The ratio of \( \ell \) to an object's extent \( L \) is therefore an indication of how many times a photon is likely to scatter.</p>
 <div style="text-align: center;">
   <figure><img width="75%" src="../../images/scattering-mean-free-path.jpg"></figure>
@@ -133,7 +136,7 @@ bg-dark
 <p>$$ \frac{\ell}{L} \ll 1 $$</p>
 <p>I say that this is a heuristic because there are a few problems with this explanation. Namely,</p>
 <ol>
-<li>As far as I am aware, there isn't a clear relationship between \( ell \) and the gradient of the refractive index.</li>
+<li>As far as I am aware, there isn't a clear relationship between \( \ell \) and the gradient of the refractive index.</li>
 <li>The mean free path makes sense only if light is modeled as discrete, point-like objects traveling ballistically through the sample, occasionally scattering off of other point-like objects. This is an obvious over-simplification that doesn't reflect the wave nature of light.</li>
 </ol>
 <p>Additionally, if the ratio \( \ell / L \) is much less than one, the above picture suggests that light will not interact with the sample at all, but it can still very much diffract.</p>
@@ -143,7 +146,7 @@ bg-dark
 <p>Consider the following ratio between the object's axial extent and the microscope's depth of focus, or</p>
 <p>$$ \frac{L}{\text{DOF}} $$</p>
 <p>The depth of focus is the axial range within which an object appears in focus. When the ratio is significantly less than 1, the object fits entirely within the depth of focus and appears to be effectively two dimensional. When it is about 1 or greater, some sections of the object will appear in focus whereas others will be out-of-focus. The light originating from out-of-focus sections will contribute a nonzero background to the image of the in focus section.</p>
-<p>There is no hard cutoff value for this ratio that I am aware of that determines when an object is 2D or 3D. Most likely it is more like a continuum where models that assume 2D objects become continuously less accurate as the value of the ratio increases.</p>
+<p>There is no hard cutoff value for this ratio that I am aware of that determines when an object is effectively 2D. Most likely it is more like a continuum where models that assume 2D objects become continuously less accurate as the value of the ratio increases.</p>
 <p>In terms of microscope optics, the depth of focus (also confusingly called the <a href="https://www.microscopyu.com/microscopy-basics/depth-of-field-and-depth-of-focus">depth of field</a>) depends, among other things, on the numerical aperture (NA) of the objective. A higher NA leads to a smaller depth of focus.</p>
 <p>An interesting situation arises when the thickness of an object, such as a cell, varies considerably across its cross section. As illustrated below, a cell might be approximately 2D everywhere when imaged with a 0.25 NA objective, which has an approximately \( 10 \, \mu m \) depth of focus. On the otherhand, only the contents within its periphery would be 2D with a 0.75 NA objective possessing a \( 1 \, \mu m \) depth of focus. Significant portions of the nucleus would be out-of-focus.</p>
 <div style="text-align: center;">
@@ -158,19 +161,25 @@ bg-dark
 
 <h3>Strongly Scattering Objects</h3>
 <p>This is the easiest case. We're probably not going to be doing microscopy for such samples, so we don't even try to model it.</p>
-<p>There are other techniques for studying multiply scattering samples, but they are outside the scope of this discussion.</p>
+<p>There are techniques other than brightfield microscopy for studying multiply scattering samples, but they are outside the scope of this discussion.</p>
 <h3>Weakly Scattering Objects</h3>
 <p>Here we need to know whether the object is larger or smaller than the microscope depth of focus.</p>
 <h4>Objects Smaller than the Depth of Focus</h4>
 <p>If the object is smaller than the depth of focus, we can model the sample as a complex 2D transmission mask:</p>
 <p>$$ t( x, y) \approx e^{ j k_0 \int \left[ n( x, y, z) - n_0 \right] \, dz } $$</p>
 <p>where \( k_0 \) is the free space wavenumber and \( n_0 \) is the refractive index of medium surrounding the object.</p>
-<p>This approach effectively projects the small refractive index differences along the z-direction onto a plane. It can be derived from the Helmholtz equation by ignorning transverse gradients of the field's amplitude and approximating the refractive index term, which is quadratic, as a linear function in \( n \).</p>
+<p>This approach effectively projects the small refractive index differences onto a plane transverse to the z-axis. It can be derived from the Helmholtz equation by ignorning transverse gradients of the field's amplitude and approximating the refractive index term, which is quadratic, as a linear function in \( n \).</p>
 <h4>Objects Larger than the Depth of Focus</h4>
-<p>One approach to this case is to divide the sample into thin, independent slices. Each slice is modeled as previously described. The final image is obtained by propagating the field from each slice with various degrees of defocus to the image plane.</p>
-<p>IMAGE: thin independent slices</p>
+<p>One approach to this case is to divide the sample into thin, independent slices. Each slice is modeled as previously described. The final image is obtained by propagating the field from each slice with various degrees of defocus to the image plane, summing the propagated fields, and computing the intensity.</p>
+<div style="text-align: center;">
+    <figure><img width="75%" src="../../images/object-model-independent-slices.jpg"></figure>
+</div>
+
 <p>Of course, the slices are really only independent if the scattering is extremely weak. If this is not the case, we could use multi-slice modeling. In this approach, the sample is again divided into thin sequential slices. The difference is that the light diffracted from the first plane serves as the input to the second plane, which diffracts and serves as the input to the third plane, and so on.</p>
-<p>IMAGE: multi-slice modeling</p>
+<div style="text-align: center;">
+    <figure><img width="75%" src="../../images/object-model-multi-slice.jpg"></figure>
+</div>
+
 <h3>Moderately Scattering Samples</h3>
 <p>I think things get really interesting here, but likely this is best left for later as I don't fully know what options are available.</p>
 <p>I will however say that microscopy approaches with optical sectioning, such as confocal and lightsheet, might be of some use.</p>
@@ -184,7 +193,11 @@ bg-dark
 </ol>
 </div>
     </div>
-    <aside class="postpromonav"><nav><ul class="pager hidden-print">
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/brightfield/" rel="tag">brightfield</a></li>
+            <li><a class="tag p-category" href="../../categories/microscopy/" rel="tag">microscopy</a></li>
+        </ul>
+<ul class="pager hidden-print">
 <li class="previous">
                 <a href="../the-axis-of-symmetry-of-a-parabola-and-the-eigenvectors-of-its-matrix-representation/" rel="prev" title="The Axis of Symmetry of a Parabola and the Eigenvectors of its Matrix Representation">Previous post</a>
             </li>
@@ -194,9 +207,9 @@ bg-dark
         <div id="disqus_thread"></div>
         <script>
         var disqus_shortname ="kyle-m-douglass",
-            disqus_url="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1/",
-        disqus_title="Image Formation in brightfield Microscopy: Part 1",
-        disqus_identifier="cache/posts/image-formation-in-brightfield-microscopy-part-1.html",
+            disqus_url="https://kylemdouglass.com/posts/image-formation-in-brightfield-microscopy-part-1-object-models/",
+        disqus_title="Image Formation in brightfield Microscopy: Part 1 - Object Models",
+        disqus_identifier="cache/posts/image-formation-in-brightfield-microscopy-part-1-object-models.html",
         disqus_config = function () {
             this.language = "en";
         };
