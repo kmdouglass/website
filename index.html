@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-2.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/image-formation-in-brightfield-microscopy-part-1-object-models/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -66,7 +66,116 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/image-formation-in-brightfield-microscopy-part-1-object-models/" class="u-url">Image Formation in Brightfield Microscopy: Part 1 - Object Models</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/" class="u-url">Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/" rel="bookmark">
+            <time class="published dt-published" datetime="2025-12-08T15:10:53+01:00" itemprop="datePublished" title="2025-12-08 15:10">2025-12-08 15:10</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#disqus_thread" data-disqus-identifier="cache/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <h4>Citation</h4>
+<p><a href="https://doi.org/10.1364/JOSAA.34.001738">Yijun Bao and Thomas K. Gaylord, "Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories: Discussion,"  J. Opt. Soc. Am. A 34, 1738-1745 (2017)</a></p>
+<h4>Abstract</h4>
+<blockquote>
+<p>Two-dimensional (2D) and three-dimensional (3D) diffraction theories form the underlying basis of quantitative phase imaging. This paper reviews how 2D and 3D diffraction theories are developed based on thin and thick object requirements. However, some previously reported work has mixed 2D and 3D theories. This discussion shows that it is possible to enable consistent mixed use of 2D and 3D theories by applying appropriate obliquity factor (OF) modifications. The discussion is concluded with an overall unifying representation for the usage of the OF modifications in 2D and 3D diffraction theories as applied to both thin and thick objects.</p>
+</blockquote>
+<h2>Reason for this Review</h2>
+<p>I often notice that articles concerning quantitative phase imaging (QPI) are unclear about what is meant by 2D and 3D objects. The article helps to clarify this point.</p>
+<h2>Summary of the Paper</h2>
+<p>The paper addresses the problem of when to use 2D and 3D diffraction theories in forward models of image formation in a microscope. I will refer to this problem as the choice of dimensionality. In addition, the authors highlight the choice of whether an object may be treated as a "thick" object or a "thin" object, which is not the same as the choice of dimensionality. I call this the choice of object model.</p>
+<p>Ultimately, a decision matrix is constructed in which the dimensionality and object model serve as inputs. The output is the form of the obliquity factor, a term found in all diffraction integrals relating to the Huygens-Fresnel principle and that is used to prevent backward energy flow of the wave field<sup id="fnref:1"><a class="footnote-ref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fn:1">1</a></sup>. The correct forms of the obliquity factor (OF) are then used to allow the application of 2D diffraction theory to thick objects (the so-called Type-1 OF modification) and 3D diffraction theory to thin objects (the Type-2 OF modification).</p>
+<p>The unifying theory is meant to address a problem of consistency in the authors' previous work, but I think that it is important on a more fundamental level.</p>
+<h2>Diffraction Theory</h2>
+<h3>2D Diffraction Theory</h3>
+<p>2D diffraction theory follows from the well-known developments of Huygens, Fresnel, Kirchoff, Rayleigh, and Sommerfeld. The integral equation for 2D diffraction is:</p>
+<p>$$ u ( \vec{x}, z ) = \frac{1}{j \lambda }\int u_{inc} ( \vec{x}', 0) t ( \vec{x}' ) \frac{e^{ j k \sqrt{ (\vec{x} - \vec{x}' ) + z^2 } } }{\sqrt{ (\vec{x} - \vec{x}' ) + z^2 }} K ( \vec{x}, z; \vec{x} ') \, d \vec{x}' . $$</p>
+<p>In words, the above expression determines the field \( u \) at transverse coordinate \( \vec{x} \) and axial coordinate \( z \) due to an incident field \( u_{inc} \) on a 2D complex transmission screen \( t \) at \(z = 0 \). \( K \) is the obliquity factor, takes the form \( cos(\theta) \) in the first Rayleigh-Sommerfeld diffraction integral, \( \theta \) being the angle between the normal to the screen and the line from the origin to the point of observation.</p>
+<p>This expression is equivalent to Eq. 3-41 of Goodman<sup id="fnref:2"><a class="footnote-ref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fn:2">2</a></sup>.</p>
+<h4>Assumption of the 2D Theory</h4>
+<p>The most important assumption in 2D diffraction theory is that the object is thin. I think the authors give a somewhat unsatisfactory definition of "thin," stating:</p>
+<blockquote>
+<p>A thin object usually means that the light exits the object approximately at the same transveral coordinate as it enters the object, or the transversal deviation of light can be neglected.</p>
+</blockquote>
+<p>For this definition they cite Goodman<sup id="fnref2:2"><a class="footnote-ref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fn:2">2</a></sup>. I think they are specifically referring to this passage in Chapter 5, section 1:</p>
+<blockquote>
+<p>With reference to Appendix B, a lens is said to be a thin lens if a ray entering at coordinates (x, y) on one face exits at approximately the same coordinates on the opposite face, i.e. if there is negligible translation of a ray within the lens. Thus a thin lens simply delays an incident wavefront by an amount proportional to the thickness of the lens at each point.</p>
+</blockquote>
+<p>I find the defintion unsatisfactory partly because Goodman is specifically talking about rays and lenses, whereas Bao and Gaylord are talking about waves and inhomogeneous media. At the end of this post I provide a more detailed critique and a possible solution.</p>
+<p>Mathematically, this assumption allows us to write the refractive index difference due to the screen as</p>
+<p>$$ \Delta n ( \vec{x}, z) = \phi ( \vec{x} ) \delta ( z ) / k $$</p>
+<p>where \( \delta \) is the Dirac delta function. The delta function is ultimately the source of the difficulties in reconciling the 2D and 3D theories.</p>
+<h3>3D Diffraction Theory</h3>
+<p>By "3D diffraction theory," Bao and Gaylord are referring to what I normally think of as "scattering." In particular, under the first Born approximation:</p>
+<p>$$ u ( \vec{r} ) = u_{inc} ( \vec{r} ) + \int u_{inc} ( \vec{r}' ) F ( \vec{ r }' ) G ( \vec{r}, \vec{r}' ) \, d \vec{r}' .$$</p>
+<p>This expression states that the total field diffracted (i.e. scattered) by a 3D scattering potental \( F \) is the sum of the incident field and an integral over source terms \( u_{inc} ( \vec{r}') F ( \vec{r}' ) \) multiplied by the Greens function \( G \).</p>
+<h4>Assumptions of the 3D Theory</h4>
+<p>In deriving the integral expression above, Born and Wolf<sup id="fnref:3"><a class="footnote-ref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fn:3">3</a></sup> note in chapter 13 that the gradient of the object's refractive index must be small so that the electric field components can be decoupled, thereby reducing the vector theory to a scalar one. Additionally, the first Born approximation requires that the refractive index contrast of the object be small.</p>
+<p>The authors rightly point out that these assumptions are in contradiction with what constitutes a thin object. As a result of the delta function in the expression for \( \Delta n \) of a thin object, the refractive index gradient is huge and 3D diffraction theory should not apply. More specifically, the scalar approximation to the vector Helmholtz equation should be invalid, and it is this approximation that leads to the integral equation of potential scattering.</p>
+<p>The authors further state that another consequence of a thin object is that the <em>values</em> of the refractive index become large, which violates the assumption of the first Born approximation. Here I am less certain of their argument, and I think the reason again is due to the nature of the delta function. I think that their argument is this: the refractive index values are large because the delta function technically has an infinite value. But I usually think that the delta function by itself is physically meaningless unless integrated over, which is why I am less certain of the strength of this argument.</p>
+<h2>An Inconsistency Arises</h2>
+<p>When applied to a thin object, the two different theories lead to nearly identical expressions for the diffracted field. They differ in that the expression from the 2D theory has an obliquity factor whereas that from the 3D theory does not. The authors point out that this near similarity was discussed in Chapter 1, section 8 of Cowley <sup id="fnref2:1"><a class="footnote-ref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fn:1">1</a></sup>, a book originally from the 1970's. The authors clarify that the inconsistency arises from "dissimilar object requirements." I think another way to say this is that the assumptions of the 3D theory are violated when applied to a thin object. We will later see that the assumptions are not violated. Rather, the discrepancy comes from incorrectly accounting for the phase accumulated by light incident at an angle to the object.</p>
+<h2>Conversions between 2D and 3D Theories</h2>
+<h3>Application of 2D theory to 3D objects</h3>
+<p>In an illuminating (pun intended) discussion the authors proceed to demonstrate that 3D diffraction theory actually emerges from the 2D theory by applying multislice theory. In this theory, a 3D object is divided into many, infinitesimally thin slices and the final field is the sum over the 2D diffracted fields from each slice.</p>
+<p>The authors state that, <strong>for each slice, both the thin object requirement and the small refractive index contrast requirements are satisfied</strong>, which allows for the 2D and 3D theories to be linked. There is an extremely subtle point here because in the previous section the authors stated that an infinitesimally thin slice violates the assumption of small refractive index constrat <em>values</em>. But this is probably because the phase shift of the slice is finite but not infinitesimally thin. Here, by making the slices of the 3D object extremely thin, we are also inducing an infinitesimal phase shift in each slice. An infinitesimal phase shift is consistent with the small refractive index contrasts required by the first Born approximation.</p>
+<p>Thus the 3D theory can be in a sense rescued by proper and repeated application of the 2D theory.</p>
+<p>Now, a proper accounting of the phase shift of each slice must include a division by the obliquity factor:</p>
+<p>$$ d \phi ( \vec{x}', z' ) = \frac{ k \Delta n (\vec{x}', z' ) dz' } {K (\vec{x}, z; \vec{x}', z' )} .$$</p>
+<p>The logic behind this assertion is that illumination of the slice at an angle results in a larger distance covered in traversing the slice relative to normal illumination. In the words of the authors:</p>
+<blockquote>
+<p>The division of the OF enlarges the effective phase, because the light path length in the slice is \( dz' / K \) for off-axis light.</p>
+</blockquote>
+<p>Combining this with the 2D integral theory results in a cancellation of the obliquity factors and a recovery of the 3D integral expression for the diffracted field.</p>
+<p>The authors call this modification to the differential phase imparted by each slice a <strong>type I OF modification</strong>.</p>
+<h3>Application of 3D theory to 2D objects</h3>
+<p>3D theory cannot be applied to 2D objects in an attempt to recover 2D diffraction theory because of the "dissimilar object requirements." By "cannot" the authors really mean "can" because in just a few sentences they circumvent the perceived difficulty by modifying the Greens function in the 3D theory by multiplying by the obliquity factor. This leads to what the authors call a <strong>type II OF modification</strong> which appears never to have been published before in the literature.</p>
+<h3>Discussion on the Two Types OF Modification</h3>
+<p>Section 3C is probably the most important section of the paper. In it, the authors discuss the nature of the proposed OF modifications and why they are justified. By the term "nature," I mean whether they are physically motivated or just mathematical conveniences.</p>
+<p>The application of 2D theory to 3D objects is discussed first. The corresponding OF modification to the phase of each slice is physically motivated by "the longer propagation distances of the off-axis rays." The statement at the beginning of the paragraph "A thick object must satisfy [ \( | n ( \vec{r} ) -1 | \ll 1 \) ], which is the requirement of 3D diffraction theory," is a bit puzzling not because of what it asserts (it's correct), but because it seems to imply that a proper application of 2D theory can recover this requirement without having to assume it. But by asserting that we can arrive at the total diffracted field by summing contributions from each infinitesimal slice, we are assuming exactly the first Born approximation. So it is not surprising that we should recover the 3D diffraction theory from multislice modeling <em>when the slices are independent of one another</em> because we made the first Born approximation in assuming the independence of each slice.</p>
+<p>Perhaps the authors' intent was just to point out the physical basis of the OF modification to the phase. In this case, I completely agree with the modification and its physical origin.</p>
+<p>Next we arrive at a paragraph about why 2D theory cannot be derived from 3D theory. Here the authors state that the phase induced by thin 2D object of thickness \( l \) is \( \phi \approx k l \Delta n \). Since both \( l \) and \( \Delta n \) are small, their product is very small and therefore the object has no appreciable effect on the phase. They next claim that the object cannot satisfy the first Born approximation, which is a bit confusing because the discussion in section 2C seemed to suggest that the problem comes from refractive index values that are too large, not too small.</p>
+<p>To be honest, I don't quite follow the logic here, but I again agree with the conclusion. The type II OF modification of the Greens function is just a mathematical convenience that produces the correct results when applying 3D theory to thin objects.</p>
+<h2>What about the Depth of Field?</h2>
+<p>Overall, this paper has helped me immensely in understanding the subtleties in the different ways to model diffraction and scattering from transparent objects. In particular, I have a much clearer understanding now on how to properly carry out forward modeling of image formation in high numerical aperture (NA) microscopes.</p>
+<p>There is however one significant oversight, which is the definition of what it means for an object to be thin. I find their definition unsatisfactory for the following reason.</p>
+<p>Consider a flat piece of glass in air and a ray of light incident upon it. If thin means that "light exits the object approximately at the same tranversal coordinate as it enters the object," then a physically thick piece of glass can be just as "thin" under a small angle of incidence as a physically thin piece of glass under a large angle of incidence. It's the optical path length that matters, not the physical extent of the object.</p>
+<p>This is not so much an objection to their definition, but rather to the word "thin" itself. "Thin" alludes to physical extent, but we must remind ourselves that it is really optical extent. But consider next a ray of light that is normally incident upon the glass. Now it doesn't matter how physically thick or thin the glass is; it always exits at the same tranverse coordinate. Is every object under illumination at normal incidence a thin object?</p>
+<p>These examples indicate that any defintion of "thin" might have to include the angle of the illumination.</p>
+<p>Carrying this example further, if we continuously reduce the NA of the system, then we will measure light that is confined to smaller and smaller angles to the axis. But then we will approach the situation described above where even physically thick objects appear thin under illumination at angles close to normal. Since decreasing the NA increases the depth of field, I suspect that a more satisfactory definition of "thin" will ultimately depend on the depth of field as well.</p>
+<p>My hypothesis is that an object's "thinness" really depends on two things:</p>
+<ol>
+<li>The ratio of its physical extent to the depth of field</li>
+<li>The refractive index contrast of the object</li>
+</ol>
+<p>We need both of the above quantities to be small for an object to be thin.</p>
+<h2>Conclusion</h2>
+<p>In conclusion, I really love this paper. It made me critically examine aspects of QPI that I think are taken for granted by clarifying a common point of confusion. Though I might sound critical in this post, it's only because I wish to see the authors' arguments further improved to the point where no ambiguity remains.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Cowley, John Maxwell. Diffraction physics. Elsevier, 1995. <a class="footnote-backref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fnref:1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fnref2:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p>Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers, 2005. <a class="footnote-backref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fnref:2" title="Jump back to footnote 2 in the text">↩</a><a class="footnote-backref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fnref2:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+<li id="fn:3">
+<p>Born, Max, and Emil Wolf. Principles of optics: electromagnetic theory of propagation, interference and diffraction of light. Elsevier, 2013. <a class="footnote-backref" href="posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/#fnref:3" title="Jump back to footnote 3 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/image-formation-in-brightfield-microscopy-part-1-object-models/" class="u-url">Image Formation in Brightfield Microscopy: Part 1 - Object Models</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -1269,94 +1378,13 @@ U \left( x = 0, y = Y, z = Z \right) &amp;=&amp; \frac{ e^{jkZ} }{j \lambda Z} e
 </ol>
 </div>
     </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/meta-biophysics-of-the-cell/" class="u-url">Meta-Biophysics of the Cell</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/meta-biophysics-of-the-cell/" rel="bookmark">
-            <time class="published dt-published" datetime="2025-01-14T17:07:30+01:00" itemprop="datePublished" title="2025-01-14 17:07">2025-01-14 17:07</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/meta-biophysics-of-the-cell/#disqus_thread" data-disqus-identifier="cache/posts/meta-biophysics-of-the-cell.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <p>I work in a biophysics lab applying microscopy techniques to study cell biology. I am not a biologist, and I was not trained as one. I therefore have had to develop heuristics to help me understand what cell biologists do and to communicate with them effectively.</p>
-<p>In this post, I present these heuristics as a sort of model for how I think that cell biologists think. I collectively call them "Meta-Biophysics of the Cell" because:</p>
-<ol>
-<li>they model the models of cell biologists, hence they are a meta-model,</li>
-<li>they are inspired by physics and quantitative modeling, and</li>
-<li>I limit myself to cellular processes and not, for example, in vitro or organismal studies.</li>
-</ol>
-<p>Furthermore, they are heavily biased by my work in microscopy.</p>
-<p>These heuristics may very well be wrong. I do not pretend to understand biology nearly as well as a biologist. If you think I am wrong, please do not hesitate to leave a comment and explain why.</p>
-<p>They also are certainly not complete. I present here only what I think the most important heuristics are.</p>
-<h2>Biologists want to know distributions of proteins across space and time</h2>
-<p>Cell biology is concerned with understanding the structure and behavior of cells as complex phenomena that emerge from the interactions of molecules. The types of these molecules may be proteins, nucleic acids, lipids, or some other type. I will use the term "protein" generally because </p>
-<ol>
-<li>it's easier than always listing all the types of molecules,</li>
-<li>it's more precise than just saying "molecule"</li>
-<li>there are at least 10,000 different types of proteins in the human cell, making proteins a core building block of the cell, and</li>
-<li>these heuristics do not change if you substitute another type of molecule for the word "protein."</li>
-</ol>
-<p>Within a single cell, we can model the number of proteins at a point in space and a point in time with a function \( N \left( \mathbf{r}, t \right) \). This is a spatiotemporal distribution for protein number density. Its dimensions are in numbers of proteins per unit of volume.</p>
-<p>A single protein can be represented as a point in space and time, such as a delta function:</p>
-<p>$$ N \left( \mathbf{r}, t \right) = \delta \left( \mathbf{r}, t \right) $$</p>
-<p>Of course a real protein occupies some volume and is not a point, but at the level of a cell I think that this is an adequate model for what cell biologists want to know about protein distributions.</p>
-<p>But wait. There are more than ten thousand types of proteins within the cell. Some proteins are of high abundance, and some are very rare. So it is not sufficient merely to count proteins in space and time: we also need to identify their types. For this, I assign a unique ID to each type that I call \( s \) for "species". Our model now becomes a function of another variable, one that is categorical rather than continuous:</p>
-<p>$$ N \left( \mathbf{r}, t ; s\right) $$</p>
-<p>Below I show a simplified schematic of the volume that this model occupies. It is simplified because I show only one spatial dimension (otherwise it would be a five dimensional hypervolume). I saw a figure like this once in a paper about a decade ago, but sadly I cannot find it to credit it. (<em>Update 2025-01-30: The paper referred to is <a href="https://doi.org/10.1016/j.cell.2007.08.031">Megason and Fraser, "Imaging in Systems Biology," Cell 130(5), 784-795 (2007)</a></em>)</p>
-<figure><img src="images/protein-distributions.png"><figcaption>A cell can be represented as a "volume" of spatiotemporal distributions where one spatiotemporal slice belongs to each protein species.</figcaption></figure><p>The \( x \) and \( t \) dimensions are continuous; the \( s \) dimension is a discrete, categorical variable. Each \( s \) slice is the spatiotemporal distribution of that protein within a single cell. Each point in the volume is the protein density for that point in space and time and for that species of protein.</p>
-<p>Individual proteins might also vary amongst themselves as in, for example, post translation modifications. This is not really a problem for the above model because we can use a different value for the \( s \) of each variant.</p>
-<h3>Creation and degradation of a protein</h3>
-<p>The appearance and disappearance of a protein is modeled as a non-zero value over a time range from \( t_0 \) to \( t_1 \). For example, a single protein existing over a finite time interval may be expressed as</p>
-<p>$$\begin{eqnarray}
- &amp;&amp;\delta \left( \mathbf{r}, t \right), \, t_0 &lt; t &lt; t_1 \\
- &amp;&amp;0, \, \text{otherwise}
-\end{eqnarray}$$</p>
-<h3>Biologists can only measure slices of protein distributions</h3>
-<p>Look again at the figure above. Remember that there are in fact five dimensions. Can any one experimental technique measure the whole hypevolume?</p>
-<p>No. Instead, biologists can measure slices from the volume and try to piece together a complete picture of \( N \) from individual measurements.</p>
-<p>For example, fluorescence microscopy can measure proteins in space and time. Sometimes it can measure in 3 spatial dimensions, but it is easier to measure in 2. Unfortunately, it can only measure a small of number of protein species relative to all the proteins that are in the cell. These would correspond to the different fluorescence channels of the measurement. Thus, fluorescence microscopy provides a slice of the volume that looks like the following:</p>
-<figure><img src="images/protein-distributions-microscopy-slice.png"><figcaption>Fluorescence microscopy measures a small slice of the spatiotemporal protein distribution that represents a cell.</figcaption></figure><p>Other types of measurements, such as those in single cell proteomics, might measure a large number of proteins but cannot resolve them in space and time. They would slice the volume like this:</p>
-<figure><img src="images/protein-distributions-proteomics-slice.png"></figure><p>So after their measurements, biologists are always going to be left with less than the total amount of information contained within a single cell because they can only measure slices of \( N \).</p>
-<h2>Organelles are mutually exclusive slices of protein distributions in space</h2>
-<p>Consider a mitochondrion. It is a membrane-bound organelle. Everything inside the mitochondrion is considered part of the organelle, and everything outside it is not. An organelle is therefore a mutually-exclusive slice through the volume dimensions of \( N \).</p>
-<p>The slices are mutually-exclusive because two mitochondria cannot occupy the same volume at the same time and have a distinct identity.</p>
-<p>For non-membrane bound organelles, keep reading.</p>
-<h3>Organelles contain many types proteins</h3>
-<p>If we use the definition of an organelle as a mutually-exclusive slice through the volume dimensions of \( N \), then we can look sideways along the \( s \) dimension to find all the proteins that belong to the organelle. If the distribution for protein \( s_i \) is non-zero inside an organelle's volume at a given time, then it belongs to the organelle. The set of all proteins within the volume slice at a given time constitute the organelle.</p>
-<h3>Knowing \( N \) doesn't by itself tell us what is and is not an organelle</h3>
-<p>Membrane-bound organelles are easy to identify because of their structure. Other sets of proteins within a given volume may or may not form an organelle. In these situations, we might look at their function instead to decide whether the volume is or is not occupied by an organelle.</p>
-<p>For example, organelles like the centrosome have a diffuse, pericentriolar material that surround them. In this case, the border defining what is and isn't inside the centrosome is likely to be somewhat arbitrary.</p>
-<h2>Cause and Effect is the probability of one protein distribution given another</h2>
-<p>At this time, I am much less certain about how function and causal relationships fit within this model. It is nevertheless important because biologists are deeply interested in the function of proteins and other complexes. To a rough approximation, I would say that cause and effect describes how the spatiotemporal distributions of a subset of protein species can serve as a predictor of another distribution at a later time. In other words, we can assign a probability to a certain distribution given another one.</p>
-<p>I would guess that not every possible set proteins is linked by causal relationships. This would mean that the limitations that come from being able to sample slices of the protein distribution hypervolume are not so significant. You would then want choose your measurements so that you slice the volume to include only the species that are causally linked for the phenomenon that you are studying.</p>
-<p>As a consequence of this, the causal links between distributions are likely more important than knowing \( N \). I doubt that we can have a satisfactory understanding of the cell if we could exhaustively measure \( N \) for even a single cell.</p>
-<h3>Interactions between proteins require spatial colocalization</h3>
-<p>Protein-protein interactions occur on length-scales on the order of the size of individual proteins. For two different proteins to "interact" we require that they be colocated less than this distance. Colcalization means that two proteins are located less than the distance required for an interaction to occur.</p>
-<p>Furthermore, colocalization is necessary but not sufficient for an interaction. A real interaction involves the chemistry between the two different species.</p>
-<h2>Summary</h2>
-<p>In summary, my main three heuristics for meta-biophysics of the cell are:</p>
-<ol>
-<li>Biologists want to know distributions of proteins across space and time</li>
-<li>Organelles are mutually exclusive slices of protein distributions in space</li>
-<li>Cause and Effect is the probability of one or more protein distributions given another</li>
-</ol>
-<p>I find that nearly all the problems that the cell biologists that I work with can be reformulated into this language. I emphasize again that the "real" science is being done by the biologists, and I in no way mean to diminish the complexity of their work. These heuristics are merely a tool that I use to understand what they are doing when I myself am unfamiliar with their jargon and mental models.</p>
-    </div>
     </article>
 </div>
 
         <ul class="pager postindexpager clearfix">
 <li class="next"><a href="index-2.html" rel="next">Older posts</a></li>
         </ul>
-<script>var disqus_shortname="kyle-m-douglass";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+<script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
         </script><!--End of body content--><footer id="footer">
             Contents © 2025         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
