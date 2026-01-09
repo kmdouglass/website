@@ -7,7 +7,7 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>https://kylemdouglass.com/</loc>
-  <lastmod>2025-09-04T07:28:00Z</lastmod>
+  <lastmod>2026-01-09T13:07:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/2024/</loc>
@@ -19,7 +19,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2025-12-08T13:37:00Z</lastmod>
+  <lastmod>2026-01-09T13:09:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
@@ -171,11 +171,15 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2025-12-08T13:37:00Z</lastmod>
+  <lastmod>2026-01-09T13:09:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-2.html</loc>
-  <lastmod>2025-12-08T13:37:00Z</lastmod>
+  <lastmod>2026-01-09T13:09:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/pages/portfolio/</loc>
+  <lastmod>2026-01-09T13:07:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</loc>
