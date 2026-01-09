@@ -142,10 +142,11 @@ TRANSLATIONS_PATTERN = '{path}.{lang}.{ext}'
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
+        ("/pages/portfolio/", "Portfolio"),
         ("/archive.html", "Archive"),
         ("/categories/", "Tags"),
         ("/rss.xml", "RSS feed"),
-        ("https://kmdouglass.github.io/", "Previous"),
+        ("https://kmdouglass.github.io/", "Old Blog"),
     ),
 }
 
