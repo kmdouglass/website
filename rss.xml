@@ -1,9 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass</title><link>https://kylemdouglass.com/</link><description>Optics, programming, and biophysics</description><atom:link href="https://kylemdouglass.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2025 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass</title><link>https://kylemdouglass.com/</link><description>Optics, programming, and biophysics</description><atom:link href="https://kylemdouglass.com/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2026 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 08 Dec 2025 15:48:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 26 Jan 2026 11:00:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Triggering Analog Voltage Outputs using a NI-DAQ Counter</title><link>https://kylemdouglass.com/posts/triggering-analog-voltage-outputs-using-a-ni-daq-counter/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;My current project in the lab requires that I update the triggering implementation for an instant structured illumination microscope, or &lt;a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3898876/"&gt;iSIM&lt;/a&gt;. The waveforms in the current iteration look like the following:&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img width="75%" src="https://kylemdouglass.com/images/isim-triggering.jpg"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;The most important waveform drives a galvanometric mirror. The timing of this waveform with respect to the camera pulse ensures that the mirror is already in motion and in its linear ramp phase when the camera begins its exposure. Now, the camera is a &lt;a href="https://www.teledynevisionsolutions.com/products/prime-bsi/"&gt;Photometrics Prime BSI&lt;/a&gt; which has a rolling shutter, so "exposure" in this sense refers the period of time during which all rows are exposing, otherwise known as &lt;a href="https://www.teledynevisionsolutions.com/learn/learning-center/imaging-fundamentals/rolling-vs-global-shutter/"&gt;pseudo-global shutter&lt;/a&gt;. The acousto-optic tunable filter (AOTF) is configured to interleave two different illumination wavelengths and to expose the sample only during the period of time where the camera is exposing.&lt;/p&gt;
+&lt;p&gt;For the moment, a National Instruments PCI-6733 DAQ board acts as the leader clock, and all the other components follow it. The board is configured in Python using the &lt;a href="https://github.com/ni/nidaqmx-python"&gt;nidaqmx&lt;/a&gt; package, which is more-or-less a wrapper around the NIDAQmx C API. The goal of this project is to integrate the timing logic into a Micro-Manager (MM) device adapter so that I can remove the Python layer entirely. In doing so, I should be able to harness &lt;a href="https://micro-manager.org/Hardware-based_Synchronization_in_Micro-Manager"&gt;Micro-Manager's builtin hardware sequencing&lt;/a&gt; capabilities so that everything &lt;em&gt;just works&lt;/em&gt; after the initial setup.&lt;/p&gt;
+&lt;p&gt;The main impediment to this goal is a conflict in interfacing the current setup with MM's hardware sequencing model. MM sequencing is based on a state machine, where each trigger signal sequentially advances a hardware device to its next state, eventually looping back to the beginning and starting over. Every device that follows the leader clock needs to be &lt;code&gt;Sequenceable&lt;/code&gt; in the MM sense. In the current setup where the NI-6733 is leader, it would have to provide both the clock and entire analog output (AO) waveform for each sequenceable state. This is a much more complex task than simply triggering AO waveforms because interleaving the illumination channels requires different waveforms for different states.&lt;/p&gt;
+&lt;p&gt;At this point I decided that the problem was too complex to address head on and decided first to address a simpler one: triggering AO waveforms from an external signal.&lt;/p&gt;
+&lt;h2&gt;DAQ Routes&lt;/h2&gt;
+&lt;p&gt;The key to understanding what you can do with your specific NIDAQ board is to access its routing table through the NI MAX software. Here is what the NI-6733 routing table looks like:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="https://kylemdouglass.com/images/ni-6733-routing-table.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;Here, &lt;code&gt;Dev1&lt;/code&gt; is the alias for the NI-6733 device. You can see that &lt;code&gt;/Dev1/PFI6&lt;/code&gt; has a direct route to &lt;code&gt;Dev1/ao/StartTrigger&lt;/code&gt;. My thinking at this point was that I only need to wire an external trigger source to &lt;code&gt;PFI6&lt;/code&gt; and I should be good to go.&lt;/p&gt;
+&lt;p&gt;I used the spring terminal and a 22 AWG jumper to connect the &lt;code&gt;USER 2&lt;/code&gt; BNC input to &lt;code&gt;PFI6&lt;/code&gt; on our BNC-2110 interface board as shown here:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="https://kylemdouglass.com/images/ni-pfi-user-2-jumper.jpg"&gt;&lt;/p&gt;
+&lt;p&gt;For the input trigger I set up a quick push button cirucit using an Arduino Nano to output a 5 V signal on one of the Arduino's digital output pins when the button is pressed. This was fast and good enough for testing.&lt;/p&gt;
+&lt;p&gt;Finally, I set up a quick NIDAQmx task in Python to wire everything up. I decided to output one period of a 0 - 5 V sinusoid each time the button is pressed.&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="n"&gt;samples&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;samples&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; 
+&lt;span class="n"&gt;waveform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;2.5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mf"&gt;2.5&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Create and configure the task&lt;/span&gt;
+&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;nidaqmx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Task&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Add analog output channel&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ao_channels&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_ao_voltage_chan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Dev1/ao0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;min_val&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;max_val&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# #10 kHz sampling rate and 1000 samples =&amp;gt; 100 ms sinusoid perid&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg_samp_clk_timing&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;rate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;sample_mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;AcquisitionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FINITE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;samps_per_chan&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;samples&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Configure digital edge start trigger on PFI6, rising edge&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;triggers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start_trigger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg_dig_edge_start_trig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;trigger_source&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"/Dev1/PFI6"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;trigger_edge&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Edge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;RISING&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Set task to be retriggerable&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;triggers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start_trigger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;retriggerable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Write waveform to buffer&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;waveform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;auto_start&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Start task (will wait for trigger)&lt;/span&gt;
+    &lt;span class="n"&gt;task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Unfortunately I encountered this error:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;nidaqmx.errors.DaqError: Specified property is not supported by the device or is not applicable to the task.
+
+Property: DAQmx_StartTrig_Retriggerable
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2&gt;Retriggerable AO Tasks&lt;/h2&gt;
+&lt;p&gt;As it turns out, the NI-6733 does not support retriggerable AO tasks. This means that, if configured as above, my waveform would only run once. To run it again, I would need to recreate the task in software. This is obviously unacceptable because I need hardware timing.&lt;/p&gt;
+&lt;p&gt;I found a solution in this NI knowledge base article: &lt;a href="https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z0000019MXxSAM"&gt;https://knowledge.ni.com/KnowledgeArticleDetails?id=kA00Z0000019MXxSAM&lt;/a&gt;. The NI-6733's internal counters &lt;strong&gt;are retriggerable&lt;/strong&gt;, and I can use them to serve as the clock for an AO task.&lt;/p&gt;
+&lt;p&gt;Here's how this works: I setup a NIDAQmx task to output a set number of pulses from one of the counters. The number of pulses is equal to the number of samples in my desired waveform. The counter pulse train is triggered by my 5 V input signal on PFI3.&lt;/p&gt;
+&lt;p&gt;Next, I rely on a direct connection from the counter's output to the AO channel's clock source . This means that the AO waveform advances by one sample every time a pulse is received from the counter. In terms of the routing table:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/Dev1/PFI3&lt;/code&gt; --&amp;gt; &lt;code&gt;/Dev1/Ctr1Source&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/Dev1/Ctr1InternalOutput&lt;/code&gt; --&amp;gt; &lt;code&gt;/Dev1/ao/SampleClock&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The script then creates the two different tasks. NIDAQ devices usually only support running one AO task at a time, but since the counter is not part of AO, I can have both tasks running simultaneously. The full test script is as follows:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;nidaqmx&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;nidaqmx.constants&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;AcquisitionType&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Edge&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;RegenerationMode&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;numpy&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;as&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;time&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Generate sinusoid waveform (0 to 5V, 1000 samples)&lt;/span&gt;
+&lt;span class="n"&gt;samples&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;samples&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;waveform&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;2.5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mf"&gt;2.5&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pi&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;counter_task&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nidaqmx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Task&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ao_task&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;nidaqmx&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Task&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Configure Counter 1 to generate sample clock pulses&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;co_channels&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_co_pulse_chan_freq&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;"Dev1/ctr1"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;freq&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;# 10 kHz&lt;/span&gt;
+        &lt;span class="n"&gt;duty_cycle&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.5&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Generate exactly 1000 pulses per trigger&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg_implicit_timing&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;sample_mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;AcquisitionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FINITE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;samps_per_chan&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;samples&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Trigger counter from PFI3&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;triggers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start_trigger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg_dig_edge_start_trig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;trigger_source&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"/Dev1/PFI3"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;trigger_edge&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Edge&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;RISING&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Make counter retriggerable&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;triggers&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start_trigger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;retriggerable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Configure analog output task&lt;/span&gt;
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ao_channels&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_ao_voltage_chan&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Dev1/ao0"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;min_val&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;max_val&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Use CONTINUOUS mode with external sample clock&lt;/span&gt;
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;timing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cfg_samp_clk_timing&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;rate&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;10000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;source&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"/Dev1/Ctr1InternalOutput"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;sample_mode&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;AcquisitionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;CONTINUOUS&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# ALLOW regeneration - buffer loops back to beginning&lt;/span&gt;
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;out_stream&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;regen_mode&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RegenerationMode&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ALLOW_REGENERATION&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Write waveform ONCE to buffer&lt;/span&gt;
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;waveform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;auto_start&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Start tasks&lt;/span&gt;
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Tasks configured and running!"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Connect Arduino button to PFI3"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Waveform loaded once - will regenerate on each trigger"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"Press Ctrl+C to stop&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;0.1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;KeyboardInterrupt&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;Stopping tasks..."&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;finally&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;stop&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+
+    &lt;span class="n"&gt;ao_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;counter_task&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Note that regeneration is enabled for the AO task. This means that the waveform is uploaded to the NI-6733's internal buffer and a pointer advances sequentially through it. Once the pointer reaches the end, it circles back to the beginning without having to upload more waveform samples.&lt;/p&gt;
+&lt;h3&gt;Two Color Interleaved Sequential Imaging&lt;/h3&gt;
+&lt;p&gt;I think that this approach can be extended to the original problem of interleaving the different AOTF channels as follows. For the AO task, create a waveform that is two galvo waveform periods long. In the first galvo period, activate the first AOTF channel, and switch to the other channel during the second period.&lt;/p&gt;
+&lt;p&gt;For the counter, &lt;strong&gt;configure a pulse sequence that has half the number of samples as the AO task.&lt;/strong&gt; So, for example, if the full galvo/camera/AOTF waveform across two periods is 1024 samples, the counter pulse train should be only 512 samples. When it is triggered, it will advance the galvo/etc. waveform by 512 samples and will await the second trigger to advance another 512 samples.&lt;/p&gt;
+&lt;h2&gt;Closing Remarks&lt;/h2&gt;
+&lt;p&gt;The key to setting up complex timing circuits with a NIDAQ is to critically examine its routing table. This can be quite complex, and I found that even my LLM of choice, Claude, made mistakes when interpreting its image. In the end I actually printed it out to examine it on paper.&lt;/p&gt;
+&lt;p&gt;The other important thing that I learned is that we can use counters to drive other NIDAQmx tasks. This opens up a lot of interesting possibilities, such as the two color interleaved sequencing that I described above.&lt;/p&gt;
+&lt;p&gt;I am inclined to eventually make the camera the leader in this set up. MM's hardware sequencing works best when this is the case. Additionally, I could free an analog output channel by making this transition.&lt;/p&gt;
+&lt;p&gt;Finally, I use hard-coded empircal offsets and rely on the agreement between the NIDAQ and camera clocks to ensure that the AOTF signals are applied only during exposure. The Prime BSI camera outputs a signal when all rows are exposing that I am currently not using. It would likely be better to use this expose out signal instead and tie the AOTF timings to this. Doing so would ensure tight synchronization between the AOTF and camera, but the downside would be that it would require a separate hardware controller due to the fact that I can't have more than one AO task running on the NIDAQ at once.&lt;/p&gt;</description><category>isim</category><category>nidaq</category><category>timing</category><guid>https://kylemdouglass.com/posts/triggering-analog-voltage-outputs-using-a-ni-daq-counter/</guid><pubDate>Mon, 26 Jan 2026 10:39:15 GMT</pubDate></item><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
 &lt;p&gt;&lt;a href="https://doi.org/10.1364/JOSAA.34.001738"&gt;Yijun Bao and Thomas K. Gaylord, "Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories: Discussion,"  J. Opt. Soc. Am. A 34, 1738-1745 (2017)&lt;/a&gt;&lt;/p&gt;
 &lt;h4&gt;Abstract&lt;/h4&gt;
 &lt;blockquote&gt;
@@ -1082,60 +1234,4 @@ U \left( x = 0, y = Y, z = Z \right) &amp;amp;=&amp;amp; \frac{ e^{jkZ} }{j \lam
 &lt;p&gt;I conclude that there is no reason to remove &lt;code&gt;terminated&lt;/code&gt; for performance reasons. Reducing my floating point precision would produce a more noticeable effect on the cache locality of the &lt;code&gt;Ray&lt;/code&gt; data type.&lt;/p&gt;
 &lt;h2&gt;Does all of this matter?&lt;/h2&gt;
 &lt;p&gt;My Ryzen 7 laptop can trace about 600 rays through 3 surfaces in 380 microseconds with Firefox, Slack, and Outlook running. At this point, I doubt that crafting my data types for cache friendliness is going to offer a significant payoff. Creating data types that are easy to work with is likely more important.&lt;/p&gt;
-&lt;p&gt;I do think, however, that it's important to understand these concepts. If I do need to tune the performance in the future, then I know where to look.&lt;/p&gt;</description><category>ray tracing</category><category>rust</category><guid>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</guid><pubDate>Mon, 24 Feb 2025 07:40:00 GMT</pubDate></item><item><title>An Analog LED Dimmer Circuit</title><link>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I recently needed to build a circuit to control the brightness of a 4 W LED with a knob. I know basic electronics, and I thought this would be easy. I spoke to a few people whom I know and are knowledgable in electronics. I also asked people on Reddit. A lot of people said it would be easy.&lt;/p&gt;
-&lt;p&gt;As it turns it, it wasn't easy.&lt;/p&gt;
-&lt;h2&gt;The Requirements&lt;/h2&gt;
-&lt;p&gt;My requirments are simple:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;The brightness should be manually adjustable with a knob from OFF to nearly full ON.&lt;/li&gt;
-&lt;li&gt;The LED will serve as the light source of a microscope trans-illuminator. It should work across a large range of frame acquisition rates (1 Hz to 1 kHz, or exposure times of 1 ms to 1 s).&lt;/li&gt;
-&lt;li&gt;The range of brightnesses should be variable across the dynamic range of the camera, which in my case is 35,000:1, or about 90 dB.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;I don't care about efficiency. I don't care about whether I can use a Raspberry Pi to control it. I don't care whether it can be turned on or off with different logic levels. I just want a knob that I can turn to make the LED brighter or dimmer.&lt;/p&gt;
-&lt;p&gt;In spite of the insistence of several people that I communicated with on the internet, I decided that the second requirement would preclude using pulse width modulation (PWM) to dim the LED. Even when I could convince others that PWM almost always causes aliasing at high frame rates, they tried to find obscure work arounds so I could still use PWM. I really do appreciate all the feedback I got. But I also learned that PWM is the hammer of the electronics world that makes everything look like a nail&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/#fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-&lt;h2&gt;The Circuit&lt;/h2&gt;
-&lt;p&gt;I reached out to a friend of mine who's a wizard at analog electronics&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt;. He suggested to use a MOSFET and to vary the gate-source voltage to control the current through the LED.&lt;/p&gt;
-&lt;p&gt;After a lot of thinking and reading, I arrived at &lt;a href="https://tinyurl.com/2cnw45fy"&gt;the following circuit&lt;/a&gt;:&lt;/p&gt;
-&lt;figure&gt;
-  &lt;img src="https://kylemdouglass.com/images/led-dimmer-circuit-v0.png"&gt;
-&lt;/figure&gt;
-
-&lt;p&gt;The LED is an Osram Oslon star LED (LST1-01F05-4070-01) with a maximum current of 1.3 A and a maximum forward voltage of 3.2 V. The MOSFET is an IRF510, whose gate-source threshold voltage is about 3 V.&lt;/p&gt;
-&lt;p&gt;Here's a brief explanation of what each component does:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Voltage source&lt;/strong&gt; : This is just a 12 V wall wart.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;200 nF capacitor&lt;/strong&gt; : This smooths out any fluctuations from the wall wart.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;50 kOhm potentiometer&lt;/strong&gt; : The "knob." Turning it will vary the gate-source voltage of the MOSFET, which controls how much current flows through the LED.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;50 kOhm resistor&lt;/strong&gt; : This along with the potentiometer forms a voltage divider to keep the minimum voltage at the MOSFET gate close to where the LED turns on. Without it, you need to rotate the potentiometer almost half of its full range for the LED to turn on.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;300 nF capacitor&lt;/strong&gt; : A debounce capacitor that smooths out the mechanical irregularities of the pot when it turns.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;IRF510 MOSFET&lt;/strong&gt; : Basically a valve that I can vary continuously to control the LED current by setting the voltage at the gate.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;LED&lt;/strong&gt; : So pretty.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;10 Ohm resistor&lt;/strong&gt; : This limits the current through the resistor. I calculated its value by dividing the maximum supply voltage minus the maximum forward voltage drop across the LED by the maximum current, then rounded up for safety.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;$$ R = \frac{V}{I} = \frac{\left( 12 \, V - 3.2 \, V \right) }{1.3 \, A} = 6.8 \Omega $$&lt;/p&gt;
-&lt;p&gt;The resistor also has to handle a large power dissipation at the maximum current:&lt;/p&gt;
-&lt;p&gt;$$ P = I^2 R = \left(1.3 \, A \right)^2 \left( 10 \Omega \right) = 16.9 W $$&lt;/p&gt;
-&lt;p&gt;I decided instead to keep the current to less than 1 Amp so that I could use a 10 Watt resistor that I had.&lt;/p&gt;
-&lt;p&gt;Power dissipation is also why we don't just use a potentiometer to control the LED current: my pots were only rated up to about 50 mW, whereas I expected that the MOSFET would have handle loads on the order of Watts due to the high current.&lt;/p&gt;
-&lt;h2&gt;What I Learned&lt;/h2&gt;
-&lt;h3&gt;I really need to study MOSFETS&lt;/h3&gt;
-&lt;p&gt;I still don't really know how to solve circuits with MOSFETs. I arrived at the above circuit largely by trial-and-error on a prototype and by performing naive calculations on the voltage divider that turned out to not be entirely correct. I also expected that the LED would turn on once I passed the MOSFET's gate-source voltage threshold, but this turned out to be off by about 2 or 3 V.&lt;/p&gt;
-&lt;h3&gt;MOSFETs suffer from second order effects&lt;/h3&gt;
-&lt;p&gt;There is currently a hysteresis in the gate-ground voltage at when the LED turns on and when it turns off by about half a Volt. According to a helpful person on Reddit, this is likely due to a change in both the LEDs forward voltage and the MOSFET's threshold voltage with temperature once the current starts flowing. A possible fix is to swap the order of the LED and the MOSFET so that only the MOSFET will contribute to the hysteresis.&lt;/p&gt;
-&lt;h3&gt;You can always complicate things to make them better&lt;/h3&gt;
-&lt;p&gt;The same person on Reddit above also suggested making the circuit robust to temperature variations by adding an opamp to control the MOSFET gate voltage. It would compensate for temperature changes by comparing the potentiometer value to the 10 Ohm resistor in a closed feedback loop.&lt;/p&gt;
-&lt;h3&gt;Electronics is an art&lt;/h3&gt;
-&lt;p&gt;Yes, electronics is a science, but I would argue that having to mentally juggle second order effects and the fact that experts seem to make an initial design "by feel" are signatures of an art.&lt;/p&gt;
-&lt;p&gt;It also struck me how nearly every step of the process forced me to take a detour to address something I hadn't at first considered, such as current limits in the wires and large variations in the MOSFET specs.&lt;/p&gt;
-&lt;p&gt;The next time I need to do something like this, I will expect the problem to take longer to solve than I first anticipate.&lt;/p&gt;
-&lt;div class="footnote"&gt;
-&lt;hr&gt;
-&lt;ol&gt;
-&lt;li id="fn:1"&gt;
-&lt;p&gt;To my non-native English speaking readers: I mean that people try to use PWM to solve problems where it's not appropriate. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/#fnref:1" title="Jump back to footnote 1 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li id="fn:2"&gt;
-&lt;p&gt;And if you play electric guitar, be sure to check out his handmade effects pedals: &lt;a href="https://www.volumeandpower.com/"&gt;https://www.volumeandpower.com/&lt;/a&gt;. &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/#fnref:2" title="Jump back to footnote 2 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;</description><category>electronics</category><category>optics</category><guid>https://kylemdouglass.com/posts/an-analog-led-dimmer-circuit/</guid><pubDate>Fri, 17 Jan 2025 08:08:27 GMT</pubDate></item></channel></rss>
+&lt;p&gt;I do think, however, that it's important to understand these concepts. If I do need to tune the performance in the future, then I know where to look.&lt;/p&gt;</description><category>ray tracing</category><category>rust</category><guid>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</guid><pubDate>Mon, 24 Feb 2025 07:40:00 GMT</pubDate></item></channel></rss>
