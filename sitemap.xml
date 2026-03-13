@@ -23,11 +23,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2026-01-26T10:37:00Z</lastmod>
+  <lastmod>2026-03-13T09:17:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2026-01-26T11:00:00Z</lastmod>
+  <lastmod>2026-03-13T09:34:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -60,6 +60,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/cameras/</loc>
   <lastmod>2024-05-17T09:20:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/cat_biophysics/</loc>
+  <lastmod>2026-03-13T09:34:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/cat_homelab/</loc>
@@ -106,6 +110,10 @@
   <lastmod>2025-01-17T08:38:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/electrostatics/</loc>
+  <lastmod>2026-03-13T09:34:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/fits/</loc>
   <lastmod>2024-03-26T13:35:00Z</lastmod>
  </url>
@@ -142,8 +150,16 @@
   <lastmod>2025-07-07T08:34:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/membrane-potential/</loc>
+  <lastmod>2026-03-13T09:34:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/microscopy/</loc>
   <lastmod>2024-05-22T11:46:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/mitochondria/</loc>
+  <lastmod>2026-03-13T09:34:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/networking/</loc>
@@ -191,7 +207,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-2.html</loc>
-  <lastmod>2026-01-26T10:37:00Z</lastmod>
+  <lastmod>2026-03-13T09:17:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/pages/portfolio/</loc>
@@ -228,6 +244,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/data-type-alignment-for-ray-tracing-in-rust/</loc>
   <lastmod>2025-02-24T08:31:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/electrostatics-and-mitochondria/</loc>
+  <lastmod>2026-03-13T09:17:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/engineering-fits/</loc>

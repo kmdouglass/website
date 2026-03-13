@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about biophysics)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/cat_biophysics.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2026 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+&lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
+&lt;img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 13 Mar 2026 09:38:09 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Electrostatics and Mitochondria</title><link>https://kylemdouglass.com/posts/electrostatics-and-mitochondria/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;The mitochondrial &lt;a href="https://en.wikipedia.org/wiki/Membrane_potential"&gt;membrane potential&lt;/a&gt; is the potential difference across the inner mitochondrial membrane caused by proton pumps in the electron transport chain. Its value is often cited as about \( -150\, mV \). I can never remember the directional conventions for this, so I made the following sketch as a reminder:&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img width="75%" src="https://kylemdouglass.com/images/mito_membrane_potential.png"&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;IMM&lt;/strong&gt;: Inner mitochondrial membrane&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IMS&lt;/strong&gt;: Intermembrane space&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;OMM&lt;/strong&gt;: Outer mitchondrial membrane&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you stick the positive lead of a voltmeter inside the mitochontrial matrix and the negative lead in the intermembrane space, you will measure a voltage of about \( -150 \, mV \).&lt;/p&gt;
+&lt;p&gt;The electric field, which points from positive to negative charge, points from the IMS into the matrix. The definition of potential difference is&lt;/p&gt;
+&lt;p&gt;$$ \Delta \psi = -\int_C \vec{E} \cdot \, d \vec{\ell} $$&lt;/p&gt;
+&lt;p&gt;where \( C \) is the path of integration. In the absence of magnetic fields this integral is independent of the path and depends only on the value of the potential at its endpoints:&lt;/p&gt;
+&lt;p&gt;$$ \Delta \psi = - \left| \vec{E} \right| \times (z_{mat}  - z_{ims}) $$&lt;/p&gt;
+&lt;p&gt;with \( z_{mat} \) and \( z_{ims} \) positions within the matrix and IMS, respectively. This equation also assumes that the electric field is uniform across the membrane, which is clearly a simplification.&lt;/p&gt;
+&lt;p&gt;The direction of integration is from \( z_{ims} \) to \( z_{mat} \). In the figure above the electric field \( \vec{E} \) and the path length differential \( d \vec{\ell} \) are parallel, so \( \vec{E} \cdot \, d \vec{\ell} \) is positive, and the negative sign in the definition results in a negative value for \( \Delta \psi \).&lt;/p&gt;</description><category>electrostatics</category><category>membrane potential</category><category>mitochondria</category><guid>https://kylemdouglass.com/posts/electrostatics-and-mitochondria/</guid><pubDate>Fri, 13 Mar 2026 09:04:38 GMT</pubDate></item></channel></rss>
