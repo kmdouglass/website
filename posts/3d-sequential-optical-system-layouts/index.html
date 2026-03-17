@@ -211,7 +211,7 @@ bg-dark
 <p>The first step in computing \( {}^{\mathbf{ C }} \vec{ p } \) is to translate from the origin of the global frame to the position of cursor.</p>
 <p>$$ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right)  =  (0, -6.35 \sqrt{3}, -6.35)^{ \mathrm{ T }}$$</p>
 <h4>Step 2: Rotate into the Cursor Frame</h4>
-<p>A rotation from the global frame into the cursor frame can be achieved by taking the \( \hat{ r } \), \( \hat{ u } \), and \( \hat{ f } \) unit vectors that define the cursor frame in the global coordinate system and making them the columns of a \( 3 \times 3 \) rotation matrix. At the second mirror, this matrix is:</p>
+<p>A rotation from the global frame into the cursor frame can be achieved by taking the \( \hat{ r } \), \( \hat{ u } \), and \( \hat{ f } \) unit vectors that define the cursor frame in the global coordinate system and making them the rows of a \( 3 \times 3 \) rotation matrix. At the second mirror, this matrix is:</p>
 <p>$$\begin{eqnarray}
 R_{GC} \left( \theta = 30^{ \circ } \right) = \left(
   \begin{array}{ccc}
@@ -221,7 +221,8 @@ R_{GC} \left( \theta = 30^{ \circ } \right) = \left(
   \end{array}
 \right)
 \end{eqnarray}$$</p>
-<p>If this is not clear, consider that the columns of a rotation matrix represent the basis vectors of the coordinate system after rotation, but expressed in the original (global) frame's coordinate system. Also, from the diagram above, \( \hat{ u } \left( s_2 \right) = ( 0, 1 / 2, \sqrt{ 3 } / 2)^{ \mathrm{ T }} \) and \( \hat{ f } \left( s_2 \right) = ( 0, \sqrt{ 3 } / 2, - 1 / 2)^{ \mathrm{ T }}\), which are the second and third columns of the matrix.</p>
+<p>If this is not clear, consider that the rows of a rotation matrix represent the basis vectors of the coordinate system after a passive rotation, but expressed in the original (global) frame's coordinate system. (See below for more on passive rotations.) When you multiply a global-frame vector by this matrix, each row makes a dot product with that vector, projecting it onto the corresponding cursor axis. From the diagram above, \( \hat{ u } \left( s_2 \right) = ( 0, 1 / 2, \sqrt{ 3 } / 2)^{ \mathrm{ T } } \) and \( \hat{ f } \left( s_2 \right) = ( 0, \sqrt{ 3 } / 2, - 1 / 2)^{ \mathrm{ T
+  }} \), which are the second and third rows of the matrix.</p>
 <p>The rotation into the cursor frame is the product between the rotation matrix and the difference \( {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \):</p>
 <p>$$\begin{eqnarray}
 {}^{\mathbf{ C }} \vec{ p } = R_{GC} \left[ {}^{\mathbf{G}}\vec{ p } - {}^{\mathbf{G}}\vec{ t } \left( s_2 \right) \right] = \left(
