@@ -33,7 +33,9 @@ Here, `Dev1` is the alias for the NI-6733 device. You can see that `/Dev1/PFI6` 
 
 I used the spring terminal and a 22 AWG jumper to connect the `USER 2` BNC input to `PFI6` on our BNC-2110 interface board as shown here:
 
-![](/images/ni-pfi-user-2-jumper.jpg)
+<figure>
+  <img width="50%" src=/images/ni-pfi-user-2-jumper.jpg>
+</figure>
 
 For the input trigger I set up a quick push button cirucit using an Arduino Nano to output a 5 V signal on one of the Arduino's digital output pins when the button is pressed. This was fast and good enough for testing.
 
