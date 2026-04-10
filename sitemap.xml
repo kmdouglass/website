@@ -23,11 +23,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2026-03-13T09:17:00Z</lastmod>
+  <lastmod>2026-03-26T07:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2026-03-13T09:34:00Z</lastmod>
+  <lastmod>2026-04-10T07:39:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -170,6 +170,10 @@
   <lastmod>2026-01-26T11:00:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/numerical-methods/</loc>
+  <lastmod>2026-04-10T07:39:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/optics/</loc>
   <lastmod>2024-05-22T11:46:00Z</lastmod>
  </url>
@@ -203,11 +207,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-1.html</loc>
-  <lastmod>2026-01-09T13:09:00Z</lastmod>
+  <lastmod>2026-03-26T07:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-2.html</loc>
-  <lastmod>2026-03-13T09:17:00Z</lastmod>
+  <lastmod>2026-03-26T07:51:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/pages/portfolio/</loc>
@@ -292,6 +296,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/raspberry-pi-i2c-quickstart/</loc>
   <lastmod>2024-09-24T14:43:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/ray-surface-intersections-with-the-newton-raphson-algorithm/</loc>
+  <lastmod>2026-03-23T07:50:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/testing-simulation-code/</loc>

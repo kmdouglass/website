@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 26 Jan 2026 11:00:55 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Triggering Analog Voltage Outputs using a NI-DAQ Counter</title><link>https://kylemdouglass.com/posts/triggering-analog-voltage-outputs-using-a-ni-daq-counter/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;My current project in the lab requires that I update the triggering implementation for an instant structured illumination microscope, or &lt;a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3898876/"&gt;iSIM&lt;/a&gt;. The waveforms in the current iteration look like the following:&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Thu, 26 Mar 2026 07:51:42 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Triggering Analog Voltage Outputs using a NI-DAQ Counter</title><link>https://kylemdouglass.com/posts/triggering-analog-voltage-outputs-using-a-ni-daq-counter/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;My current project in the lab requires that I update the triggering implementation for an instant structured illumination microscope, or &lt;a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3898876/"&gt;iSIM&lt;/a&gt;. The waveforms in the current iteration look like the following:&lt;/p&gt;
 &lt;figure&gt;
   &lt;img width="75%" src="https://kylemdouglass.com/images/isim-triggering.jpg"&gt;
 &lt;/figure&gt;
@@ -17,7 +17,10 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;p&gt;&lt;img alt="" src="https://kylemdouglass.com/images/ni-6733-routing-table.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;Here, &lt;code&gt;Dev1&lt;/code&gt; is the alias for the NI-6733 device. You can see that &lt;code&gt;/Dev1/PFI6&lt;/code&gt; has a direct route to &lt;code&gt;Dev1/ao/StartTrigger&lt;/code&gt;. My thinking at this point was that I only need to wire an external trigger source to &lt;code&gt;PFI6&lt;/code&gt; and I should be good to go.&lt;/p&gt;
 &lt;p&gt;I used the spring terminal and a 22 AWG jumper to connect the &lt;code&gt;USER 2&lt;/code&gt; BNC input to &lt;code&gt;PFI6&lt;/code&gt; on our BNC-2110 interface board as shown here:&lt;/p&gt;
-&lt;p&gt;&lt;img alt="" src="https://kylemdouglass.com/images/ni-pfi-user-2-jumper.jpg"&gt;&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img width="50%" src="https://kylemdouglass.com/images/ni-pfi-user-2-jumper.jpg"&gt;
+&lt;/figure&gt;
+
 &lt;p&gt;For the input trigger I set up a quick push button cirucit using an Arduino Nano to output a 5 V signal on one of the Arduino's digital output pins when the button is pressed. This was fast and good enough for testing.&lt;/p&gt;
 &lt;p&gt;Finally, I set up a quick NIDAQmx task in Python to wire everything up. I decided to output one period of a 0 - 5 V sinusoid each time the button is pressed.&lt;/p&gt;
 &lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="n"&gt;samples&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;

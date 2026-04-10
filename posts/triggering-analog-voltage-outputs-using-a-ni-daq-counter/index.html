@@ -113,8 +113,7 @@ bg-dark
 <p><img alt="" src="../../images/ni-6733-routing-table.jpg"></p>
 <p>Here, <code>Dev1</code> is the alias for the NI-6733 device. You can see that <code>/Dev1/PFI6</code> has a direct route to <code>Dev1/ao/StartTrigger</code>. My thinking at this point was that I only need to wire an external trigger source to <code>PFI6</code> and I should be good to go.</p>
 <p>I used the spring terminal and a 22 AWG jumper to connect the <code>USER 2</code> BNC input to <code>PFI6</code> on our BNC-2110 interface board as shown here:</p>
-<p><img alt="" src="../../images/ni-pfi-user-2-jumper.jpg"></p>
-<p>For the input trigger I set up a quick push button cirucit using an Arduino Nano to output a 5 V signal on one of the Arduino's digital output pins when the button is pressed. This was fast and good enough for testing.</p>
+<figure><img width="50%" src="../../images/ni-pfi-user-2-jumper.jpg"></figure><p>For the input trigger I set up a quick push button cirucit using an Arduino Nano to output a 5 V signal on one of the Arduino's digital output pins when the button is pressed. This was fast and good enough for testing.</p>
 <p>Finally, I set up a quick NIDAQmx task in Python to wire everything up. I decided to output one period of a 0 - 5 V sinusoid each time the button is pressed.</p>
 <div class="code"><pre class="code literal-block"><span class="n">samples</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span> 

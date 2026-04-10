@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I take a deep dive into computing ray-surface intersections using the Newton-Raphson algorithm.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ray-Surface Intersections with the Newton-Raphson Algorithm | Kyle M. Douglass</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/posts/ray-surface-intersections-with-the-newton-raphson-algorithm/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
+<link rel="prev" href="../electrostatics-and-mitochondria/" title="Electrostatics and Mitochondria" type="text/html">
+<meta property="og:site_name" content="Kyle M. Douglass">
+<meta property="og:title" content="Ray-Surface Intersections with the Newton-Raphson Algorithm">
+<meta property="og:url" content="https://kylemdouglass.com/posts/ray-surface-intersections-with-the-newton-raphson-algorithm/">
+<meta property="og:description" content="I take a deep dive into computing ray-surface intersections using the Newton-Raphson algorithm.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-04-09T20:26:02+02:00">
+<meta property="article:tag" content="numerical methods">
+<meta property="article:tag" content="ray tracing">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../../">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../pages/portfolio/" class="nav-link">Portfolio</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+                </li>
+<li class="nav-item">
+<a href="https://kmdouglass.github.io/" class="nav-link">Old Blog</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Ray-Surface Intersections with the Newton-Raphson Algorithm</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2026-04-09T20:26:02+02:00" itemprop="datePublished" title="2026-04-09 20:26">2026-04-09 20:26</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/ray-surface-intersections-with-the-newton-raphson-algorithm.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>A few weeks ago I restarted work on <a href="https://kmdouglass.github.io/cherry/">Cherry</a>, my sequential ray tracer, by porting the GUI from Javascript/React to pure WASM with <a href="https://github.com/emilk/egui">egui</a>. I am very happy with the results. It's much easier to add features with egui, and I have no regrets about giving up the DOM in the web application. I was never very good at web developement, and I always felt that React has too much unseen magic happening behind the scenes.</p>
+<p>Having gotten the frontend work out of the way, I turned my attention back to adding features to Cherry. One of the applications that interests me in the lab is scan lenses, i.e. lenses that translate an angular deviation of a laser beam into a lateral displacement. These lenses are designed so that their scanning plane is as flat as possible over a large field of view. They often must work across multiple wavelengths and at large field angles.</p>
+<p>As a starting point, I put the <a href="https://optiland.readthedocs.io/en/latest/gallery/specialized_lenses/f_theta_lens.html">f-theta scan lens example from Optiland</a>, which itself comes from <a href="https://www.routledge.com/Lens-Design/Laikin/p/book/9780849382789">Milton Laikin's Lens Design, 4th ed.</a>, into Cherry and began varying the incident field angle. It did not take long before problems in the ray tracing routine appeared.</p>
+<p><img alt="" src="../../images/newton-raphson-ray-trace-error.png"></p>
+<p>At a field angle of exactly 5.6 degrees, the marginal ray from the Fraunhofer C line ( \( \lambda = 0.6563 \, \mu m\) ) reflects backwards off the first lens surface and intersects the origin. It propagates correctly for field angles of 5.5 degrees and 5.7 degrees, which to me suggests that there is a numerical accident that happens at exactly this value. Furthermore, the spot diagram shows ray-surface intersections across all wavelengths in the image plane disappearing and reappearing randomly as the field angle increases, with the overall number of ray trace errors increasing with field angle. Small angles do not seem to have the problem, and indeed I had not yet tried examples with highly curved surfaces such as this f-theta lens.</p>
+<p>As it turns out, the cause of this problem was a silly bug that came from code I wrote three years ago. At the time, I didn't truly and fully understand the Newton-Raphson (NR) root finding algorithm for finding ray-surface intersections. I wanted surface normal vectors to always be unit vectors by convention, and this subtlety ended up degrading and in some cases, ruining the algorithm's ability to find the intersection point, especially at large angles of incidence.</p>
+<p>This post is a recap about my journey in debugging the issue and better understanding the NR algorithm. I hope you learn as much as I did from it.</p>
+<h2>Debugging Ray-Surface Intersections</h2>
+<h3>Running Traces through Algorithms</h3>
+<p>In practice there are a lot of ray-surface intersections to compute; tracing 1000 rays through 8 surfaces, for example, yields 8000 intersections. This means the algorithm loops 8000 individual times. When only a subset of these fail, it pays to have good debugging tooling in place to identify the state of the algorithm during a failure.</p>
+<p>For this I turned to the excellent <a href="https://github.com/tokio-rs/tracing">tracing</a> crate, which has become something of a <em>de facto</em> standard for logging in Rust. The primary abstractions in tracing are events and spans. Events are the most straightforward to understand because they are the same thing as log messages in other languages.</p>
+<p>tracing's documentation provides a good, high-level explanation of spans<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>:</p>
+<blockquote>
+<p>Unlike a log line that represents a moment in time, a span represents a period of time with a beginning and an end. When a program begins executing in a context or performing a unit of work, it enters that context’s span, and when it stops executing in that context, it exits the span.</p>
+</blockquote>
+<p>The value in using spans is that you can attach data to them, forming a context. Every event that is emitted during a span is associated with this data, regardless of where the event was emitted. In pseudocode, my ray tracing algorithm roughly works like this:</p>
+<div class="code"><pre class="code literal-block"><span class="k">for</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">fields</span><span class="o">.</span><span class="n">iter</span><span class="p">():</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">surface_id</span><span class="p">,</span><span class="w"> </span><span class="n">surface</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">surfaces</span><span class="o">.</span><span class="n">iter</span><span class="p">()</span><span class="o">.</span><span class="n">enumerate</span><span class="p">():</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ray_id</span><span class="p">,</span><span class="w"> </span><span class="n">ray</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">rays</span><span class="o">.</span><span class="n">iter</span><span class="p">()</span><span class="o">.</span><span class="n">enumerate</span><span class="p">():</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">coordinate</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="n">transformations</span>
+
+<span class="w">        </span><span class="n">intersect</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span><span class="w"> </span><span class="n">surface</span><span class="p">)</span>
+
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="n">transformations</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">coordinate</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="n">transformations</span>
+</pre></div>
+
+<p>When an intersection failure occurs, I'd like to know the <code>ray_id</code>, but I'd also like to know the state of variables inside the <code>intersection</code> method. Using spans, I do not have to thread <code>ray_id</code> inside the <code>intersect</code> method to attach it to log messages. Instead, I create a span at the top of the inner-most loop that contains ray_id in its context. Then, any events inside the <code>intersection</code> method will be associated to that context. I can then filter by, say, <code>ray_id=42</code> to see all events that happened for that ray inside <code>intersect()</code>.</p>
+<div class="code"><pre class="code literal-block"><span class="k">for</span><span class="w"> </span><span class="n">field</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">fields</span><span class="o">.</span><span class="n">iter</span><span class="p">():</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">surface_id</span><span class="p">,</span><span class="w"> </span><span class="n">surface</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">surfaces</span><span class="o">.</span><span class="n">iter</span><span class="p">()</span><span class="o">.</span><span class="n">enumerate</span><span class="p">():</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ray_id</span><span class="p">,</span><span class="w"> </span><span class="n">ray</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">rays</span><span class="o">.</span><span class="n">iter</span><span class="p">()</span><span class="o">.</span><span class="n">enumerate</span><span class="p">():</span>
+<span class="w">        </span><span class="n">let</span><span class="w"> </span><span class="n">_span</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">trace_span</span><span class="o">!</span><span class="p">(</span><span class="s2">"trace_ray"</span><span class="p">,</span><span class="w"> </span><span class="n">ray_id</span><span class="p">,</span><span class="w"> </span><span class="n">surface_id</span><span class="p">)</span><span class="o">.</span><span class="n">entered</span><span class="p">();</span><span class="w">  </span><span class="o">//</span><span class="w"> </span><span class="o">&lt;--</span><span class="w"> </span><span class="n">Span</span><span class="w"> </span><span class="n">begins</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">coordinate</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="n">transformations</span><span class="w">                                        </span><span class="o">|</span>
+<span class="w">                                                                                    </span><span class="o">|</span>
+<span class="w">        </span><span class="n">intersect</span><span class="p">(</span><span class="n">ray</span><span class="p">,</span><span class="w"> </span><span class="n">surface</span><span class="p">)</span><span class="w">                                                     </span><span class="o">|</span>
+<span class="w">                                                                                    </span><span class="o">|</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">ray</span><span class="w"> </span><span class="n">transformations</span><span class="w">                                                      </span><span class="o">|</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="n">coordinate</span><span class="w"> </span><span class="n">system</span><span class="w"> </span><span class="n">transformations</span><span class="w">                                        </span><span class="o">|</span>
+<span class="w">        </span><span class="o">//</span><span class="w"> </span><span class="o">&lt;-----------------------------------------------------------------------</span><span class="w"> </span><span class="n">Span</span><span class="w"> </span><span class="n">ends</span>
+</pre></div>
+
+<h3>A Failing Test Case</h3>
+<p>I recreated the same lens in an integration test with a single wavelength at \( \lambda = 0.5876 \) and an off-axis tangential ray fan consisting of 9 rays and incident at 20 degrees. I simplified the test case to reduce the total number of errors, which in turn allowed me to better isolate problems. There were two notable types of errors. In the first, I saw NaNs appear in some of the values manipulated by the Newton-Raphson algorithm:</p>
+<div class="code"><pre class="code literal-block"><span class="go">  2026-03-26T07:49:32.552835Z ERROR cherry_rs::views::ray_trace_3d::rays: Ray intersection did not converge, ctr: 999, s: NaN, residual: NaN</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:97</span>
+
+<span class="go">  2026-03-26T07:49:32.552896Z ERROR cherry_rs::views::ray_trace_3d::trace: Ray terminated due to intersection failure, ray_id: 8, surface_id: 2, reason: Ray intersection did not converge</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/trace.rs:57</span>
+</pre></div>
+
+<p>In the second type of error, the ray-surface intersection simply did not converge.</p>
+<div class="code"><pre class="code literal-block"><span class="go">  2026-03-26T07:49:32.553113Z ERROR cherry_rs::views::ray_trace_3d::rays: Ray intersection did not converge, ctr: 999, s: 0.339233626291856, residual: -2.220446049250313e-16</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:97</span>
+
+<span class="go">  2026-03-26T07:49:32.553139Z ERROR cherry_rs::views::ray_trace_3d::trace: Ray terminated due to intersection failure, ray_id: 3, surface_id: 3, reason: Ray intersection did not converge</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/trace.rs:57</span>
+</pre></div>
+
+<p>The first type of error was easy to fix. The NaN occurs because the first guess at the intersection point lies further from the axis than the surface's radius of curvature. To correct for this, I now check for NaNs and bisect the guess backwards until I am inside the domain of the surface.</p>
+<p>The second error type was the tricky one, and I'll spend the rest of this post discussing it.</p>
+<h2>The Newton-Raphson Algorithm</h2>
+<p>At this point while debugging, I began to feel like I needed a refresher in the NR algorithm. It has been about three years since I first implemented it and quite frankly I have forgotten a lot of the details. So I'm going to circle back to the basics to better prepare myself to fix this thing.</p>
+<h3>Root Finding</h3>
+<p>The Newton-Raphson algorithm is a well-known numerical routine for finding the roots (a.k.a. zeros) of a function. I think it's best illustrated by way of example. I found one at <a href="https://atozmath.com/example/CONM/Bisection.aspx?q=nr&amp;q1=E1">https://atozmath.com/example/CONM/Bisection.aspx?q=nr&amp;q1=E1</a> that involves finding the single zero of the function \( f(x) = x^3 - x - 1 \). The function is plotted below:</p>
+<p><img alt="" src="../../images/newton_raphson_example_function.png"></p>
+<p>The algorithm is derived as follows: assume we want to find the root of a function \( f(x) \). Choose a starting point \( x_0 \) close to the root and find the slope of the line tangent to the curve of the function at this point. Extend this line to \( x_1 \), the x-intercept where \( y = 0 \). The expression for the slope of \( f (x) \) at \( x_0 \) is</p>
+<p>$$ f'(x_0) = \frac{\Delta y}{ \Delta x} = \frac{f(x_0) - f(x_1)}{x_0 - x_1} = \frac{f(x_0) - 0}{x_0 - x_1}. $$</p>
+<p>Below you can see what this construction looks like using \( x_0 = 1.5 \).</p>
+<figure id="nr-construction"><img src="../../images/newton_raphson_construction.png"></figure><p>Solving this expression for \( x_ 1 \) gives</p>
+<p>$$ x_1 = x_0 - \frac{f(x_0)}{f'(x_0)}. $$</p>
+<p>Repeat the process using \( x_1 \) as the new starting point:</p>
+<p>$$ x_2 = x_1 - \frac{f(x_1)}{f'(x_1)}. $$</p>
+<p>The more you repeat the process, the closer you get to the root.</p>
+<h4>Before I Go On, Some Vocabulary</h4>
+<p>The function \( f(x) \) is often called the <strong>residual</strong> in the NR literature because it can be thought of as a distance-based error from the the value \( f(x) = 0 \).</p>
+<p>As far as I can tell there's no standard term for \( f'(x) \). I'll refer to it as the <strong>denominator</strong> for simplicity. Once I reach the part of this post on surface representations, I will also refer to it as the surface normal because it is related to the normal vector to the lens surface.</p>
+<h4>Termination Criteria</h4>
+<p>There are two common stopping criteria for NR. In the first, you stop iterating whenever the difference between successive steps \( x_i \) and \( x_{i+1} \) is less than some tolerance. In the second, you stop when \( | f(x_n) | \) is less than some tolerance. You can also combine the two so that you stop when either is satisfied. This helps terminate the algorithm when it is converging so slowly that \( \Delta x_i \) is large even but the residual is small.</p>
+<p>Here are the first six iterations of the algorithm for finding the root of \( f(x) = x^3 - x - 1 \) when starting at \( x_0 = 1.5 \).</p>
+<p><img alt="" src="../../images/newton_raphson_convergence.png"></p>
+<p>After 6 steps, the algorithm has identified the root \( x = 1.324718 \) with a precision better than \( 10^{-6} \).</p>
+<h3>Oscillations</h3>
+<p>Now of course I deliberately diverted your attention away from the important point that you need to choose the starting point such that it is already close to the root. Here's what happens when I choose a starting point close the local maximum at -0.5:</p>
+<p><img alt="" src="../../images/newton_raphson_divergence.png"></p>
+<p>The algorithm struggles to converge because the initial tangent line is nearly horizontal. This results in the next guess being very far off target and ultimately the algorithm oscillates irregularly around the starting point. However, at step 12, it happens to land just to the right of the local minimum at \( x = 0.7425 \), which sends the next guess far to the right of all local extrema.</p>
+<p><img alt="" src="../../images/newton_raphson_near_local_minimum.png"></p>
+<p>From this point, the algorithm can simply descend downhill, where by step 19 it has found the root with a tolerance better than \( 10^{-6} \).</p>
+<h3>Convergence Guarantees</h3>
+<p><a href="https://archive.nptel.ac.in/content/storage2/courses/122104019/numerical-analysis/Rathish-kumar/ratish-1/f3node7.html">If the starting point is close to the root, the Newton-Raphson algorithm has quadratic convergence.</a> This means that the error \( \epsilon_{i+1} \) in step \( i + 1 \) is proportional to the square of the error at the previous step, \( \epsilon_i^2 \). But if the starting point is not sufficiently close, then the algorithm can display quite erratic behavior and the assumptions that led to the conclusion about quadratic convergence are no longer valid.</p>
+<h3>The Importance of the Magnitude of \( f'(x) \)</h3>
+<p>The preceding discussion demonstrates that the choice of starting point is of great importance. Is there some way to identify a good or bad starting point?</p>
+<p>The above figure shows that when the slope of the tangent line is small, the next guess is relatively far away from the current position. Oscillations are more likely to occur when this happens, especially when local extrema are between the trial position and the root. </p>
+<p>Conversely, when the slope of the tangent line is large, the next guess is relatively close to the current position. This is what happened with an initial guess of 1.5 <a href="#nr-construction">as seen here</a>.</p>
+<p>We can see this behavior by rewriting the equation for the next guess \( i + 1 \) as:</p>
+<p>$$\begin{eqnarray}
+  x_{i+1} &amp;=&amp; x_i - \frac{f(x)}{f'(x)} \\
+  x_{i+1} - x_i &amp;=&amp; - \frac{f(x)}{f'(x)} \\
+  \Delta x_i &amp;=&amp; - \frac{f(x)}{f'(x)}
+\end{eqnarray}$$</p>
+<p>So two quantities determine the magnitude of the step. Large step sizes occur when:</p>
+<ol>
+<li>the residual function \( f(x) \) is large, and</li>
+<li>the magnitude of \( f'(x) \) is small.</li>
+</ol>
+<p>The magnitude of \( f'(x) \) is therefore an indicator of the likelihood of convergence problems. In the extreme case of \( f'(x) = 0 \), the NR algorithm will never converge because of a division by zero in the above equation.</p>
+<h2>Ray-Surface Intersections</h2>
+<p>The central problem in ray tracers is to find the 3D intersection of a ray with a surface. The problem has analytical solutions when the surface is planar or spherical, though care must be taken to avoid numerical artifacts such as <a href="https://en.wikipedia.org/wiki/Catastrophic_cancellation">catastrophic cancellation</a> in their solutions<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>.</p>
+<p>When a surface is not flat or spherical, however, we turn to numerical routines such as NR. One early paper describing the approach was from <a href="https://doi.org/10.1364/JOSA.52.000672">Spencer and Murty in 1962</a>. Spencer and Murty were particularly interested in tracing rays through systems containing general surface shapes like conic section surfaces, aspheres, cylinders, and toroids. They were also interested in an algorithm that would easily accommodate new surface types.</p>
+<h3>Ray Parameterization</h3>
+<p>Regardless of whether you use an analytical or numerical solution, you usually approach the problem by first expressing ray propagation in parametric form. I illustrate this construction below:</p>
+<p><img alt="" src="../../images/newton_raphson_parametric_ray.png"></p>
+<p>A ray is defined by two, 3D vectors \( \vec{p} \) and \( \hat{d} \). The position vector \( \vec{p} \) points to <em>any</em> point on the ray. \( \hat{d} \) is a vector of unit magnitude whose elements are the direction cosines of the ray. The parameter \( s \) denotes the distance along the ray from the point \( \vec{p} \) so that the set of all points on the ray is expressed as</p>
+<p>$$ \vec{r}(s) = \vec{p} + s \hat{d}. $$</p>
+<p>When \( s = 0 \), we are at the point \( \vec{p} \) on the ray. Increasing \( s \) moves us in the direction of the ray; decreasing it moves in the opposite direction.</p>
+<h3>Surface Representations</h3>
+<p>An <strong>implicit representation</strong> of a surface in 3D is</p>
+<p>$$ F ( x, y, z) = 0. $$</p>
+<p>Seen this way, a surface is the zero level set of a 3D scalar function.</p>
+<p>A more useful representation for optical design is to place a single vertex or point of the surface at the origin and let the \( z \) axis represent the optical axis. Let the so-called <a href="https://en.wikipedia.org/wiki/Sagitta_(optics)">surface sag</a>, or \( sag(x, y) \), represent the distance from the \( z = 0 \) plane to the surface for all points \( x, y \) within the aperture of the surface<sup id="fnref:3"><a class="footnote-ref" href="#fn:3">3</a></sup>.</p>
+<p><img alt="" src="../../images/newton_raphson_surface_sag.png"></p>
+<p>We can now rewrite \( F \) as</p>
+<p>$$ F(x, y, z) = z - \text{sag}(x, y) = 0 $$.</p>
+<h4>Saggita for Rotationally Symmetric Conic Section Surfaces</h4>
+<p>The most common surface types used in optical design are</p>
+<ol>
+<li>flat surfaces, and</li>
+<li>rotationally symmetric conic section surfaces, also known as quadrics of rotation.</li>
+</ol>
+<p>The surface sag of a flat surface is zero everywhere in the local coordinate system of the surface, which by my definition is the \( z=0 \) plane.</p>
+<p>A conic section surface is a surface whose intersection with a plane is a conic section curve, i.e. a circle, parabola, hyperbola, or ellipse. The surface sag of a rotationally symmetric conic section surface with a vertex at the origin and oriented along the \( z \) direction is</p>
+<p>$$ \text{sag}(r) = \frac{r^2 C}{1 + \sqrt{1 - (1 + K) C^2 r^2}} $$</p>
+<p>where \( r = \sqrt{x^2 + y^2} \) is the radial distance from the origin and \( C \) is the curvature of the surface<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>. It is expressed in terms of curvature and not radius of curvature \( R \) to avoid numeric difficulties with flat surfaces where \( R = \pm \infty \).</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Conic_constant">conic constant</a> \( K \) determines the conic's type. The types are defined by:</p>
+<ol>
+<li>Hyperbola : \( K &lt; -1 \)</li>
+<li>Parabola : \( K = -1 \)</li>
+<li>Ellipse : \( K &gt; -1 \)</li>
+<li>Circle (special case of an ellipse): \( K = 0 \)</li>
+</ol>
+<p>The implicit surface representation for a conic section surface is</p>
+<p>$$ F (x, y, z) = z - \frac{r^2 C}{1 + \sqrt{1 - (1 + K) C^2 r^2}} = 0 $$.</p>
+<h4>Partial Derivatives of Rotationally Symmetric Conic Section Surfaces</h4>
+<p>The last bit of information that I need to calculate ray intersections with conic section surfaces are their partial derivatives. I got these by hand by computing them in polar coordinates and converting them back to Cartesian coordinates using the chain rule. The results are</p>
+<p>$$\begin{eqnarray}
+\frac{\partial F}{ \partial x} &amp;=&amp; \frac{-x C}{\sqrt{1 - (1 + K) C^2 (x^2 + y^2)}} \\
+\frac{\partial F}{ \partial y} &amp;=&amp; \frac{-y C}{\sqrt{1 - (1 + K) C^2 (x^2 + y^2)}} \\
+\frac{\partial F}{ \partial z} &amp;=&amp; 1
+\end{eqnarray}$$</p>
+<h3>Newton-Raphson for Ray-Surface Intersections</h3>
+<p>The NR algorithm for computing ray intersections with general surfaces is</p>
+<p>$$s_{i+1} = s_i - \frac{F(x,y,z)}{\nabla F (x, y, z) \cdot \hat{d}}.$$</p>
+<p>I think most notable is that the denominator has been replaced with the <em>directional derivative</em> of the surface's equation along the direction of the ray's propagation. Another thing worth noting is that \(x\), \(y\), and \(z\) are constrained to lie on the ray by writing \(x = p_x + sl \) and so on for the other two quantities<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.</p>
+<p>At this point I'm at last able to understand where problems in the Newton-Raphson algorithm for ray tracing arise. Remember that oscillations and non-convergence often occur when the derivative of the residual is small or there are local extrema between the starting point and the actual root. In ray tracing, the derivative is expressed as \( \nabla F (x, y, z) \cdot \hat{d} \). This can become small when:</p>
+<ol>
+<li>A ray is traveling nearly parallel to the surface at a point \( x, y \).</li>
+<li>The gradient of \( F \) is small.</li>
+</ol>
+<h4>Geometrical Interpretation of Newton-Raphson Failures</h4>
+<p>I think the small gradient of \( F \) is more easily understood geometrically. To see this, consider that the \( \nabla F \) is parallel to the surface normal vector at all points on the surface. I can write this as a product of the magnitude of the normal vector and a unit vector pointing in its direction:</p>
+<p>$$ \nabla F = |\eta| \hat{\eta}. $$</p>
+<p>Now the denominator in the NR update equation is the dot product of the above expression with the direction of the ray, or \( |\eta| \hat{d} \cdot \hat{\eta} \). But both \( \hat{d} \) and \( \hat{\eta} \) are unit vectors, so I can replace their dot product with the cosine of the angle \( \alpha \) between them:</p>
+<p>$$ \nabla F \cdot \hat{d} = |\eta| \cos \alpha. $$</p>
+<p>So the directional derivative becomes small for large angles of incidence and small normal vectors.</p>
+<h2>Normal Vectors and Surface Representations</h2>
+<p>There are two parts of the gradient that can make the denominator in the Newton-Raphson update equation small:</p>
+<ol>
+<li>The magnitude of the normal vector \( | \eta |\)</li>
+<li>The angle between the ray direction cosine vector and the unit normal vector \(\hat{d} \cdot \hat{\eta} = \cos \alpha \)</li>
+</ol>
+<p>To get a sense of the magnitude of the normal vector, consider the plot of the gradient of \( F \) as a function of radial distance from the vertex of the curved surface of a \(f = 50 \, mm\), 1" diameter, spherical, convexplano lens. The radius of curvature of this surface is 25.8 mm.</p>
+<p><img alt="" src="../../images/newton_raphson_normal_convexplano.png"></p>
+<p>Compare this to the same plot but for the first surface of the scan lens from the beginning of this post, whose radius of curvature is -2.2136 mm.</p>
+<p><img alt="" src="../../images/newton_raphson_normal_scan_lens.png"></p>
+<p>In neither case is the gradient very small, and we are in some sense rescued by the fact that \( \frac{\partial F}{\partial x} \) is 1 everywhere.</p>
+<p>But wait. Shouldn't the normal vector of a spherical surface be a vector of constant magnitude and perpendicular to the surface everywhere? I expected this:</p>
+<p><img alt="" src="../../images/newton_raphson_normal_sphere_symmetric.png"></p>
+<p>But got this:</p>
+<p><img alt="" src="../../images/newton_raphson_normal_sphere_saggita.png"></p>
+<p>So the magnitude of the normal vector varies with distance from the z-axis<sup id="fnref:6"><a class="footnote-ref" href="#fn:6">6</a></sup>. And though it's hard to see in these plots, the "normal vectors" are not normal to the surface except at \( x = y = 0 \)!</p>
+<p>I was really disturbed by this at first. As it turns out, this is due to representing the surface by its sag, which is effectively a height field above the xy plane. If instead I had used the sphere's symmetric implicit form \(F_s = x^2 + y^2 + (z - R)^2 - R^2 = 0 \) then I would have obtained a normal vector whose magnitude was constant everywhere on the sphere. This is because</p>
+<p>$$\begin{eqnarray}
+\frac{\partial F_s}{ \partial x} &amp;=&amp; 2x \\
+\frac{\partial F_s}{ \partial y} &amp;=&amp; 2y \\
+\frac{\partial F_s}{ \partial z} &amp;=&amp; 2(z - R).
+\end{eqnarray}$$</p>
+<p>In other words, representing the sphere as a height field has the effect of breaking spherical symmetry with respect to its normal vector<sup id="fnref:7"><a class="footnote-ref" href="#fn:7">7</a></sup>.</p>
+<p>All of this aside, the magnitude of the normal vector doesn't really become that large in the scan lens example, so the cause of the Newton-Raphson failure is likely coming from near-grazing incidence rays where \(\cos \alpha \approx 0 \).</p>
+<h2>Back to Debugging</h2>
+<p>At this point I wanted to confirm that the problematic rays were at near-grazing incidences, so I turned back to the code. Here is a trace of the first five NR iterations of one particular ray that fails to converge at the first surface of the lens:</p>
+<div class="code"><pre class="code literal-block"><span class="go"> 2026-04-09T07:25:02.768031Z TRACE cherry_rs::views::ray_trace_3d::rays: intersect_init, pos_x: 3.0616169978683836e-17, pos_y: 0.5, pos_z: -5.0, dir_l: 2.094269368838496e-17, dir_m: 0.3420201433256687, dir_n: 0.9396926207859084, s_init: 5.320888862379561</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:69</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+
+<span class="go">  2026-04-09T07:25:02.768093Z TRACE cherry_rs::views::ray_trace_3d::rays: newton-raphson iteration data, ctr: 0, s: 4.775443550511577, s_1: 0.0, p_x: 8.633304277606096e-17, p_y: 1.4099255856655057, p_z: -2.5, sag: -0.5071021819862234, residual: -1.9928978180137766, denom: 0.94226</span>
+<span class="go">88642314074</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:125</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+
+<span class="go">  2026-04-09T07:25:02.768118Z TRACE cherry_rs::views::ray_trace_3d::rays: newton-raphson iteration data, ctr: 1, s: 2.8626356840250526, s_1: 4.775443550511577, p_x: 1.306268214832213e-16, p_y: 2.1332978875896096, p_z: -0.5125509346046124, sag: -1.6227826993006131, residual: 1.110</span>
+<span class="go">2317646960007, denom: 0.5804199073769454</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:125</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+
+<span class="go">  2026-04-09T07:25:02.768148Z TRACE cherry_rs::views::ray_trace_3d::rays: newton-raphson iteration data, ctr: 2, s: 4.7418998688939, s_1: 2.8626356840250526, p_x: 9.056747225066086e-17, p_y: 1.479079066939422, p_z: -2.3100023717232365, sag: -0.5666786072973584, residual: -1.74332</span>
+<span class="go">3764425878, denom: 0.9276629536509492</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:125</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+
+<span class="go">  2026-04-09T07:25:02.768181Z TRACE cherry_rs::views::ray_trace_3d::rays: newton-raphson iteration data, ctr: 3, s: 2.997895475725084, s_1: 4.7418998688939, p_x: 1.299243264339216e-16, p_y: 2.1218252727950615, p_z: -0.5440716846947353, sag: -1.5828207424715346, residual: 1.038749</span>
+<span class="go">0577767993, denom: 0.5956114914879407</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:125</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+
+<span class="go">  2026-04-09T07:25:02.768222Z TRACE cherry_rs::views::ray_trace_3d::rays: newton-raphson iteration data, ctr: 4, s: 4.714415826981489, s_1: 2.997895475725084, p_x: 9.340017663658938e-17, p_y: 1.525340640282867, p_z: -2.182899743573678, sag: -0.6094301551576737, residual: -1.57346</span>
+<span class="go">95884160044, denom: 0.9166623554823017</span>
+<span class="go">    at cherry-rs/src/views/ray_trace_3d/rays.rs:125</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::rays::intersect</span>
+<span class="go">    in cherry_rs::views::ray_trace_3d::trace::trace_ray with ray_id: 8, surface_id: 2</span>
+</pre></div>
+
+<p>In table form:</p>
+<table border="1">
+<thead><tr>
+<th>ctr</th>
+      <th>s (after step)</th>
+      <th>residual</th>
+      <th>denominator</th>
+    </tr></thead>
+<tbody>
+<tr>
+<td>0</td>
+      <td>4.775</td>
+      <td>-1.993</td>
+      <td>0.942</td>
+    </tr>
+<tr>
+<td>1</td>
+      <td>2.863</td>
+      <td>1.110</td>
+      <td>0.580</td>
+    </tr>
+<tr>
+<td>2</td>
+      <td>4.742</td>
+      <td>-1.743</td>
+      <td>0.928</td>
+    </tr>
+<tr>
+<td>3</td>
+      <td>2.998</td>
+      <td>1.039</td>
+      <td>0.596</td>
+    </tr>
+<tr>
+<td>4</td>
+      <td>4.714</td>
+      <td>-1.573</td>
+      <td>0.917</td>
+    </tr>
+</tbody>
+</table>
+<p>The denominator is not anywhere near small enough to indicate that the problem is caused by near-grazing incidence angles, so there must be something else going on.</p>
+<p>The first thing to note is that the residual \(z - \text{sag} (x, y) \) is oscillating in sign which indicates that the algorithm is hopping back and forth between different sides of the surface. The root estimate <code>s</code> appears to slowly be converging to some value but hasn't yet done so. In fact, <strong>it took 100,000 iterations to converge to within 0.0004 of the root, which was somewhere around <code>s=4.14</code></strong>. This rate of convergence is much too slow. What could be causing it?</p>
+<p>I plotted the residual function and it didn't seem too bad:</p>
+<p><img alt="" src="../../images/newton_raphson_residual_ray_id_8.png"></p>
+<p>I then plotted the NR steps for this particular ray and found that I could not reproduce the oscillations. In fact, NR converged quite rapidly.</p>
+<p><img alt="" src="../../images/newton_raphson_residual_convergence_ray_id_8.png"></p>
+<p>So my two different implementations did not agree. After about 2 hours of digging I found the problem: I was normalizing the normal vector to 1 in the Rust code rather than retaining its magnitude. </p>
+<div class="code"><pre class="code literal-block"><span class="c1">// 💣💣💣</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vec3</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">dfdx</span><span class="p">,</span><span class="w"> </span><span class="n">dfdy</span><span class="p">,</span><span class="w"> </span><span class="n">dfdz</span><span class="p">).</span><span class="n">normalize</span><span class="p">();</span>
+<span class="c1">// 💣💣💣</span>
+</pre></div>
+
+<p>This has a subtle effect on the value of the NR denominator such that the step size isn't quite what it should be.</p>
+<p>I can't begin to explain to you how subtle this bug was. I nearly face-palmed by head off when I found it. It was in code that I wrote <em>nearly three years ago.</em> Smart people can do really dumb things with computers.</p>
+<h2>Discussion</h2>
+<p>I am actually quite happy to have had to solve this bug even if there was no deeper, numerical reason behind it. It forced me to do a deep dive into the Newton-Raphson algorithm and I feel much more knowledgable as a result. Still, it's frustrating because I clearly was experimenting in the early days, and I wonder whether some other careless coding choices still await to be discovered.</p>
+<p>I only briefly mentioned it, but in this journey I also implemented a fallback to a bisection method when the initial NR guess fails due to a negative discriminant in the sag function of a conic section surface. I think this is a win because rays that would have initially failed can be recovered by the fallback routine. But what's more, both of these changes led to some impressive improvements in the benchmark tests: the convexplano lens example runs 43% faster because of faster NR convergence and fewer early ray terminations.</p>
+<p>Out of curiosity I looked into what <a href="https://github.com/optiland/optiland">Optiland</a> does to compute Ray-Surface intersections. I believe that it analytically computes intersections for flat and spherical surfaces and falls back to NR when things get more complicated. I use NR for everything, and to be honest, I'm happy with this approach so far. The ray-surface interection function in my ray tracer is a single long function, but it reads linearly and is very clear about what it does. If I were to add if/else branches to check for surface types (or, more properly, employ polymorphism to make the intersection logic a Surface-level method), then the logic would diffuse throughout the codebase. <a href="http://number-none.com/blow/john_carmack_on_inlined_code.html">An essay by John Carmack on inlining code</a> that I read a couple years ago had a profound effect on me when it comes to mission-critical, high performance sections of code. Ray-surface intersection logic is one such example where "good" software engineering practices are counter-productive, and just inlining the whole damn thing makes a lot of sense.</p>
+<p>The real lesson here is that it always pays to really understand what your algorithms are doing, and having the proper tooling in place for debugging pays off enormously.</p>
+<p>Happy ray tracing.</p>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Spans remind me a lot of <a href="https://sentry.io">Sentry</a>, which I used to perform tracing on distributed code bases when I worked for a photogrammetry company doing image processing on the Cloud. <a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:2">
+<p>See for example Chapter 7 of <a href="https://www.realtimerendering.com/raytracinggems/rtg/index.html">Ray Tracing Gems</a>. <a class="footnote-backref" href="#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+<li id="fn:3">
+<p>When I first learned this term, I thought the name came from the idea that the surface "sags" away from the \(z=0\) plane. As it turns out, it's short for <em>sagitta</em>, the Latin word for arrow. <a class="footnote-backref" href="#fnref:3" title="Jump back to footnote 3 in the text">↩</a></p>
+</li>
+<li id="fn:4">
+<p>Surface curvature is related to the radius of curvature \( R \) as \(C = 1 / R \). <a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">↩</a></p>
+</li>
+<li id="fn:5">
+<p>\(l^2 + m^2 + n^2 = 1 \) are the direction cosines of the ray. <a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">↩</a></p>
+</li>
+<li id="fn:6">
+<p>I don't show this, but for a lens with positive curvature, the normal vectors point to the left in these plots for the symmetric implicit representation. In other words, it always points outwards from the sphere's center in the symmetric implicit representation, but in the +z direction in the saggital representation. <a class="footnote-backref" href="#fnref:6" title="Jump back to footnote 6 in the text">↩</a></p>
+</li>
+<li id="fn:7">
+<p>There is a name for this height field representation in the theory of surfaces; it's called the <a href="https://en.wikipedia.org/wiki/Monge_patch">Monge patch</a>. <a class="footnote-backref" href="#fnref:7" title="Jump back to footnote 7 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/numerical-methods/" rel="tag">numerical methods</a></li>
+            <li><a class="tag p-category" href="../../categories/ray-tracing/" rel="tag">ray tracing</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../electrostatics-and-mitochondria/" rel="prev" title="Electrostatics and Mitochondria">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+    
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="https://kylemdouglass.com/posts/ray-surface-intersections-with-the-newton-raphson-algorithm/",
+        disqus_title="Ray-Surface Intersections with the Newton-Raphson Algorithm",
+        disqus_identifier="cache/posts/ray-surface-intersections-with-the-newton-raphson-algorithm.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2026         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
