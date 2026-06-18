@@ -63,7 +63,7 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 
 ## Devices
 
-- **power supply**, *n* : 1. un bloc d'alimintation, 2. l'alim
+- **power supply**, *n* : 1. un bloc d'alimentation, 2. l'alim
 
 # Software
 
