@@ -15,7 +15,7 @@ I started with vocabulary for machinists, but I have expanded it to other domain
 
 Here is a list of English-French vocabulary words that I have found useful. I will update it as I learn more words.
 
-*Last update: 2025-03-28*
+*Last update: 2026-06-18*
 
 # Materials and processing
 
@@ -57,5 +57,14 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 
 ## Connectors
 
+- **shielding**, *n* : le blindage
 - **connector**, *n* : la cosse
 - **pin (for a PCB)**, *n* : la barrette
+
+## Devices
+
+- **power supply**, *n* : 1. un bloc d'alimintation, 2. l'alim
+
+# Software
+
+- **encryption key**, *n* : une clé de chiffrement
