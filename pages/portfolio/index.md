@@ -17,6 +17,8 @@ Below you can find a non-exhaustive list of projects that I have worked on in my
 
 *A design for a LED illumination module emitting circularly polarized light for optogenetic control of protein states.*
 
+![A Monte-Carlo ray trace of an LED through an aspheric collimator](/images/led_illuminator.png)
+
 In this project I modeled a LED illumination module using Monte Carlo ray tracing. The purpose was to ensure circularly polarized light of uniform irradiance over the entire volume of a protein solution.
 
 ## Skills Demonstrated
