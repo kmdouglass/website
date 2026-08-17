@@ -23,11 +23,11 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/archive.html</loc>
-  <lastmod>2026-03-26T07:51:00Z</lastmod>
+  <lastmod>2026-08-17T07:52:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/</loc>
-  <lastmod>2026-04-10T07:39:00Z</lastmod>
+  <lastmod>2026-08-17T09:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/3d-printing/</loc>
@@ -56,6 +56,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/cad/</loc>
   <lastmod>2024-03-08T14:42:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/calculus/</loc>
+  <lastmod>2026-08-17T09:00:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/cameras/</loc>
@@ -178,6 +182,10 @@
   <lastmod>2024-05-22T11:46:00Z</lastmod>
  </url>
  <url>
+  <loc>https://kylemdouglass.com/categories/radiometry/</loc>
+  <lastmod>2026-08-17T07:52:00Z</lastmod>
+ </url>
+ <url>
   <loc>https://kylemdouglass.com/categories/raspberry-pi/</loc>
   <lastmod>2024-09-13T13:40:00Z</lastmod>
  </url>
@@ -192,6 +200,10 @@
  <url>
   <loc>https://kylemdouglass.com/categories/simulation/</loc>
   <lastmod>2024-05-17T09:20:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/categories/solid-angle/</loc>
+  <lastmod>2026-08-17T07:52:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/categories/statistics/</loc>
@@ -211,7 +223,7 @@
  </url>
  <url>
   <loc>https://kylemdouglass.com/index-2.html</loc>
-  <lastmod>2026-03-26T07:51:00Z</lastmod>
+  <lastmod>2026-08-17T07:52:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/pages/portfolio/</loc>
@@ -220,6 +232,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/3d-sequential-optical-system-layouts/</loc>
   <lastmod>2025-06-05T09:03:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/a-primer-on-the-mathematics-behind-radiometry/</loc>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/a-simple-object-space-telecentric-system/</loc>
@@ -316,6 +332,10 @@
  <url>
   <loc>https://kylemdouglass.com/posts/triggering-analog-voltage-outputs-using-a-ni-daq-counter/</loc>
   <lastmod>2026-01-26T10:37:00Z</lastmod>
+ </url>
+ <url>
+  <loc>https://kylemdouglass.com/posts/uniform-sampling-of-solid-angles/</loc>
+  <lastmod>2026-08-17T07:52:00Z</lastmod>
  </url>
  <url>
   <loc>https://kylemdouglass.com/posts/why-is-camera-read-noise-gaussian-distributed/</loc>

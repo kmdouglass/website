@@ -34,6 +34,10 @@
   <lastmod>2024-03-08T14:42:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/calculus.xml</loc>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/cameras.xml</loc>
   <lastmod>2025-06-23T07:04:00Z</lastmod>
  </sitemap>
@@ -59,7 +63,7 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_optics.xml</loc>
-  <lastmod>2026-04-10T07:41:00Z</lastmod>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/categories/cat_programming.xml</loc>
@@ -154,6 +158,10 @@
   <lastmod>2026-03-26T07:51:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/radiometry.xml</loc>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/raspberry-pi.xml</loc>
   <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
@@ -170,6 +178,10 @@
   <lastmod>2025-04-01T06:41:00Z</lastmod>
  </sitemap>
  <sitemap>
+  <loc>https://kylemdouglass.com/categories/solid-angle.xml</loc>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>https://kylemdouglass.com/categories/statistics.xml</loc>
   <lastmod>2025-06-23T07:04:00Z</lastmod>
  </sitemap>
@@ -183,10 +195,10 @@
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/rss.xml</loc>
-  <lastmod>2026-06-18T07:09:00Z</lastmod>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>https://kylemdouglass.com/sitemap.xml</loc>
-  <lastmod>2026-06-18T07:09:00Z</lastmod>
+  <lastmod>2026-08-17T12:17:00Z</lastmod>
  </sitemap>
 </sitemapindex>

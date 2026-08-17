@@ -12,7 +12,7 @@
 <link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="https://kylemdouglass.com/">
 <link rel="next" href="index-2.html" type="text/html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/ray-surface-intersections-with-the-newton-raphson-algorithm/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/a-primer-on-the-mathematics-behind-radiometry/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -69,7 +69,118 @@ bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/ray-surface-intersections-with-the-newton-raphson-algorithm/" class="u-url">Ray-Surface Intersections with the Newton-Raphson Algorithm</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-primer-on-the-mathematics-behind-radiometry/" class="u-url">A Primer on the Mathematics behind Radiometry</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="posts/a-primer-on-the-mathematics-behind-radiometry/" rel="bookmark">
+            <time class="published dt-published" datetime="2026-08-17T09:36:02+02:00" itemprop="datePublished" title="2026-08-17 09:36">2026-08-17 09:36</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="posts/a-primer-on-the-mathematics-behind-radiometry/#disqus_thread" data-disqus-identifier="cache/posts/a-primer-on-the-mathematics-behind-radiometry.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <p>I have two projects at the moment that involve modeling <a href="https://en.wikipedia.org/wiki/Radiometry">radiometric quantities</a> in optical systems. At the outset of these projects I felt that I needed to refresh my knowledge of the basics. This post contains my notes about the topics that I think form the mathematical foundation of radiometry.</p>
+<h2>Spherical Coordinate Systems</h2>
+<p>Radiometric models are most naturally constructed in spherical coordinate systems. A spherical coordinate system is illustrated below.</p>
+<figure><img alt="A spherical coordinate system built upon a Cartesian axis" width="50%" src="images/spherical_coordinates.png"></figure><p>In the above illustration, I use the physicist's notation to denote:</p>
+<ol>
+<li>\( r \) : the radial coordinate</li>
+<li>\( \theta \) : the polar (or zenith) angle</li>
+<li>\( \phi \) : the azimuthal angle</li>
+</ol>
+<h3>The Differential Volume Element</h3>
+<p>The differential volume element in spherical coordinates is constructed as follows.</p>
+<figure><img alt="Construction of the differential volume element in spherical coordinates" width="50%" src="images/differential_volume_element_spherical_coordinates.png"></figure><p>In the figure above, the point \( A \) represents the point \( \left( r, \theta, \phi \right) \) in spherical coordinates.</p>
+<ol>
+<li>The line segment \( AB \) has length \( dr \)</li>
+<li>The arc \( AC \) has length \( r \, d \theta \)</li>
+<li>The arc \( AD \) has length \( r \sin \theta \, d \phi \)</li>
+</ol>
+<p>The differential volume element therefore is</p>
+<p>$$
+dV = r^2 \sin \theta \, dr \, d \theta \, d \phi
+$$.</p>
+<p>The reason for the \( \sin \theta \) term is that the ray from the origin to the point \( \left( r, \theta, \phi \right) \) traces out a circle of radius \( r \sin \theta \) when I let \( \phi \) vary from 0 to \( 2 \pi \) as illustrated below:</p>
+<figure><img alt="Circle radii vs. polar angles" width="50%" src="images/circle_radius_versus_polar_angle.png"></figure><h2>Solid Angle</h2>
+<p>A central concept in radiometry is the idea of the <a href="https://en.wikipedia.org/wiki/Solid_angle">solid angle</a>. Solid angle is the equivalent to angle in 3D space and is represented by the Greek letter \( \Omega \).</p>
+<p>We use solid angle to describe the apparent size of a surface as reviewed from some point in space. For a differential surface patch that we denote \( dS \) at a distance \( r \) from the point of observation \( P \), we say that the differential solid angle subtended by the patch at \( P \) is</p>
+<p>$$
+d \Omega = \sin \theta \, d \theta \, d \phi
+$$.</p>
+<p>A good heuristic to remember this quantity is to take the volume element in spherical coordinates and divide by \( r^2 \, dr \).</p>
+<p>I often see the definition \( \Omega = A / r^2 \), but this applies in the special case when the patch has area \( A \) and is a subset of the surface of a sphere of radius \( r \). More generally, if \( dS' \) represents the projected surface area of a patch, then</p>
+<p>$$
+d \Omega = \frac{dS'}{r^2}
+$$.</p>
+<p>Why must \( dS' \) be a projected area? The answer is due to an effect known as foreshortening, which will be discussed in the next section.</p>
+<p>When the observation point is at the origin and I use spherical coordinates, then I can equate the two expressions above:</p>
+<p>$$
+d \Omega = \frac{dS'}{r^2} = \sin \theta \, d \theta \, d \phi
+$$</p>
+<h3>Foreshortening</h3>
+<p>If the patch is oriented such that its unit normal vector \( \hat{n} \) is at an angle \( \theta \) to the line-of-sight from the observation point to the patch, then its apparent area will be <strong>foreshortened</strong> according to the cosine rule:</p>
+<p>$$
+A' = A \cos \theta
+$$.</p>
+<p>As a result of foreshortening, the solid angle subtended by the patch at \( P \) will appear smaller. This is illustrated in the figure below.</p>
+<figure><img alt="The effect of foreshortening of a patch on its solid angle." width="50%" src="images/foreshortening.png"></figure><p>In this figure, the red dotted lines go from \( P \) to the edges of the patch when it is oriented with its normal unit vector parallel to the line-of-sight and the blue dashed lines go from \( P \) to the edges of the patch when it is oriented at an angle \( \theta \) to the line-of-sight. The angle subtended by the red dotted lines is larger than the one subtended by blue dashed lines, so foreshortening effectively reduces the solid angle subtended by the patch.</p>
+<p>In differential form, the solid angle of a patch of differential area \( dS \) foreshortened due to observation at an angle \( \theta \) is</p>
+<p>$$
+d \Omega = \frac{\cos \theta \, dS}{r^2} = \frac{ \left( \hat{r} \cdot \hat{n} \right) dS }{r^2}
+$$</p>
+<p>where \( \hat{r} \) and \( \hat{n} \) are unit vectors.</p>
+<p>The solid angle subtended by the patch is obtained by integrating over either expression:</p>
+<p>$$
+\Omega = \iint_S \frac{\cos \theta \, dS}{r^2} = \iint_S \frac{ \left( \hat{r} \cdot \hat{n} \right) dS }{r^2}
+$$</p>
+<h3>Uniformly Sampling Surfaces in Solid Angle</h3>
+<p>In one of my projects I am working with a rotationally symmetric optical surface that is defined through a recursion relation, but I need a differentiable representation for ray tracing. I obtain this representation by sampling the surface at different polar angles \( \theta \) and fitting the samples with a polynomial or spline.</p>
+<p>In some scenarios it is advantageous to uniformly sample the surface in solid angle, rather than angle itself. To achieve this, I uniformly sample \( \cos \theta \) and obtain the values for \( \theta \) by applying an \( \arccos \) function to the samples. In pure Python this looks like the following:</p>
+<div class="code"><pre class="code literal-block"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+
+<span class="n">num_samples</span> <span class="o">=</span> <span class="mi">8</span>
+
+<span class="c1"># Sample directions from the optical axis to directions perpendicular to it.</span>
+<span class="n">cos_theta</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cos_theta</span><span class="p">)</span> <span class="o">==</span> <span class="n">num_samples</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="p">[</span><span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cos_theta</span><span class="p">]</span>
+</pre></div>
+
+<p>The above code produces values for \( \theta \) of <code>[0.0, 0.5410995259571458, 0.7751933733103613, 0.9625507478846871, 1.1278852827212578, 1.2810446253588492, 1.4274487578895312, 1.5707963267948966]</code>.</p>
+<p>The reason this works is the following: start with the definition of solid angle \( d \Omega = \sin \theta \, d \theta \, d \phi\). Because the surface is rotationally symmetric, integrate over the azimuthal angle to obtain \( \iint_{\phi = 0}^{2 \pi} \sin \theta \, d \theta \, d \phi = 2 \pi \int \sin \theta \, d \theta \).</p>
+<p>But \( \sin \theta \, d \theta = -d ( \cos \theta) \), so uniform sampling in \( \cos \theta \) space produces equal-sized rectangles in the Riemann sum that approximates this integral.</p>
+<h2>Etendue</h2>
+<p>Etendue (sorry French speakers) is another important quantity in radiometry. Though it is a core quantity of the science, it is actually a purely mathematical construction and does not require any concept of power, detector, or light source. It is related to solid angle, but is easy to confuse with the above expressions for solid angle because two different patches are involved in its construction, not one.</p>
+<p>Let \( dS_1 \) and \( dS_2 \) represent these two different surface patches. They are differential patches but drawn unrealistically large in the figure below for ease of understanding. Assume that the solid angle subtended <strong>by surface 2 as viewed from the center of surface 1</strong> is \( d \Omega_{2,1} \). Furthermore let \( \theta_1 \) represent the angle between the unit normal vector to \( dS_1 \) and the center of the solid angle \( d \Omega_{2,1} \). Similarly, let \( \theta_2 \) represent the angle between the unit normal vector to \( dS_2 \) and the center of the solid angle \( d \Omega_{1,2} \). Finally, assume these patches sit in a medium with refractive index \( n \).</p>
+<figure><img alt="The geometrical construction for etendue." width="50%" src="images/etendue_construction.png"></figure><p>Etendue is defined as:</p>
+<p>$$
+dG = n^2 \, \cos \theta_1 \, dS_1 \, d \Omega_{2,1}
+$$</p>
+<h3>Conservation of Etendue</h3>
+<p>We can prove that this quantity is conserved by noting that \( d \Omega_{2,1} = \frac{\cos \theta_2 \, dS_2} {r^2} \), or</p>
+<p>$$\begin{eqnarray}
+  dG &amp;=&amp; n^2 \cos \theta_1 \, dS_1 \, d \Omega_{2,1} \\
+  &amp;=&amp; n^2 \cos \theta_1 \, dS_1 \frac{\cos \theta_2 \, dS_2}{r^2} \\
+  &amp;=&amp; n^2 \frac{\cos \theta_1 \, dS_1}{r^2}  \cos \theta_2 \, dS_2 \\
+  &amp;=&amp; n^2 \, d \Omega_{1, 2} \cos \theta_2 \, dS_2
+\end{eqnarray}$$.</p>
+<p>So it does not matter if we measure etendue from surface 1 to surface 2, or from surface 2 to surface 1; it is the same for any two patches.</p>
+<p>Intuitively, the conservation of etendue is just a fancy way of counting the number of lines that pass through any two patches in space. When viewed this way, it is obvious that the number of lines that pass through both patches must be the same regardless of whether we look from patch 1 to patch 2 or from patch 2 to patch 1.</p>
+<figure><img alt="The geometrical intuition behind etendue." width="50%" src="images/etendue_intuition.png"></figure><h3>Phase Space Representation</h3>
+<p>Rigorously speaking, conservation of etendue is a result of Liouville's theorem. Let each ray be represented in a four dimensional phase space where two dimensions are on a reference surface and the remaining two represent the two degrees of freedom in the optical momentum vector \( \vec{p} = n \hat{s} \) of Hamiltonian optics. The volume of the phase space spanned by all the rays intersecting this surface is a conserved quantity.</p>
+<p>Etendue becomes an optical quantity when I assert that the lines represent rays that carry some amount of power \( d \Phi \). Strictly speaking, etendue either stays the same or increases, but it cannot decrease. Diffuse scattering is one way that it can increase, but not because scattering simply redirects light rays. Reflection and refraction also redirect light rays, but in these cases etendue is conserved because reflection and refraction are operations that satisfy Liouville's theorem.</p>
+<p>Etendue can be related to the second law of thermodynamics. (But how exactly this is done I do not know.)</p>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/ray-surface-intersections-with-the-newton-raphson-algorithm/" class="u-url">Ray-Surface Intersections with the Newton-Raphson Algorithm</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Kyle M. Douglass
@@ -1426,104 +1537,6 @@ R_{CL} \left( \theta  = 30^{ \circ },  \psi = 0, \phi = 0 \right) = \left(
 </li>
 <li id="fn:6">
 <p>The cosine and sine of 45 degrees are both \( 1 / \sqrt{ 2 } \). <a class="footnote-backref" href="posts/3d-sequential-optical-system-layouts/#fnref:6" title="Jump back to footnote 6 in the text">↩</a></p>
-</li>
-</ol>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/" class="u-url">A Very Brief Summary of The Analytic Signal in Fourier Optics</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Kyle M. Douglass
-            </span></p>
-            <p class="dateline">
-            <a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/" rel="bookmark">
-            <time class="published dt-published" datetime="2025-04-01T15:53:21+02:00" itemprop="datePublished" title="2025-04-01 15:53">2025-04-01 15:53</time></a>
-            </p>
-                <p class="commentline">
-    
-    <a href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#disqus_thread" data-disqus-identifier="cache/posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <h2>The Analytic Signal Representation of a Monochromatic Wave</h2>
-<h3>Monochromatic Scalar Waves</h3>
-<p>A monochromatic, scalar waveform is described by the expression:</p>
-<p>$$ u \left( \mathbf{r}, t\right) = A ( \mathbf{r} ) \cos \left[2 \pi f_0 t + \phi \left( \mathbf{r} \right) \right] $$</p>
-<ul>
-<li>The signal is real-valued</li>
-<li>The signal has a known phase for all \( t \)</li>
-</ul>
-<h3>The Analytic Signal</h3>
-<p>An analytic signal is a generalization of a phasor. It is used to represent a real-valued signal as a complex exponential or a sum of complex exponentials. When Goodman<sup id="fnref:1"><a class="footnote-ref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:1">1</a></sup> refers to a phasor, he often means the analytic signal. This is made clear in Chapter 6 where he describes the construction of the phasor for a narrowband signal as follows:</p>
-<ol>
-<li>compute its Fourier transform</li>
-<li>set the positive frequency components to zero</li>
-<li>double the amplitudes of the negative frequency components</li>
-<li>inverse Fourier transform the resulting one-sided spectrum</li>
-</ol>
-<p>Strictly speaking, the analytic signal is obtained by setting the negative frequencies to zero and doubling by application of the Hilbert transform. However, many engineering fields have adopted the convention of setting the positive frequencies to zero instead. The results will be the same, except that the direction of power flow will be reversed (if I recall correctly).</p>
-<p>The Fourier transform of \( u \left( \mathbf{r}, t\right) \) is:</p>
-<p>$$ \mathcal{F} \left\{ u \left( \mathbf{r}, t\right) \right\} = \frac{A ( \mathbf{r} ) }{2} \left[ e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) + e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) \right] $$</p>
-<p>Drop the positive frequency term \( e^{j \phi \left( \mathbf{r} \right) } \delta \left( f - f_0 \right) \) and double the result. This produces:</p>
-<p>$$ A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \delta \left( f + f_0 \right) $$</p>
-<p>Let \( U ( \mathbf{r} ) := A ( \mathbf{r} ) e^{-j \phi \left( \mathbf{r} \right) } \). The inverse Fourier transform of this signal is:</p>
-<p>$$ \mathcal{F}^{-1} \left\{ U ( \mathbf{r} ) \delta \left( f + f_0 \right) \right\} = U ( \mathbf{r} ) e^{-j 2 \pi f_0 t } $$</p>
-<p>We can recover the original field by taking the real part of this expression, which is equivalent to applying Euler's identity and dropping the imaginary part:</p>
-<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U ( \mathbf{r} ) e^{-j 2 \pi f t} \right] $$</p>
-<h2>Polychromatic Scalar Waves</h2>
-<p>To model a polychromatic wave, we integrate over the analytic signals of each spectral component and take the real part of the result:</p>
-<p>$$ u \left( \mathbf{r}, t\right) = \Re \left[ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df \right] $$</p>
-<h3>The Narrowband Assumption</h3>
-<p>We get a useful representation to the expression above if we assume that the bandwidth of the signal is much smaller than its center frequency \( \Delta f \ll f_0 \):</p>
-<p>$$ \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df = U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} $$</p>
-<p>To better understand the meaning of this assumption, make the substitution \( \nu = f - f_0 \) into the expression on the left hand side:</p>
-<p>$$\begin{eqnarray}
-\int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, f \right) e^{-j 2 \pi f t} \,df &amp;=&amp; \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \left( \nu + f_0 \right) t} \,d\nu \\
-&amp;=&amp; e^{-j 2 \pi f_0 t} \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu
-\end{eqnarray}$$</p>
-<p>Under the narrowband assumption, the integration in the expression above is constrained to small values around \( \nu = 0 \) that are much less than the phasor term that is oscillating at frequency \( f_0 \). If we define the following function:</p>
-<p>$$ U \left( \mathbf{r}, t \right) := \int_{-\infty}^{\infty} \tilde{U} \left( \mathbf{r}, \nu + f0 \right) e^{-j 2 \pi \nu t} \,d\nu $$ </p>
-<p>then it will vary slowly with respect to the carrier frequency \( f_0 \).</p>
-<p>As a result, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) as an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation fails.</p>
-<h3>The Slowly Varying Envelope Assumption</h3>
-<p>It is instructive to reverse our reasoning and see why a slowly-varying envelope implies a narrowband signal. Compute the Fourier transforms of the narrowband waveform, along with the Fourier transform of the derivative of \( U \left( \mathbf{r}, t \right) \).</p>
-<p>The Fourier transform of the analytic signal:</p>
-<p>$$ \int_{-\infty}^{\infty} \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] e^{-j 2 \pi f t} \,dt = \tilde{U} \left( \mathbf{r}, f + f_0 \right) $$</p>
-<p>The Fourier transform of the derivative of \( U \):</p>
-<p>$$\begin{eqnarray}
-\int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt &amp;=&amp; j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right)
-\end{eqnarray}$$</p>
-<p>Now, apply the <a href="https://en.wikipedia.org/wiki/Slowly_varying_envelope_approximation">slowly varying envelope approximation (SVEA)</a> by asserting that the rate of change of \( U \) with respect to time is much less than the value of \( U \) multiplied by the center frequency, or \( \left| \frac{d}{dt} U \left( \mathbf{r}, t\right) \right| \ll \left| 2 \pi f_0 U \left( \mathbf{r, t} \right) \right| \)</p>
-<p>$$\begin{eqnarray}
-\left| j 2 \pi f \tilde{U} \left( \mathbf{r}, f \right) \right| &amp;=&amp; \left| \int_{-\infty}^{\infty} \frac{d}{dt} \left[ U \left( \mathbf{r}, t \right) \right] e^{-j 2 \pi f t} \,dt \right| \\
-&amp;\ll&amp; \left| \int_{-\infty}^{\infty} 2 \pi f_0 U \left( \mathbf{r}, t \right) e^{-j 2 \pi f t} \,dt \right| \\
-&amp;\ll&amp; 2 \pi f_0 \left| \tilde{U} \left( \mathbf{r}, f \right) \right|
-\end{eqnarray}$$</p>
-<p>This expression means that the appreciable frequency components of \( U \left( \mathbf{r} , t \right) \) are much less than the frequency \( f_0 \)<sup id="fnref:2"><a class="footnote-ref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fn:2">2</a></sup>. And when we consider the spectrum of \( U \left( \mathbf{r} , t \right) \) centered around \( f_0 \), we find that the bandwidth \( \Delta f \) is small with respect to \( f_0 \).</p>
-<h3>Assumptions, not Approximations!</h3>
-<p>The narrowband and slowly varying envelope assumptions are usually referred to as approximations. This is misleading! The resulting expression for the field is not an approximation at all; instead, under the assumptions of narrowbandedness, we can interpret the complex function \( U \left( \mathbf{r}, t \right) \) an "envelope" modulating the amplitude of the fast oscillating carrier wave. If the assumption is not valid, then this interpretation is not correct.</p>
-<h3>Narrowband Polychromatic Waves</h3>
-<p>In summary, narrowband polychromatic waves with a center frequency \( f_0 \) are modeled as the product of a fast rotating phasor and slowly varying envelope:</p>
-<p>$$ u \left( \mathbf{r}, t \right) = \Re \left[ U \left( \mathbf{r}, t \right) e^{-j 2 \pi f_0 t} \right] $$</p>
-<p>The amplitude and the phase of the envelope are the amplitude and phase of the real optical wave.</p>
-<h2>Coherence</h2>
-<p>While the expression for the analytic signal \( U \left( \mathbf{r}, t \right) \) as an integral over frequency components appears deterministic, the phase relationships between the spectral components are often unknown and vary randomly in time. As a result, the envelope of the optical wave will vary unpredictably and must be analyzed in terms of its statistical properties.</p>
-<h3>Monochromatic Light is Coherent</h3>
-<p>Since monochromatic light has only one spectral component by definition, it is completely coherent.</p>
-<ul>
-<li>I mean monochromatic in the ideal sense, not like how we sometimes describe lasers.</li>
-<li>Monochromatic waves, like plane waves, cannot exist in real life. The uncertainy principle requires that a monochromatic wave exist for an infinite duration.</li>
-</ul>
-<div class="footnote">
-<hr>
-<ol>
-<li id="fn:1">
-<p>Goodman, Joseph W. Introduction to Fourier optics. Roberts and Company publishers (2005). ISBN 978-0974707723. <a class="footnote-backref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:1" title="Jump back to footnote 1 in the text">↩</a></p>
-</li>
-<li id="fn:2">
-<p><a href="https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply">https://physics.stackexchange.com/questions/451239/slowly-varying-envelope-approximation-what-does-it-imply</a> <a class="footnote-backref" href="posts/a-very-brief-summary-of-the-analytic-signal-in-fourier-optics/#fnref:2" title="Jump back to footnote 2 in the text">↩</a></p>
 </li>
 </ol>
 </div>

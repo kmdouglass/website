@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about calculus)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/calculus.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2026 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+&lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
+&lt;img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 17 Aug 2026 12:22:21 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>A Primer on the Mathematics behind Radiometry</title><link>https://kylemdouglass.com/posts/a-primer-on-the-mathematics-behind-radiometry/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;I have two projects at the moment that involve modeling &lt;a href="https://en.wikipedia.org/wiki/Radiometry"&gt;radiometric quantities&lt;/a&gt; in optical systems. At the outset of these projects I felt that I needed to refresh my knowledge of the basics. This post contains my notes about the topics that I think form the mathematical foundation of radiometry.&lt;/p&gt;
+&lt;h2&gt;Spherical Coordinate Systems&lt;/h2&gt;
+&lt;p&gt;Radiometric models are most naturally constructed in spherical coordinate systems. A spherical coordinate system is illustrated below.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="A spherical coordinate system built upon a Cartesian axis" width="50%" src="https://kylemdouglass.com/images/spherical_coordinates.png"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;In the above illustration, I use the physicist's notation to denote:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;\( r \) : the radial coordinate&lt;/li&gt;
+&lt;li&gt;\( \theta \) : the polar (or zenith) angle&lt;/li&gt;
+&lt;li&gt;\( \phi \) : the azimuthal angle&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;The Differential Volume Element&lt;/h3&gt;
+&lt;p&gt;The differential volume element in spherical coordinates is constructed as follows.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="Construction of the differential volume element in spherical coordinates" width="50%" src="https://kylemdouglass.com/images/differential_volume_element_spherical_coordinates.png"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;In the figure above, the point \( A \) represents the point \( \left( r, \theta, \phi \right) \) in spherical coordinates.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The line segment \( AB \) has length \( dr \)&lt;/li&gt;
+&lt;li&gt;The arc \( AC \) has length \( r \, d \theta \)&lt;/li&gt;
+&lt;li&gt;The arc \( AD \) has length \( r \sin \theta \, d \phi \)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The differential volume element therefore is&lt;/p&gt;
+&lt;p&gt;$$
+dV = r^2 \sin \theta \, dr \, d \theta \, d \phi
+$$.&lt;/p&gt;
+&lt;p&gt;The reason for the \( \sin \theta \) term is that the ray from the origin to the point \( \left( r, \theta, \phi \right) \) traces out a circle of radius \( r \sin \theta \) when I let \( \phi \) vary from 0 to \( 2 \pi \) as illustrated below:&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="Circle radii vs. polar angles" width="50%" src="https://kylemdouglass.com/images/circle_radius_versus_polar_angle.png"&gt;
+&lt;/figure&gt;
+
+&lt;h2&gt;Solid Angle&lt;/h2&gt;
+&lt;p&gt;A central concept in radiometry is the idea of the &lt;a href="https://en.wikipedia.org/wiki/Solid_angle"&gt;solid angle&lt;/a&gt;. Solid angle is the equivalent to angle in 3D space and is represented by the Greek letter \( \Omega \).&lt;/p&gt;
+&lt;p&gt;We use solid angle to describe the apparent size of a surface as reviewed from some point in space. For a differential surface patch that we denote \( dS \) at a distance \( r \) from the point of observation \( P \), we say that the differential solid angle subtended by the patch at \( P \) is&lt;/p&gt;
+&lt;p&gt;$$
+d \Omega = \sin \theta \, d \theta \, d \phi
+$$.&lt;/p&gt;
+&lt;p&gt;A good heuristic to remember this quantity is to take the volume element in spherical coordinates and divide by \( r^2 \, dr \).&lt;/p&gt;
+&lt;p&gt;I often see the definition \( \Omega = A / r^2 \), but this applies in the special case when the patch has area \( A \) and is a subset of the surface of a sphere of radius \( r \). More generally, if \( dS' \) represents the projected surface area of a patch, then&lt;/p&gt;
+&lt;p&gt;$$
+d \Omega = \frac{dS'}{r^2}
+$$.&lt;/p&gt;
+&lt;p&gt;Why must \( dS' \) be a projected area? The answer is due to an effect known as foreshortening, which will be discussed in the next section.&lt;/p&gt;
+&lt;p&gt;When the observation point is at the origin and I use spherical coordinates, then I can equate the two expressions above:&lt;/p&gt;
+&lt;p&gt;$$
+d \Omega = \frac{dS'}{r^2} = \sin \theta \, d \theta \, d \phi
+$$&lt;/p&gt;
+&lt;h3&gt;Foreshortening&lt;/h3&gt;
+&lt;p&gt;If the patch is oriented such that its unit normal vector \( \hat{n} \) is at an angle \( \theta \) to the line-of-sight from the observation point to the patch, then its apparent area will be &lt;strong&gt;foreshortened&lt;/strong&gt; according to the cosine rule:&lt;/p&gt;
+&lt;p&gt;$$
+A' = A \cos \theta
+$$.&lt;/p&gt;
+&lt;p&gt;As a result of foreshortening, the solid angle subtended by the patch at \( P \) will appear smaller. This is illustrated in the figure below.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="The effect of foreshortening of a patch on its solid angle." width="50%" src="https://kylemdouglass.com/images/foreshortening.png"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;In this figure, the red dotted lines go from \( P \) to the edges of the patch when it is oriented with its normal unit vector parallel to the line-of-sight and the blue dashed lines go from \( P \) to the edges of the patch when it is oriented at an angle \( \theta \) to the line-of-sight. The angle subtended by the red dotted lines is larger than the one subtended by blue dashed lines, so foreshortening effectively reduces the solid angle subtended by the patch.&lt;/p&gt;
+&lt;p&gt;In differential form, the solid angle of a patch of differential area \( dS \) foreshortened due to observation at an angle \( \theta \) is&lt;/p&gt;
+&lt;p&gt;$$
+d \Omega = \frac{\cos \theta \, dS}{r^2} = \frac{ \left( \hat{r} \cdot \hat{n} \right) dS }{r^2}
+$$&lt;/p&gt;
+&lt;p&gt;where \( \hat{r} \) and \( \hat{n} \) are unit vectors.&lt;/p&gt;
+&lt;p&gt;The solid angle subtended by the patch is obtained by integrating over either expression:&lt;/p&gt;
+&lt;p&gt;$$
+\Omega = \iint_S \frac{\cos \theta \, dS}{r^2} = \iint_S \frac{ \left( \hat{r} \cdot \hat{n} \right) dS }{r^2}
+$$&lt;/p&gt;
+&lt;h3&gt;Uniformly Sampling Surfaces in Solid Angle&lt;/h3&gt;
+&lt;p&gt;In one of my projects I am working with a rotationally symmetric optical surface that is defined through a recursion relation, but I need a differentiable representation for ray tracing. I obtain this representation by sampling the surface at different polar angles \( \theta \) and fitting the samples with a polynomial or spline.&lt;/p&gt;
+&lt;p&gt;In some scenarios it is advantageous to uniformly sample the surface in solid angle, rather than angle itself. To achieve this, I uniformly sample \( \cos \theta \) and obtain the values for \( \theta \) by applying an \( \arccos \) function to the samples. In pure Python this looks like the following:&lt;/p&gt;
+&lt;div class="code"&gt;&lt;pre class="code literal-block"&gt;&lt;span class="kn"&gt;import&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nn"&gt;math&lt;/span&gt;
+
+
+&lt;span class="n"&gt;num_samples&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Sample directions from the optical axis to directions perpendicular to it.&lt;/span&gt;
+&lt;span class="n"&gt;cos_theta&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_samples&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_samples&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;span class="k"&gt;assert&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cos_theta&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;num_samples&lt;/span&gt;
+
+&lt;span class="n"&gt;theta&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;math&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;acos&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;cos_theta&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The above code produces values for \( \theta \) of &lt;code&gt;[0.0, 0.5410995259571458, 0.7751933733103613, 0.9625507478846871, 1.1278852827212578, 1.2810446253588492, 1.4274487578895312, 1.5707963267948966]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The reason this works is the following: start with the definition of solid angle \( d \Omega = \sin \theta \, d \theta \, d \phi\). Because the surface is rotationally symmetric, integrate over the azimuthal angle to obtain \( \iint_{\phi = 0}^{2 \pi} \sin \theta \, d \theta \, d \phi = 2 \pi \int \sin \theta \, d \theta \).&lt;/p&gt;
+&lt;p&gt;But \( \sin \theta \, d \theta = -d ( \cos \theta) \), so uniform sampling in \( \cos \theta \) space produces equal-sized rectangles in the Riemann sum that approximates this integral.&lt;/p&gt;
+&lt;h2&gt;Etendue&lt;/h2&gt;
+&lt;p&gt;Etendue (sorry French speakers) is another important quantity in radiometry. Though it is a core quantity of the science, it is actually a purely mathematical construction and does not require any concept of power, detector, or light source. It is related to solid angle, but is easy to confuse with the above expressions for solid angle because two different patches are involved in its construction, not one.&lt;/p&gt;
+&lt;p&gt;Let \( dS_1 \) and \( dS_2 \) represent these two different surface patches. They are differential patches but drawn unrealistically large in the figure below for ease of understanding. Assume that the solid angle subtended &lt;strong&gt;by surface 2 as viewed from the center of surface 1&lt;/strong&gt; is \( d \Omega_{2,1} \). Furthermore let \( \theta_1 \) represent the angle between the unit normal vector to \( dS_1 \) and the center of the solid angle \( d \Omega_{2,1} \). Similarly, let \( \theta_2 \) represent the angle between the unit normal vector to \( dS_2 \) and the center of the solid angle \( d \Omega_{1,2} \). Finally, assume these patches sit in a medium with refractive index \( n \).&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="The geometrical construction for etendue." width="50%" src="https://kylemdouglass.com/images/etendue_construction.png"&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Etendue is defined as:&lt;/p&gt;
+&lt;p&gt;$$
+dG = n^2 \, \cos \theta_1 \, dS_1 \, d \Omega_{2,1}
+$$&lt;/p&gt;
+&lt;h3&gt;Conservation of Etendue&lt;/h3&gt;
+&lt;p&gt;We can prove that this quantity is conserved by noting that \( d \Omega_{2,1} = \frac{\cos \theta_2 \, dS_2} {r^2} \), or&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}
+  dG &amp;amp;=&amp;amp; n^2 \cos \theta_1 \, dS_1 \, d \Omega_{2,1} \\
+  &amp;amp;=&amp;amp; n^2 \cos \theta_1 \, dS_1 \frac{\cos \theta_2 \, dS_2}{r^2} \\
+  &amp;amp;=&amp;amp; n^2 \frac{\cos \theta_1 \, dS_1}{r^2}  \cos \theta_2 \, dS_2 \\
+  &amp;amp;=&amp;amp; n^2 \, d \Omega_{1, 2} \cos \theta_2 \, dS_2
+\end{eqnarray}$$.&lt;/p&gt;
+&lt;p&gt;So it does not matter if we measure etendue from surface 1 to surface 2, or from surface 2 to surface 1; it is the same for any two patches.&lt;/p&gt;
+&lt;p&gt;Intuitively, the conservation of etendue is just a fancy way of counting the number of lines that pass through any two patches in space. When viewed this way, it is obvious that the number of lines that pass through both patches must be the same regardless of whether we look from patch 1 to patch 2 or from patch 2 to patch 1.&lt;/p&gt;
+&lt;figure&gt;
+  &lt;img alt="The geometrical intuition behind etendue." width="50%" src="https://kylemdouglass.com/images/etendue_intuition.png"&gt;
+&lt;/figure&gt;
+
+&lt;h3&gt;Phase Space Representation&lt;/h3&gt;
+&lt;p&gt;Rigorously speaking, conservation of etendue is a result of Liouville's theorem. Let each ray be represented in a four dimensional phase space where two dimensions are on a reference surface and the remaining two represent the two degrees of freedom in the optical momentum vector \( \vec{p} = n \hat{s} \) of Hamiltonian optics. The volume of the phase space spanned by all the rays intersecting this surface is a conserved quantity.&lt;/p&gt;
+&lt;p&gt;Etendue becomes an optical quantity when I assert that the lines represent rays that carry some amount of power \( d \Phi \). Strictly speaking, etendue either stays the same or increases, but it cannot decrease. Diffuse scattering is one way that it can increase, but not because scattering simply redirects light rays. Reflection and refraction also redirect light rays, but in these cases etendue is conserved because reflection and refraction are operations that satisfy Liouville's theorem.&lt;/p&gt;
+&lt;p&gt;Etendue can be related to the second law of thermodynamics. (But how exactly this is done I do not know.)&lt;/p&gt;</description><category>calculus</category><category>radiometry</category><category>solid angle</category><guid>https://kylemdouglass.com/posts/a-primer-on-the-mathematics-behind-radiometry/</guid><pubDate>Mon, 17 Aug 2026 07:36:02 GMT</pubDate></item></channel></rss>
