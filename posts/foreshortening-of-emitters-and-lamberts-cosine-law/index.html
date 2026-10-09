@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="I explore how the foreshortening concept from radiometry, along with an additional constraint, leads to Lambert's cosine law.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foreshortening of Emitters and Lambert's Cosine Law | Kyle M. Douglass</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
+<link rel="canonical" href="https://kylemdouglass.com/posts/foreshortening-of-emitters-and-lamberts-cosine-law/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Kyle M. Douglass">
+<link rel="prev" href="../a-primer-on-the-mathematics-behind-radiometry/" title="A Primer on the Mathematics behind Radiometry" type="text/html">
+<meta property="og:site_name" content="Kyle M. Douglass">
+<meta property="og:title" content="Foreshortening of Emitters and Lambert's Cosine Law">
+<meta property="og:url" content="https://kylemdouglass.com/posts/foreshortening-of-emitters-and-lamberts-cosine-law/">
+<meta property="og:description" content="I explore how the foreshortening concept from radiometry, along with an additional constraint, leads to Lambert's cosine law.">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-10-09T15:35:30+02:00">
+<meta property="article:tag" content="LEDs">
+<meta property="article:tag" content="physics">
+<meta property="article:tag" content="radiometry">
+<meta property="article:tag" content="solid angle">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark
+bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="../../">
+
+            <span id="blog-title">Kyle M. Douglass</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item">
+<a href="../../pages/portfolio/" class="nav-link">Portfolio</a>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archive</a>
+                </li>
+<li class="nav-item">
+<a href="../../categories/" class="nav-link">Tags</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS feed</a>
+                </li>
+<li class="nav-item">
+<a href="https://kmdouglass.github.io/" class="nav-link">Old Blog</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right">
+<li class="nav-item">
+    <a href="index.md" id="sourcelink" class="nav-link">Source</a>
+    </li>
+
+
+                
+            </ul>
+</div>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Foreshortening of Emitters and Lambert's Cosine Law</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
+                    Kyle M. Douglass
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2026-10-09T15:35:30+02:00" itemprop="datePublished" title="2026-10-09 15:35">2026-10-09 15:35</time></a>
+            </p>
+                <p class="commentline">
+    
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/foreshortening-of-emitters-and-lamberts-cosine-law.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.md" class="sourcelink">Source</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <p>In my <a href="../a-primer-on-the-mathematics-behind-radiometry/">last post</a> I covered some basic mathematics of radiometry. I realized shortly after writing the post that there was still a topic that I did not fully understand but that is central to radiometry and illumination optics in particular: <a href="https://en.wikipedia.org/wiki/Lambert%27s_cosine_law">Lambert's cosine law</a>. According to Wikipedia, this law states:</p>
+<blockquote>
+<p>the observed radiant intensity or luminous intensity from an ideal diffusely reflecting surface or ideal diffuse radiator is directly proportional to the cosine of the angle θ between the observer's line of sight and the surface normal; I = I0 cos θ.</p>
+</blockquote>
+<p>The dependence of the intensity on \( \cos \theta \) is mathematically the same as the dependence of the projected area of a surface patch when viewed at an angle, a term known as foreshortening. In my previous post I had described foreshortening of remote surface patches, but not emitters. In effect, I had only described foreshortening as an effect concerning detection, but in reality it concerns emission as well. I very quickly ran into a conceptual problem when trying to apply the concept to emitters. The solution to this problem turns out to be quite... <em>illuminating</em>. (Ha ha.)</p>
+<h2>Ideal Emitters</h2>
+<p>I'll start by breaking down Wikipedia's definition of the cosine law. First, it deals with ideal, diffuse reflecting and radiating surfaces. For now, I'll limit the discussion to just radiating surfaces.</p>
+<p>So what is an ideal radiating surface? It is one that can be described as a collection of mutually incoherent point sources radiating light equally in all directions. (Or so I thought.) A single point source radiating equally in all directions would look like this:</p>
+<figure><img alt="An ideal point source." width="50%" src="../../images/ideal_point_source.png"></figure><p>Here, each ray carries the same amount of power, and the number of rays per solid angle is constant. The length of a ray doesn't mean anything since, strictly speaking, a ray extends an infinite distance from the source.</p>
+<h3>Radiant Intensity</h3>
+<p>An ideal emitter is just a set of ideal point sources. Since the individual point sources are extended across space, we often call such a source an <strong>extended source</strong>.</p>
+<p>Now, since each ray carries the same amount of power, then the set of all rays traveling in the same direction represents the total power emitted into that direction.</p>
+<p>But the power emitted by a source as a function of direction is the <strong>radiant intensity</strong> of the emitter. So we can think of radiant intensity as the sum over the powers carried by all the rays traveling in the same direction from the source.</p>
+<p>The angular distribution of the radiant intensity of an emitter, therefore, is a purely geometrical construction.</p>
+<h2>Point Sources on a Surface or in a Volume?</h2>
+<h3>The Problem</h3>
+<p>Here's where I ran into my problem. I knew that LEDs could be modeled as Lambertian emitters to a decent degree of accuracy. This means that their radiant intensity should fall off like \( \cos \theta \) where \( \theta \) is the angle between the direction being considered and the normal to the surface. As described in the previous section, I also knew that the number of rays in a given direction should be proportional to the power emitted into that direction. So after counting the rays emitted into each direction, I should find that this number falls off as \( \cos \theta \).</p>
+<p>But when I sketched a picture of an LED as a collection of ideal emitters on a surface, I got the following:</p>
+<figure><img alt="An LED as a surface containing ideal point sources." width="50%" src="../../images/led_2d_point_sources.png"></figure><p>I've drawn rays in only two different directions, but you can see that the number of rays remains the same regardless of direction. So there's an inconsistency here. Where is it?</p>
+<h3>The Qualitative Solution</h3>
+<p>It took me a while to realize that the problem was with my conceptual model of the LED as a collection of emitters on a surface. A small hole in a black body radiator is also a Lambertian emitter. But a black body is a volume, not a surface. If instead I think of the LED as a window into a volume of ideal point sources, then I can see that all the rays behind the window and in the forward direction pass through the window. A fraction of the rays at any other direction are blocked, which results in a decrease in the amount of power emitted into their direction. And finally, the number of rays that are blocked increases as the angle away from the normal increases.</p>
+<figure><img alt="An LED as a volume containing ideal point sources and a window. Some rays are blocked." width="50%" src="../../images/led_3d_point_sources.png"></figure><h2>Derivation of Lambert's Cosine Law</h2>
+<p>In what follows I used Claude to help me set up the derivation, but have validated it myself.</p>
+<h3>The Setup</h3>
+<p>I say that this is a qualitative solution because it doesn't actually derive the \( \cos \theta \) dependence. As it turns out, the actual derivation is subtle and requires that we impose another condition onto the medium inside the LED.</p>
+<p>First, fill the half space \( z &lt; 0 \) with \( n \) isotropic emitters per unit volume. Then, put an opaque screen at \( z = 0 \) with a window of area \( A \). Note that the emitters now extend beyond the \( x, y \) extent of the window, unlike what I drew above.</p>
+<h3>Rigorous Ray Counting</h3>
+<p>Next, we need a way to count the number of rays leaving the window in direction \( \theta \). To do this, I'm actually going to map each ray to its source point and count the number of source points instead. Let \( \hat{d} \) represent the unit vector corresponding to direction \( \theta \). Its elements are just the direction cosines of each ray. Also, let \( r \) represent the distance from the origin to the point where the ray intersects the window. \( \vec{r} \) ranges over the window, and \(dA\) is its area element. Finally, let \( s \) represent the distance along the ray to the source point. This leads to the familiar parametric representation of a ray used by ray tracers:</p>
+<p>$$
+\vec{p} = \vec{r} - s \hat {d}
+$$</p>
+<p>I've used the negative sign because I'm tracing backwards into the medium, and the magnitude of \( \vec{r} \) is just \( r \).</p>
+<p>As seen in the figure below, the set of all source points inside the medium whose rays travel in direction \( \theta \) and that also exit the window fills a volume whose differential element is \( dV = \cos \theta dA \, ds \). </p>
+<figure><img alt="The setup for deriving Lambert's cosine law." width="50%" src="../../images/lambert_cosine_law_derivation.png"></figure><p>If each source point emits a total power \( P \) into a solid angle of \( 4 \pi \) steradians, then the intensity as a function of \( \theta \) is</p>
+<p>$$ I ( \theta ) = \frac{n P}{4 \pi} \int_{window} \cos \theta \, dA \int_{s=0}^{\infty} ds = \infty . $$</p>
+<p>Oops.</p>
+<h3>Preventing Infinite Intensity</h3>
+<p>The thing which prevents the power from blowing up is absorption by the medium. Let \( \alpha \) represent the <a href="https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law">Lambert-Beer absorption coefficient</a> of the LED material. Then the power carried along a ray is attenuated by a factor \( \exp \left(- \alpha s \right) \) after a path length \(s \) inside the material. The integral for intensity as a function of \( \theta \) is now</p>
+<p>$$
+I ( \theta) = \frac{n P}{4 \pi} \int_{window} \cos \theta \, dA \int_{s=0}^{\infty} \exp \left( - \alpha s \right) ds = \frac{n P}{4 \pi \alpha} A \cos \theta.
+$$</p>
+<p>This is exactly Lambert's cosine law, with \( I_0 = \frac{n P}{4 \pi \alpha} A \).</p>
+<h2>Some Final Observations</h2>
+<p>I can go a bit further. Dividing out the projected area \( A \cos \theta \) gives the radiance, which is independent of angle:</p>
+<p>$$
+L = \frac{n P}{4 \pi \alpha}.
+$$</p>
+<p>This has units of power per area per solid angle, as it should.</p>
+<p>I was genuinely surprised to learn how important absorption is to deriving Lambert's cosine law. If the material did not absorb but had a finite thickness \( D \) (to prevent the integral from blowing up), then the integral over path length would be \( D / \cos \theta \). The cosine in the denominator would cancel the one from the projected area of the window. The radiance would furthermore increase towards larger angles like \( 1 / \cos \theta \). In other words, it would no longer be constant.</p>
+<p>Finally, I think it's interesting that, under this conceptual setup, Lambert's cosine law is still just foreshortening of a patch when viewed at an angle. The difference is that this time we're looking at the patch/window from inside the LED material.</p>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/leds/" rel="tag">LEDs</a></li>
+            <li><a class="tag p-category" href="../../categories/physics/" rel="tag">physics</a></li>
+            <li><a class="tag p-category" href="../../categories/radiometry/" rel="tag">radiometry</a></li>
+            <li><a class="tag p-category" href="../../categories/solid-angle/" rel="tag">solid angle</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../a-primer-on-the-mathematics-behind-radiometry/" rel="prev" title="A Primer on the Mathematics behind Radiometry">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+    
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="nikolademo",
+            disqus_url="https://kylemdouglass.com/posts/foreshortening-of-emitters-and-lamberts-cosine-law/",
+        disqus_title="Foreshortening of Emitters and Lambert's Cosine Law",
+        disqus_identifier="cache/posts/foreshortening-of-emitters-and-lamberts-cosine-law.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha384-3lJUsx1TJHt7BA4udB5KPnDrlkO8T6J6v/op7ui0BbCjvZ9WqV4Xm6DTP6kQ/iBH" crossorigin="anonymous"></script><script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$latex ','$'], ['\\(','\\)']]}});
+        </script></article><script>var disqus_shortname="nikolademo";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2026         <a href="mailto:kyle.m.douglass@gmail.com">Kyle M. Douglass</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+            
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
+    </script>
+</body>
+</html>
