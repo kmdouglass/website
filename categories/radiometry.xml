@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 09 Oct 2026 13:35:51 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Foreshortening of Emitters and Lambert's Cosine Law</title><link>https://kylemdouglass.com/posts/foreshortening-of-emitters-and-lamberts-cosine-law/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;In my &lt;a href="https://kylemdouglass.com/posts/a-primer-on-the-mathematics-behind-radiometry/"&gt;last post&lt;/a&gt; I covered some basic mathematics of radiometry. I realized shortly after writing the post that there was still a topic that I did not fully understand but that is central to radiometry and illumination optics in particular: &lt;a href="https://en.wikipedia.org/wiki/Lambert%27s_cosine_law"&gt;Lambert's cosine law&lt;/a&gt;. According to Wikipedia, this law states:&lt;/p&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 09 Oct 2026 13:55:08 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Foreshortening of Emitters and Lambert's Cosine Law</title><link>https://kylemdouglass.com/posts/foreshortening-of-emitters-and-lamberts-cosine-law/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;p&gt;In my &lt;a href="https://kylemdouglass.com/posts/a-primer-on-the-mathematics-behind-radiometry/"&gt;last post&lt;/a&gt; I covered some basic mathematics of radiometry. I realized shortly after writing the post that there was still a topic that I did not fully understand but that is central to radiometry and illumination optics in particular: &lt;a href="https://en.wikipedia.org/wiki/Lambert%27s_cosine_law"&gt;Lambert's cosine law&lt;/a&gt;. According to Wikipedia, this law states:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;the observed radiant intensity or luminous intensity from an ideal diffusely reflecting surface or ideal diffuse radiator is directly proportional to the cosine of the angle θ between the observer's line of sight and the surface normal; I = I0 cos θ.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -12,7 +12,7 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;p&gt;I'll start by breaking down Wikipedia's definition of the cosine law. First, it deals with ideal, diffuse reflecting and radiating surfaces. For now, I'll limit the discussion to just radiating surfaces.&lt;/p&gt;
 &lt;p&gt;So what is an ideal radiating surface? It is one that can be described as a collection of mutually incoherent point sources radiating light equally in all directions. (Or so I thought.) A single point source radiating equally in all directions would look like this:&lt;/p&gt;
 &lt;figure&gt;
-  &lt;img alt="An ideal point source." width="50%" src="https://kylemdouglass.com/images/ideal_point_source.png"&gt;
+  &lt;img alt="An ideal point source." width="25%" src="https://kylemdouglass.com/images/ideal_point_source.png"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Here, each ray carries the same amount of power, and the number of rays per solid angle is constant. The length of a ray doesn't mean anything since, strictly speaking, a ray extends an infinite distance from the source.&lt;/p&gt;

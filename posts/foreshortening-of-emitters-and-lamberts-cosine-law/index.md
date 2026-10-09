@@ -23,7 +23,7 @@ I'll start by breaking down Wikipedia's definition of the cosine law. First, it 
 So what is an ideal radiating surface? It is one that can be described as a collection of mutually incoherent point sources radiating light equally in all directions. (Or so I thought.) A single point source radiating equally in all directions would look like this:
 
 <figure>
-  <img alt="An ideal point source." width="50%" src="/images/ideal_point_source.png">
+  <img alt="An ideal point source." width="25%" src="/images/ideal_point_source.png">
 </figure>
 
 Here, each ray carries the same amount of power, and the number of rays per solid angle is constant. The length of a ray doesn't mean anything since, strictly speaking, a ray extends an infinite distance from the source.
