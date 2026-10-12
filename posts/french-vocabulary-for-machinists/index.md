@@ -21,6 +21,9 @@ Here is a list of English-French vocabulary words that I have found useful. I wi
 
 - **aluminum**, *n* : aluminium (m)
 - **anodized**, *adj* : anodisé
+- **sandpaper**, *n* : papier abrasif (m)
+  - **to sand**, *v*: poncer
+  - **grit**, *n*: granularité (f)
 - **stainless steel**, *n* : 1. acier inoxydable, 2. inox (the cool way to say it)
 
 # Measurements
