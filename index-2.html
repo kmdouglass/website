@@ -1141,7 +1141,7 @@ k_S &amp;=&amp; \Delta k_x L \\
 2 \pi / \Delta x &amp;=&amp; 4 \pi \text{NA} L / \left[ \lambda \left( L - 1 \right) \right]
 \end{eqnarray}$$</p>
 <p>Solving the above expression for \( \Delta x \), we arrive at</p>
-<p>$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$</p>
+<p>$$ \Delta x = \frac{\lambda}{2 \text{NA}} \left( \frac{L-1}{L} \right) $$</p>
 <p>which approaches \( \lambda / \left( 2 \text{NA} \right) \) as \( L \) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \( \Delta x \) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.</p>
 <h3>Effect of not Sampling the Origin</h3>
 <p>Herrera and Quinto-Su<sup id="fnref3:2"><a class="footnote-ref" href="posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2">2</a></sup> point out that an error will be introduced if we naively apply the FFT to compute the field components in the \( \left( k_x, k_y \right) \) coordinate system because the origin is not sampled, whereas the FFT assumes that we sample the zero frequency component. The effect is that the result of the FFT has a constant phase error that accounts for a half-pixel shift in each direction of the mesh.</p>

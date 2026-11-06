@@ -190,7 +190,7 @@ k_S &=& \Delta k_x L \\\\
 
 Solving the above expression for \\( \Delta x \\), we arrive at
 
-$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$
+$$ \Delta x = \frac{\lambda}{2 \text{NA}} \left( \frac{L-1}{L} \right) $$
 
 which approaches \\( \lambda / \left( 2 \text{NA} \right) \\) as \\( L \\) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \\( \Delta x \\) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.
 

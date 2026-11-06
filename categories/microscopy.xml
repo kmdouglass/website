@@ -3,7 +3,7 @@
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Nov 2026 12:50:25 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Nov 2026 13:05:57 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
 &lt;p&gt;&lt;a href="https://doi.org/10.1364/JOSAA.34.001738"&gt;Yijun Bao and Thomas K. Gaylord, "Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories: Discussion,"  J. Opt. Soc. Am. A 34, 1738-1745 (2017)&lt;/a&gt;&lt;/p&gt;
 &lt;h4&gt;Abstract&lt;/h4&gt;
 &lt;blockquote&gt;
@@ -353,7 +353,7 @@ k_S &amp;amp;=&amp;amp; \Delta k_x L \\
 2 \pi / \Delta x &amp;amp;=&amp;amp; 4 \pi \text{NA} L / \left[ \lambda \left( L - 1 \right) \right]
 \end{eqnarray}$$&lt;/p&gt;
 &lt;p&gt;Solving the above expression for \( \Delta x \), we arrive at&lt;/p&gt;
-&lt;p&gt;$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$&lt;/p&gt;
+&lt;p&gt;$$ \Delta x = \frac{\lambda}{2 \text{NA}} \left( \frac{L-1}{L} \right) $$&lt;/p&gt;
 &lt;p&gt;which approaches \( \lambda / \left( 2 \text{NA} \right) \) as \( L \) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \( \Delta x \) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.&lt;/p&gt;
 &lt;h3&gt;Effect of not Sampling the Origin&lt;/h3&gt;
 &lt;p&gt;Herrera and Quinto-Su&lt;sup id="fnref3:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt; point out that an error will be introduced if we naively apply the FFT to compute the field components in the \( \left( k_x, k_y \right) \) coordinate system because the origin is not sampled, whereas the FFT assumes that we sample the zero frequency component. The effect is that the result of the FFT has a constant phase error that accounts for a half-pixel shift in each direction of the mesh.&lt;/p&gt;
