@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about microscopy)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/microscopy.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2025 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kyle M. Douglass (Posts about microscopy)</title><link>https://kylemdouglass.com/</link><description></description><atom:link href="https://kylemdouglass.com/categories/microscopy.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><copyright>Contents © 2026 &lt;a href="mailto:kyle.m.douglass@gmail.com"&gt;Kyle M. Douglass&lt;/a&gt; 
 &lt;a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;
 &lt;img alt="Creative Commons License BY-NC-SA"
 style="border-width:0; margin-bottom:12px;"
-src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Mon, 08 Dec 2025 15:48:28 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copyright><lastBuildDate>Fri, 06 Nov 2026 12:50:25 GMT</lastBuildDate><generator>Nikola (getnikola.com)</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Literature Review: Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories</title><link>https://kylemdouglass.com/posts/literature-review-clarification-and-unification-of-the-obliquity-factor-in-diffraction-and-scattering-theories/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;
 &lt;p&gt;&lt;a href="https://doi.org/10.1364/JOSAA.34.001738"&gt;Yijun Bao and Thomas K. Gaylord, "Clarification and Unification of the Obliquity Factor in Diffraction and Scattering Theories: Discussion,"  J. Opt. Soc. Am. A 34, 1738-1745 (2017)&lt;/a&gt;&lt;/p&gt;
 &lt;h4&gt;Abstract&lt;/h4&gt;
 &lt;blockquote&gt;
@@ -278,7 +278,7 @@ src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"&gt;&lt;/a&gt;</copy
 &lt;p&gt;This plane is located a distance \( n_2 f \) from the principal surface&lt;sup id="fnref:4"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:4"&gt;4&lt;/a&gt;&lt;/sup&gt;. It is not at a distance \( f \) from this surface. This is a result of imaging in an immersion medium.&lt;/p&gt;
 &lt;h2&gt;Geometry and Coordinate Systems&lt;/h2&gt;
 &lt;h3&gt;The Aperture Stop Radius&lt;/h3&gt;
-&lt;p&gt;The aperture stop radius \( R \) corresponds to the distance from the axis to the point where the marginal ray intersects the front prinicpal surface. In the sample space, the marginal ray travels at an angle \( \theta_{max} \) with respect to the axis.&lt;/p&gt;
+&lt;p&gt;The aperture stop radius \( R \) corresponds to the distance from the axis to the point where the marginal ray intersects the front principal surface. In the sample space, the marginal ray travels at an angle \( \theta_{max} \) with respect to the axis.&lt;/p&gt;
 &lt;p&gt;Under the sine condition, this height is&lt;/p&gt;
 &lt;p&gt;$$ R = n_2 f \sin{ \theta_{max} } = f \, \text{NA} $$&lt;/p&gt;
 &lt;p&gt;The right-most expression uses the definition of the numerical aperture \( \text{NA} \equiv n \sin{ \theta_{max} } \).&lt;/p&gt;
@@ -344,19 +344,17 @@ k_y &amp;amp;=&amp;amp; k_0 y_{\infty} / f
 &lt;p&gt;Note the symmetry between these two expressions. One scales with \( f \text{NA} \) and the other \( k_0 \text{NA} \). Recall that these are free parameters of the model.&lt;/p&gt;
 &lt;h3&gt;Sample Space Mesh Spacing&lt;/h3&gt;
 &lt;p&gt;It is interesting to compute the spacing between mesh elements \( \Delta x \) in the sample space when the fields are eventually computed.&lt;/p&gt;
-&lt;p&gt;The sampling angular frequency in the sample space is \( k_S = 2 \pi / \Delta x \).&lt;/p&gt;
-&lt;p&gt;The Nyquist-Shannon sampling theory states that the maximum informative angular frequency is \( k_{max} = k_S / 2 \).&lt;/p&gt;
+&lt;p&gt;The sampling angular frequency is by definition \( k_S = 2 \pi / \Delta x \). It's also related to the mesh size and angular frequency spacing via the equation \( k_S = L \Delta k_x \)&lt;sup id="fnref:5"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:5"&gt;5&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;p&gt;From the previous section, we know that \( k_{max} = \left(L - 1 \right) \Delta k_x / 2 \), and that \( \Delta k_x = 2 k_0 \text{NA} / \left( L - 1 \right) \).&lt;/p&gt;
 &lt;p&gt;Combining all the previous expressions and simplifying, we get:&lt;/p&gt;
 &lt;p&gt;$$\begin{eqnarray}
-k_S &amp;amp;=&amp;amp; 2 k_{max} \\
-2 \pi / \Delta x &amp;amp;=&amp;amp; \left(L - 1 \right) \Delta k_x \\
-2 \pi / \Delta x &amp;amp;=&amp;amp; \left(L - 1 \right) \left[ 2 k_0 \text{NA} / \left( L - 1 \right) \right] \\
-2 \pi / \Delta x &amp;amp;=&amp;amp; \left(L - 1 \right) \left[ 2 \left(2 \pi / \lambda \right) \text{NA} / \left( L - 1 \right) \right]
+k_S &amp;amp;=&amp;amp; \Delta k_x L \\
+2 \pi / \Delta x &amp;amp;=&amp;amp; 2 k_0 \text{NA} L / \left( L - 1 \right) \\
+2 \pi / \Delta x &amp;amp;=&amp;amp; 4 \pi \text{NA} L / \left[ \lambda \left( L - 1 \right) \right]
 \end{eqnarray}$$&lt;/p&gt;
 &lt;p&gt;Solving the above expression for \( \Delta x \), we arrive at&lt;/p&gt;
-&lt;p&gt;$$ \Delta x = \frac{\lambda}{2 \text{NA}} $$&lt;/p&gt;
-&lt;p&gt;which is of course the Abbe diffraction limit.&lt;/p&gt;
+&lt;p&gt;$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$&lt;/p&gt;
+&lt;p&gt;which approaches \( \lambda / \left( 2 \text{NA} \right) \) as \( L \) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \( \Delta x \) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.&lt;/p&gt;
 &lt;h3&gt;Effect of not Sampling the Origin&lt;/h3&gt;
 &lt;p&gt;Herrera and Quinto-Su&lt;sup id="fnref3:2"&gt;&lt;a class="footnote-ref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt; point out that an error will be introduced if we naively apply the FFT to compute the field components in the \( \left( k_x, k_y \right) \) coordinate system because the origin is not sampled, whereas the FFT assumes that we sample the zero frequency component. The effect is that the result of the FFT has a constant phase error that accounts for a half-pixel shift in each direction of the mesh.&lt;/p&gt;
 &lt;p&gt;Consider again the 1D mesh example with \(L = 16 \): \( -1.0000, -0.8667, \ldots, -0.0667, 0.0667, \ldots, 0.8667, 1.0000 \)&lt;/p&gt;
@@ -367,14 +365,14 @@ k_S &amp;amp;=&amp;amp; 2 k_{max} \\
 &lt;h3&gt;Structure of the Algorithm&lt;/h3&gt;
 &lt;p&gt;The algorithm to compute the focus fields will proceed as follows:&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;(optional) Propgate the inputs fields from the AS to the back principal plane using paraxial wave propagation&lt;/li&gt;
+&lt;li&gt;(optional) Propagate the inputs fields from the AS to the back principal plane using paraxial wave propagation&lt;/li&gt;
 &lt;li&gt;Input the sampled fields in the back principal plane in the \( \left( x_{\infty}, y_{\infty} \right) \) coordinate system&lt;/li&gt;
 &lt;li&gt;Transform the fields to the \( \left( k_x, k_y \right) \) coordinate system&lt;/li&gt;
 &lt;li&gt;Compute the fields in the \( \left(x, y, z \right) \) coordinate system using the FFT&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2&gt;Additional Remarks&lt;/h2&gt;
 &lt;ul&gt;
-&lt;li&gt;Zero padding the mesh will increase the sample space resolution beyond the Abbe limit, but since the fields remain zero outside of the support, no new information is added.&lt;/li&gt;
+&lt;li&gt;Zero padding the mesh will decrease the sample spacing in real space, but since the fields remain zero outside of the support, no new information is added and the resolution is unchanged.&lt;/li&gt;
 &lt;li&gt;On the other hand, zero padding might be required when computing fields going from the sample space to the back principal plane to faithfully reproduce any evanescent components.&lt;/li&gt;
 &lt;li&gt;Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coordinate systems, whereas energy conservation is used when computing the fields.&lt;/li&gt;
 &lt;li&gt;This post did not explain how to compute the fields.&lt;/li&gt;
@@ -394,6 +392,9 @@ k_S &amp;amp;=&amp;amp; 2 k_{max} \\
 &lt;/li&gt;
 &lt;li id="fn:4"&gt;
 &lt;p&gt;Sun-Uk Hwang and Yong-Gu Lee, "Simulation of an oil immersion objective lens: A simplified ray-optics model considering Abbe’s sine condition," Opt. Express 16, 21170-21183 (2008). &lt;a href="https://doi.org/10.1364/OE.16.021170"&gt;https://doi.org/10.1364/OE.16.021170&lt;/a&gt; &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:4" title="Jump back to footnote 4 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:5"&gt;
+&lt;p&gt;Ignoring a factor of \(1/L\), the inverse FFT computes the expression \(F_n = \sum_{m=0}^{L-1} A_m \exp \left( j 2 \pi m n / L \right) \). The angular spectrum representation is \( F(x_n) = \sum_{m=0}^{L-1} A_m \exp \left( j k_m x_n \right) \) with \( k_m = m \Delta k \) and \( x_n = n \Delta x \). (The actual k-space samples due to not sampling the origin are \( k_m = (m - (L - 1)/2) \Delta k \), but this doesn't change what follows.) Equating the exponents in the two equations gives \( \Delta k \Delta x = 2 \pi / L \). Since \( k_S = 2 \pi / \Delta x \), it must also equal \( \Delta k L \). &lt;a class="footnote-backref" href="https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/#fnref:5" title="Jump back to footnote 5 in the text"&gt;↩&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description><category>microscopy</category><category>optics</category><guid>https://kylemdouglass.com/posts/coordinate-systems-for-modeling-microscope-objectives/</guid><pubDate>Thu, 21 Nov 2024 09:52:48 GMT</pubDate></item><item><title>Literature Review: An Optical Technique for Remote Focusing in Microscopy</title><link>https://kylemdouglass.com/posts/literature-review-an-optical-technique-for-remote-focusing-in-microscopy/</link><dc:creator>Kyle M. Douglass</dc:creator><description>&lt;h4&gt;Citation&lt;/h4&gt;

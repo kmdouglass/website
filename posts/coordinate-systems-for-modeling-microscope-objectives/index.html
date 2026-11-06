@@ -139,7 +139,7 @@ bg-dark
 <p>This plane is located a distance \( n_2 f \) from the principal surface<sup id="fnref:4"><a class="footnote-ref" href="#fn:4">4</a></sup>. It is not at a distance \( f \) from this surface. This is a result of imaging in an immersion medium.</p>
 <h2>Geometry and Coordinate Systems</h2>
 <h3>The Aperture Stop Radius</h3>
-<p>The aperture stop radius \( R \) corresponds to the distance from the axis to the point where the marginal ray intersects the front prinicpal surface. In the sample space, the marginal ray travels at an angle \( \theta_{max} \) with respect to the axis.</p>
+<p>The aperture stop radius \( R \) corresponds to the distance from the axis to the point where the marginal ray intersects the front principal surface. In the sample space, the marginal ray travels at an angle \( \theta_{max} \) with respect to the axis.</p>
 <p>Under the sine condition, this height is</p>
 <p>$$ R = n_2 f \sin{ \theta_{max} } = f \, \text{NA} $$</p>
 <p>The right-most expression uses the definition of the numerical aperture \( \text{NA} \equiv n \sin{ \theta_{max} } \).</p>
@@ -200,19 +200,17 @@ k_y &amp;=&amp; k_0 y_{\infty} / f
 <p>Note the symmetry between these two expressions. One scales with \( f \text{NA} \) and the other \( k_0 \text{NA} \). Recall that these are free parameters of the model.</p>
 <h3>Sample Space Mesh Spacing</h3>
 <p>It is interesting to compute the spacing between mesh elements \( \Delta x \) in the sample space when the fields are eventually computed.</p>
-<p>The sampling angular frequency in the sample space is \( k_S = 2 \pi / \Delta x \).</p>
-<p>The Nyquist-Shannon sampling theory states that the maximum informative angular frequency is \( k_{max} = k_S / 2 \).</p>
+<p>The sampling angular frequency is by definition \( k_S = 2 \pi / \Delta x \). It's also related to the mesh size and angular frequency spacing via the equation \( k_S = L \Delta k_x \)<sup id="fnref:5"><a class="footnote-ref" href="#fn:5">5</a></sup>.</p>
 <p>From the previous section, we know that \( k_{max} = \left(L - 1 \right) \Delta k_x / 2 \), and that \( \Delta k_x = 2 k_0 \text{NA} / \left( L - 1 \right) \).</p>
 <p>Combining all the previous expressions and simplifying, we get:</p>
 <p>$$\begin{eqnarray}
-k_S &amp;=&amp; 2 k_{max} \\
-2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \Delta k_x \\
-2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \left[ 2 k_0 \text{NA} / \left( L - 1 \right) \right] \\
-2 \pi / \Delta x &amp;=&amp; \left(L - 1 \right) \left[ 2 \left(2 \pi / \lambda \right) \text{NA} / \left( L - 1 \right) \right]
+k_S &amp;=&amp; \Delta k_x L \\
+2 \pi / \Delta x &amp;=&amp; 2 k_0 \text{NA} L / \left( L - 1 \right) \\
+2 \pi / \Delta x &amp;=&amp; 4 \pi \text{NA} L / \left[ \lambda \left( L - 1 \right) \right]
 \end{eqnarray}$$</p>
 <p>Solving the above expression for \( \Delta x \), we arrive at</p>
-<p>$$ \Delta x = \frac{\lambda}{2 \text{NA}} $$</p>
-<p>which is of course the Abbe diffraction limit.</p>
+<p>$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$</p>
+<p>which approaches \( \lambda / \left( 2 \text{NA} \right) \) as \( L \) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \( \Delta x \) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.</p>
 <h3>Effect of not Sampling the Origin</h3>
 <p>Herrera and Quinto-Su<sup id="fnref3:2"><a class="footnote-ref" href="#fn:2">2</a></sup> point out that an error will be introduced if we naively apply the FFT to compute the field components in the \( \left( k_x, k_y \right) \) coordinate system because the origin is not sampled, whereas the FFT assumes that we sample the zero frequency component. The effect is that the result of the FFT has a constant phase error that accounts for a half-pixel shift in each direction of the mesh.</p>
 <p>Consider again the 1D mesh example with \(L = 16 \): \( -1.0000, -0.8667, \ldots, -0.0667, 0.0667, \ldots, 0.8667, 1.0000 \)</p>
@@ -223,14 +221,14 @@ k_S &amp;=&amp; 2 k_{max} \\
 <h3>Structure of the Algorithm</h3>
 <p>The algorithm to compute the focus fields will proceed as follows:</p>
 <ol>
-<li>(optional) Propgate the inputs fields from the AS to the back principal plane using paraxial wave propagation</li>
+<li>(optional) Propagate the inputs fields from the AS to the back principal plane using paraxial wave propagation</li>
 <li>Input the sampled fields in the back principal plane in the \( \left( x_{\infty}, y_{\infty} \right) \) coordinate system</li>
 <li>Transform the fields to the \( \left( k_x, k_y \right) \) coordinate system</li>
 <li>Compute the fields in the \( \left(x, y, z \right) \) coordinate system using the FFT</li>
 </ol>
 <h2>Additional Remarks</h2>
 <ul>
-<li>Zero padding the mesh will increase the sample space resolution beyond the Abbe limit, but since the fields remain zero outside of the support, no new information is added.</li>
+<li>Zero padding the mesh will decrease the sample spacing in real space, but since the fields remain zero outside of the support, no new information is added and the resolution is unchanged.</li>
 <li>On the other hand, zero padding might be required when computing fields going from the sample space to the back principal plane to faithfully reproduce any evanescent components.</li>
 <li>Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coordinate systems, whereas energy conservation is used when computing the fields.</li>
 <li>This post did not explain how to compute the fields.</li>
@@ -250,6 +248,9 @@ k_S &amp;=&amp; 2 k_{max} \\
 </li>
 <li id="fn:4">
 <p>Sun-Uk Hwang and Yong-Gu Lee, "Simulation of an oil immersion objective lens: A simplified ray-optics model considering Abbe’s sine condition," Opt. Express 16, 21170-21183 (2008). <a href="https://doi.org/10.1364/OE.16.021170">https://doi.org/10.1364/OE.16.021170</a> <a class="footnote-backref" href="#fnref:4" title="Jump back to footnote 4 in the text">↩</a></p>
+</li>
+<li id="fn:5">
+<p>Ignoring a factor of \(1/L\), the inverse FFT computes the expression \(F_n = \sum_{m=0}^{L-1} A_m \exp \left( j 2 \pi m n / L \right) \). The angular spectrum representation is \( F(x_n) = \sum_{m=0}^{L-1} A_m \exp \left( j k_m x_n \right) \) with \( k_m = m \Delta k \) and \( x_n = n \Delta x \). (The actual k-space samples due to not sampling the origin are \( k_m = (m - (L - 1)/2) \Delta k \), but this doesn't change what follows.) Equating the exponents in the two equations gives \( \Delta k \Delta x = 2 \pi / L \). Since \( k_S = 2 \pi / \Delta x \), it must also equal \( \Delta k L \). <a class="footnote-backref" href="#fnref:5" title="Jump back to footnote 5 in the text">↩</a></p>
 </li>
 </ol>
 </div>

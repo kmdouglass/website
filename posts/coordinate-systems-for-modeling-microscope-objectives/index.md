@@ -76,7 +76,7 @@ This plane is located a distance \\( n_2 f \\) from the principal surface[^4]. I
 
 ## The Aperture Stop Radius
 
-The aperture stop radius \\( R \\) corresponds to the distance from the axis to the point where the marginal ray intersects the front prinicpal surface. In the sample space, the marginal ray travels at an angle \\( \theta_{max} \\) with respect to the axis.
+The aperture stop radius \\( R \\) corresponds to the distance from the axis to the point where the marginal ray intersects the front principal surface. In the sample space, the marginal ray travels at an angle \\( \theta_{max} \\) with respect to the axis.
 
 Under the sine condition, this height is
 
@@ -176,26 +176,23 @@ Note the symmetry between these two expressions. One scales with \\( f \text{NA}
 
 It is interesting to compute the spacing between mesh elements \\( \Delta x \\) in the sample space when the fields are eventually computed.
 
-The sampling angular frequency in the sample space is \\( k_S = 2 \pi / \Delta x \\).
-
-The Nyquist-Shannon sampling theory states that the maximum informative angular frequency is \\( k_{max} = k_S / 2 \\).
+The sampling angular frequency is by definition \\( k_S = 2 \pi / \Delta x \\). It's also related to the mesh size and angular frequency spacing via the equation \\( k_S = L \Delta k_x \\)[^5].
 
 From the previous section, we know that \\( k_{max} = \left(L - 1 \right) \Delta k_x / 2 \\), and that \\( \Delta k_x = 2 k_0 \text{NA} / \left( L - 1 \right) \\).
 
 Combining all the previous expressions and simplifying, we get:
 
 $$\begin{eqnarray}
-k_S &=& 2 k_{max} \\\\
-2 \pi / \Delta x &=& \left(L - 1 \right) \Delta k_x \\\\
-2 \pi / \Delta x &=& \left(L - 1 \right) \left[ 2 k_0 \text{NA} / \left( L - 1 \right) \right] \\\\
-2 \pi / \Delta x &=& \left(L - 1 \right) \left[ 2 \left(2 \pi / \lambda \right) \text{NA} / \left( L - 1 \right) \right]
+k_S &=& \Delta k_x L \\\\
+2 \pi / \Delta x &=& 2 k_0 \text{NA} L / \left( L - 1 \right) \\\\
+2 \pi / \Delta x &=& 4 \pi \text{NA} L / \left[ \lambda \left( L - 1 \right) \right]
 \end{eqnarray}$$
 
 Solving the above expression for \\( \Delta x \\), we arrive at
 
-$$ \Delta x = \frac{\lambda}{2 \text{NA}} $$
+$$ \Delta x = \frac{\lambda}{2 \text{NA}} \frac{L-1}{L}$$
 
-which is of course the Abbe diffraction limit.
+which approaches \\( \lambda / \left( 2 \text{NA} \right) \\) as \\( L \\) grows. It's tempting to think that this is the Abbe diffraction limit, but it isn't. \\( \Delta x \\) is the spacing between real-space samples. If zero padding were added, then this spacing would decrease even though there would be no real increase in resolution.
 
 ## Effect of not Sampling the Origin
 
@@ -215,14 +212,14 @@ At this point, I am uncertain whether the phasor with the above argument needs t
 
 The algorithm to compute the focus fields will proceed as follows:
 
-0. (optional) Propgate the inputs fields from the AS to the back principal plane using paraxial wave propagation
+0. (optional) Propagate the inputs fields from the AS to the back principal plane using paraxial wave propagation
 1. Input the sampled fields in the back principal plane in the \\( \left( x_{\infty}, y_{\infty} \right) \\) coordinate system
 2. Transform the fields to the \\( \left( k_x, k_y \right) \\) coordinate system
 3. Compute the fields in the \\( \left(x, y, z \right) \\) coordinate system using the FFT
 
 # Additional Remarks
 
-- Zero padding the mesh will increase the sample space resolution beyond the Abbe limit, but since the fields remain zero outside of the support, no new information is added.
+- Zero padding the mesh will decrease the sample spacing in real space, but since the fields remain zero outside of the support, no new information is added and the resolution is unchanged.
 - On the other hand, zero padding might be required when computing fields going from the sample space to the back principal plane to faithfully reproduce any evanescent components.
 - Separating the coordinate system and mesh construction from the calculation of the fields reveals that the two assumptions of the model belong separately to each part. The sine condition is used in the construction of the coordinate systems, whereas energy conservation is used when computing the fields.
 - This post did not explain how to compute the fields.
@@ -233,3 +230,4 @@ The algorithm to compute the focus fields will proceed as follows:
 [^2]: Isael Herrera and Pedro A. Quinto-Su, "Simple computer program to calculate arbitrary tightly focused (propagating and evanescent) vector light fields," arXiv:2211.06725 (2022). [https://doi.org/10.48550/arXiv.2211.06725](https://doi.org/10.48550/arXiv.2211.06725)
 [^3]: Marcel Leutenegger, Ramachandra Rao, Rainer A. Leitgeb, and Theo Lasser, "Fast focus field calculations," Opt. Express 14, 11277-11291 (2006). [https://doi.org/10.1364/OE.14.011277](https://doi.org/10.1364/OE.14.011277)
 [^4]: Sun-Uk Hwang and Yong-Gu Lee, "Simulation of an oil immersion objective lens: A simplified ray-optics model considering Abbe’s sine condition," Opt. Express 16, 21170-21183 (2008). [https://doi.org/10.1364/OE.16.021170](https://doi.org/10.1364/OE.16.021170)
+[^5]: Ignoring a factor of \\(1/L\\), the inverse FFT computes the expression \\(F_n = \sum_{m=0}^{L-1} A_m \exp \left( j 2 \pi m n / L \right) \\). The angular spectrum representation is \\( F(x_n) = \sum_{m=0}^{L-1} A_m \exp \left( j k_m x_n \right) \\) with \\( k_m = m \Delta k \\) and \\( x_n = n \Delta x \\). (The actual k-space samples due to not sampling the origin are \\( k_m = (m - (L - 1)/2) \Delta k \\), but this doesn't change what follows.) Equating the exponents in the two equations gives \\( \Delta k \Delta x = 2 \pi / L \\). Since \\( k_S = 2 \pi / \Delta x \\), it must also equal \\( \Delta k L \\).
